@@ -10,11 +10,18 @@ class AssignOps
 {
 private:
     //ExpressionPtr left;
+    std::string type;
     std::string id;
     ExpressionPtr right;
 protected:
     AssignOps(/*ExpressionPtr _left*/const std::string &_id, ExpressionPtr _right)
         :id(_id)
+        , right(_right)
+    {}
+
+    AssignOps(const std::string &_type,/*ExpressionPtr _left*/const std::string &_id, ExpressionPtr _right)
+        :type(_type)
+        , id(_id)
         , right(_right)
     {}
 public:
@@ -33,12 +40,21 @@ public:
 
     virtual void print(std::ostream &dst) const override
     {
-        //left->print(dst);
-        //dst<<" ";
-        dst<<id;
-        dst<<getOpcode();
-        dst<<" ";
-        right->print(dst);
+        if(type==""){
+            dst<<id;
+            dst<<" ";
+            dst<<getOpcode();
+            dst<<" ";
+            right->print(dst);
+        }
+        else{
+            dst<<type;
+            dst<<" ";
+            dst<<id;
+            dst<<getOpcode();
+            dst<<" ";
+            right->print(dst);
+        }
     }
 };
 
@@ -51,6 +67,9 @@ protected:
 public:
     AssignOperator(/*ExpressionPtr _left*/const std::string &_id, ExpressionPtr _right)
         : AssignOps(/*_left*/_id, _right)
+    {}
+    AssignOperator(const std::string &_type,/*ExpressionPtr _left*/const std::string &_id, ExpressionPtr _right)
+        : AssignOps(_type,/*_left*/_id, _right)
     {}
 };
 

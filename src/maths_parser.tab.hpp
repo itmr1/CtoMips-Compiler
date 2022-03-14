@@ -95,7 +95,8 @@ extern int yydebug;
     TOK_MULASSIGN = 285,
     TOK_DIVASSIGN = 286,
     TOK_ADDASSIGN = 287,
-    TOK_EQASSIGN = 288
+    TOK_EQASSIGN = 288,
+    TOK_MODASSIGN = 289
   };
 #endif
 
@@ -109,7 +110,7 @@ union YYSTYPE
   double number;
   std::string *string;
 
-#line 113 "src/maths_parser.tab.hpp"
+#line 114 "src/maths_parser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

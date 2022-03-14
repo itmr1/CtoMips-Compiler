@@ -26,7 +26,7 @@
 %token TOK_MUL TOK_DIVIDE TOK_PLUS TOK_MINUS TOK_MOD
 %token TOK_LBRACKET TOK_RBRACKET TOK_SEMICOLON TOK_LCBRACKET TOK_RCBRACKET
 %token TOK_N TOK_VAR VARTYPE_INT
-%token TOK_SUBASSIGN TOK_MULASSIGN TOK_DIVASSIGN TOK_ADDASSIGN TOK_EQASSIGN
+%token TOK_SUBASSIGN TOK_MULASSIGN TOK_DIVASSIGN TOK_ADDASSIGN TOK_EQASSIGN TOK_MODASSIGN
 
 %type <expr> EXPR VAR_INIT ASSIGN_EXPR LOGIC_EXPR EQ_EXPR REL_EXPR ADD_EXPR MULT_EXPR UNARY FACTOR
 %type <number> TOK_N
@@ -41,18 +41,20 @@ ROOT  : EXPR              { g_root = $1; }
 EXPR  : VAR_INIT { $$ = $1; }
       ;
 
-ASSIGN_OP : TOK_SUBASSIGN //  -=
-          | TOK_MULASSIGN //  *=
-          | TOK_DIVASSIGN //  /=
-          | TOK_ADDASSIGN //  +=
-          ;
 VAR_INIT : ASSIGN_EXPR
-         | VARTYPE_INT TOK_VAR TOK_SEMICOLON { $$ = new Variable(*$2); }
-         | VARTYPE_INT TOK_VAR TOK_EQASSIGN ASSIGN_EXPR //Create an ast for printing this
+         | VARTYPE_INT TOK_VAR { $$ = new Variable(*$2); }
+         | VARTYPE_INT TOK_VAR TOK_EQASSIGN ASSIGN_EXPR {$$= new AssignOperator("int", *$2,$4);}
          ;
+
 ASSIGN_EXPR : LOGIC_EXPR {$$ = $1;}
             | TOK_VAR TOK_EQASSIGN ASSIGN_EXPR {$$ = new AssignOperator(*$1,$3);}
+            | TOK_VAR TOK_ADDASSIGN ASSIGN_EXPR {$$ = new AddAssignOperator(*$1,$3);}
+            | TOK_VAR TOK_SUBASSIGN ASSIGN_EXPR {$$ = new SubAssignOperator(*$1,$3);}
+            | TOK_VAR TOK_MULASSIGN ASSIGN_EXPR {$$ = new MulAssignOperator(*$1,$3);}
+            | TOK_VAR TOK_DIVASSIGN ASSIGN_EXPR {$$ = new DivAssignOperator(*$1,$3);}
+            | TOK_VAR TOK_MODASSIGN ASSIGN_EXPR {$$ = new ModAssignOperator(*$1,$3);}
             ;
+
 LOGIC_EXPR : EQ_EXPR {$$ = $1;}
            | LOGIC_EXPR TOK_BIT_AND EQ_EXPR {$$ = new BitwiseAndOperator($1, $3);}
            | LOGIC_EXPR TOK_BIT_OR EQ_EXPR {$$ = new BitwiseOrOperator($1, $3);}
@@ -87,7 +89,7 @@ UNARY : FACTOR      { $$ = $1; }
 
 FACTOR : TOK_N     { $$ = new Number( $1 ); }
        | TOK_VAR  { $$ = new Variable(*$1);}
-       | TOK_LBRACKET EXPR TOK_RBRACKET { $$ = $2; }
+       | TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET { $$ = $2; }
        ;
 
 STATEMENT : SELECT_STATEMENT
@@ -104,8 +106,8 @@ EXPR_STATEMENT : TOK_SEMICOLON
 COMPOUND_STATEMENT : TOK_LCBRACKET TOK_RCBRACKET
                    | TOK_LCBRACKET STATEMENT TOK_RBRACKET
 
-SELECT_STATEMENT : TOK_IF TOK_LBRACKET EXPR TOK_RBRACKET STATEMENT 
-                 | TOK_IF TOK_LBRACKET EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
+SELECT_STATEMENT : TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT 
+                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
                  ;
 
 ITER_STATEMENT : TOK_WHILE TOK_LBRACKET EXPR TOK_RBRACKET STATEMENT

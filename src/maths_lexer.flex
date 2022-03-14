@@ -19,6 +19,12 @@ extern "C" int fileno(FILE *stream);
 
 
 %%
+"int"             {return VARTYPE_INT;}
+"while"           { return TOK_WHILE; }
+"if"              { return TOK_IF; }
+"else"            { return TOK_ELSE; }
+"return"          {return TOK_RETURN;}
+"break"           {return TOK_BREAK;}   
 
 [0-9]+                   {yylval.number = std::strtod(yytext,0);
                            return TOK_N;}
@@ -36,6 +42,7 @@ extern "C" int fileno(FILE *stream);
 "/="              {return TOK_DIVASSIGN; }
 "+="              {return TOK_ADDASSIGN; }
 "-="              {return TOK_SUBASSIGN; }
+"%="              {return TOK_MODASSIGN; }
 "="               {return TOK_EQASSIGN; }
 
 "=="              { return TOK_EQ; }
@@ -53,14 +60,7 @@ extern "C" int fileno(FILE *stream);
 [\{]              { return TOK_LCBRACKET; }
 [\}]              { return TOK_RCBRACKET; }
 [;]               { return TOK_SEMICOLON; }
-
-"while"           { return TOK_WHILE; }
-"if"              { return TOK_IF; }
-"else"            { return TOK_ELSE; }
-
-"int"             {return VARTYPE_INT;}
-"return"          {return TOK_RETURN;}
-"break"           {return TOK_BREAK;}         
+      
 [ \t\r\n]+        {;}
 . {fprintf(stderr, "Invalid token\n");exit(1);}
 
