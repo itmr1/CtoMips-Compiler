@@ -38,7 +38,9 @@ public:
         left->print(dst);
         dst<<" )";
         dst<<" ";
+        dst<<"{ ";
         right->print(dst);
+        dst<<" }";
     }
 };
 
@@ -50,7 +52,7 @@ protected:
     { return "if"; }
 public:
     IfStmnt(ExpressionPtr cond, ExpressionPtr chunk)
-        : TwoSetStmnts(_left, _right)
+        : TwoSetStmnts(cond, chunk)
     {}
 };
 
@@ -61,8 +63,8 @@ protected:
     virtual const char *getOpcode() const override
     { return "while"; }
 public:
-    SubOperator(ExpressionPtr cond, ExpressionPtr chunk)
-        : Operator(_left, _right)
+    WhileStmnt(ExpressionPtr cond, ExpressionPtr chunk)
+        : TwoSetStmnts(cond, chunk)
     {}
 };
 
