@@ -28,4 +28,31 @@ public:
 };
 
 
+class RecExpr
+    : public Expression
+{
+private:
+    ExpressionPtr left;
+    ExpressionPtr right;
+
+public:
+    RecExpr(ExpressionPtr _left, ExpressionPtr _right)
+        : left(_left)
+        , right(_right)       
+    {}
+    virtual ~RecExpr()
+    {
+        delete left;
+        delete right;
+    }
+    virtual void print(std::ostream &dst) const override
+    {   
+       
+        left->print(dst);
+        dst<<" ";
+        right->print(dst);
+    }
+
+};
+
 #endif

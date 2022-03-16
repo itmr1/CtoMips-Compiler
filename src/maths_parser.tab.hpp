@@ -88,15 +88,18 @@ extern int yydebug;
     TOK_SEMICOLON = 278,
     TOK_LCBRACKET = 279,
     TOK_RCBRACKET = 280,
-    TOK_N = 281,
-    TOK_VAR = 282,
-    VARTYPE_INT = 283,
-    TOK_SUBASSIGN = 284,
-    TOK_MULASSIGN = 285,
-    TOK_DIVASSIGN = 286,
-    TOK_ADDASSIGN = 287,
-    TOK_EQASSIGN = 288,
-    TOK_MODASSIGN = 289
+    TOK_LSQBRACKET = 281,
+    TOK_RSQBRACKET = 282,
+    TOK_COMMA = 283,
+    TOK_N = 284,
+    TOK_VAR = 285,
+    VARTYPE_INT = 286,
+    TOK_SUBASSIGN = 287,
+    TOK_MULASSIGN = 288,
+    TOK_DIVASSIGN = 289,
+    TOK_ADDASSIGN = 290,
+    TOK_EQASSIGN = 291,
+    TOK_MODASSIGN = 292
   };
 #endif
 
@@ -110,7 +113,7 @@ union YYSTYPE
   double number;
   std::string *string;
 
-#line 114 "src/maths_parser.tab.hpp"
+#line 117 "src/maths_parser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

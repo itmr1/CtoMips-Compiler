@@ -55,11 +55,14 @@ extern "C" int fileno(FILE *stream);
 [&]               { return TOK_BIT_AND; }
 [|]               { return TOK_BIT_OR; }
 
+[\[]              { return TOK_LSQBRACKET;}
+[\]]              { return TOK_RSQBRACKET;}
 [(]               { return TOK_LBRACKET; }
 [)]               { return TOK_RBRACKET; }
 [\{]              { return TOK_LCBRACKET; }
 [\}]              { return TOK_RCBRACKET; }
 [;]               { return TOK_SEMICOLON; }
+[,]               { return TOK_COMMA;  }
       
 [ \t\r\n]+        {;}
 . {fprintf(stderr, "Invalid token\n");exit(1);}

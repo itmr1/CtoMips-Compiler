@@ -3,103 +3,57 @@
 
 #include "ast_expression.hpp"
 
+#include <string>
+#include <iostream>
 #include <cmath>
 
 class Function
     : public Expression
 {
 private:
-    ExpressionPtr arg;
-protected:
-    Function(ExpressionPtr _arg)
-        : arg(_arg)
-    {}
+    std::string type;
+    ExpressionPtr Declarator;
+    ExpressionPtr Args;
+    ExpressionPtr Statement;
+
 public:
+    Function(const std::string &_type, ExpressionPtr _Declarator, ExpressionPtr _Args, ExpressionPtr _Statement)
+        : type(_type)
+        , Declarator(_Declarator)
+        , Args(_Args)
+        , Statement(_Statement)
+    {}
+
+    Function(const std::string &_type, ExpressionPtr _Declarator,ExpressionPtr _Statement)
+        : type(_type)
+        , Declarator(_Declarator)
+        , Statement(_Statement)
+    {}
+
     virtual ~Function()
     {
-        delete arg;
+        delete Declarator;
+        delete Args;
+        delete Statement;
     }
 
-    virtual const char * getFunction() const =0;
-
-    ExpressionPtr getArg() const
-    { return arg; }
+     const std::string getType() const
+    { return type; }
 
     virtual void print(std::ostream &dst) const override
-    {
-        dst<<getFunction()<<"( ";
-        arg->print(dst);
-        dst<<" )";
+    {   
+        
+        dst<<getType();
+        dst<<" ";
+        Declarator->print(dst);
+        dst<<"(";
+        if(Args) Args->print(dst);
+        dst<<"){";
+        Statement->print(dst);
+        dst<<"}";
+        
     }
 
-    virtual double evaluate(
-        const std::map<std::string,double> &bindings
-    ) const override
-    {
-        // NOTE : This should be implemented by the inheriting function nodes, e.g. LogFunction
-        throw std::runtime_error("FunctionOperator::evaluate is not implemented.");
-    }
-};
-
-class LogFunction
-    : public Function
-{
-public:
-    LogFunction(ExpressionPtr _arg)
-        : Function(_arg)
-    {}
-
-    virtual const char *getFunction() const
-    { return "log"; }
-    
-    virtual double evaluate(
-        const std::map<std::string,double> &bindings
-    ) const override
-    {
-        double vl=getArg()->evaluate(bindings);
-	return log(vl);
-    }
-    // TODO-E : Override evaluate, and implement it
-};
-
-class ExpFunction
-    : public Function
-{
-public:
-    ExpFunction(ExpressionPtr _arg)
-        : Function(_arg)
-    {}
-
-    virtual const char *getFunction() const
-    { return "exp"; }
-
-    virtual double evaluate(
-        const std::map<std::string,double> &bindings
-    ) const override
-    {
-        double vl=getArg()->evaluate(bindings);
-        return exp(vl);
-    }
-};
-
-class SqrtFunction
-    : public Function
-{
-public:
-    SqrtFunction(ExpressionPtr _arg)
-        : Function(_arg)
-    {}
-
-    virtual const char *getFunction() const
-    { return "sqrt"; }
-
-    virtual double evaluate(
-        const std::map<std::string,double> &bindings
-    ) const override
-    {
-        double vl=getArg()->evaluate(bindings);
-        return sqrt(vl);
-    }
 };
 
 
