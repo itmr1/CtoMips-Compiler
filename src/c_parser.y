@@ -106,7 +106,7 @@ ADD_EXPR : MULT_EXPR {$$ = $1;}
 MULT_EXPR : UNARY {$$ = $1;}
           | MULT_EXPR TOK_MUL UNARY {$$ = new MulOperator($1, $3); }
           | MULT_EXPR TOK_DIVIDE UNARY { $$ = new DivOperator($1, $3); }
-          | MULT_EXPR TOK_MOD UNARY {$$ = new ModOperator($1, $3);} // 
+          | MULT_EXPR TOK_MOD UNARY {$$ = new ModOperator($1, $3);}  
           ; 
 
 UNARY : FACTOR      { $$ = $1; }
@@ -138,16 +138,17 @@ FUNC_STATEMENT : TOK_LCBRACKET TOK_RCBRACKET
                    | TOK_LCBRACKET REC_DECLARATION TOK_RCBRACKET {$$ = $2;}
                    | TOK_LCBRACKET REC_DECLARATION REC_STATEMENT TOK_RCBRACKET {$$ = new RecExpr($2, $3);}
 
-SELECT_STATEMENT : TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT 
-                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
+SELECT_STATEMENT : TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT   {$$ = new IfStmnt($3, $5);} //Should there be {} around statemnet?
+                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT {$$ = new IfElseStmnt($3, $5, $7);} //Should there be {} around statemnet?
                  ;
 
-ITER_STATEMENT : TOK_WHILE TOK_LBRACKET EXPR TOK_RBRACKET STATEMENT
+ITER_STATEMENT : TOK_WHILE TOK_LBRACKET EXPR TOK_RBRACKET STATEMENT {$$ = new WhileStmnt($3, $5);} //Should there be {} around statemnet? //shoudl Expr by Logic Expr
                ;
 
-JUMP_STATEMENT : TOK_BREAK TOK_SEMICOLON
-               | TOK_RETURN TOK_SEMICOLON
-               | TOK_RETURN EXPR TOK_SEMICOLON
+JUMP_STATEMENT : TOK_BREAK TOK_SEMICOLON {$$ = new BreakStmnt();}
+               | TOK_CONT TOK_SEMICOLON {$$ = new ContinueStmnt();}
+               | TOK_RETURN TOK_SEMICOLON //is this even a thing can add {$$ = new ReturnNoneStmnt();}
+               | TOK_RETURN EXPR TOK_SEMICOLON {$$ = new ReturnStmnt($2);}
                ;
 %%
 
