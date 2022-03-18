@@ -1,9 +1,12 @@
 #ifndef ast_operators_hpp
 #define ast_operators_hpp
 
+
 #include <string>
 #include <iostream>
 #include <cmath>
+#include context.hpp
+
 class Operator
     : public Expression
 {
@@ -41,7 +44,7 @@ public:
         dst<<" )";
     }
 
-    virtual std::string MipsCodeGen(std::ostream &dst, std::string DestReg) const override{}
+    virtual void MipsCodeGen(std::ostream &dst, std::string DestReg) const override{}
 };
 
 class AddOperator
@@ -55,11 +58,13 @@ public:
         : Operator(_left, _right)
     {}
     virtual void MipsCodeGen(std::ostream &dst, std::string DstReg){
-        std::string reg1;
-        std::string reg2;
-        left->MipsCodeGen(std::ostream &dst, reg1);
-        right->MipsCodeGen(std::ostream &dst, reg2);
-        dst<<"add "<<DstReg<<" "<<reg1<<" "<<reg2;
+        left->MipsCodeGen(std::ostream &dst, DstReg);
+        int idx = Registers.allocate()
+        std::string tmp_reg = make_regname(idx);
+        dst<<"move "<<tmp_reg<<" " <<DstReg<<std::endl;
+        right->MipsCodeGen(std::ostream &dst, DstReg);
+        dst<<"add "<<DstReg<<" "<<DstReg<<" "<<tmp_reg<<std::endl;
+        Registers.free_reg(idx);
     }
 };
 
@@ -73,6 +78,16 @@ public:
     SubOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Operator(_left, _right)
     {}
+
+    virtual void MipsCodeGen(std::ostream &dst, std::string DstReg){
+        right->MipsCodeGen(std::ostream &dst, DstReg);
+        int idx = Registers.allocate()
+        std::string tmp_reg = make_regname(idx);
+        dst<<"move "<<tmp_reg<<" " <<DstReg<<std::endl;
+        left->MipsCodeGen(std::ostream &dst, DstReg);
+        dst<<"sub "<<DstReg<<" "<<DstReg<<" "<<tmp_reg<<std::endl;
+        Registers.free_reg(idx);
+    }
 };
 
 
@@ -86,6 +101,17 @@ public:
     MulOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Operator(_left, _right)
     {}
+
+    virtual void MipsCodeGen(std::ostream &dst, std::string DstReg){
+        left->MipsCodeGen(std::ostream &dst, DstReg);
+        int idx = Registers.allocate()
+        std::string tmp_reg = make_regname(idx);
+        dst<<"move "<<tmp_reg<<" " <<DstReg<<std::endl;
+        right->MipsCodeGen(std::ostream &dst, DstReg);
+        dst<<"mul "<<DstReg<<" "<<tmp_reg<<std::endl;
+        dst<<"mflo "<<DstReg<<std::endl;
+        Registers.free_reg(idx);
+    }
 };
 
 class DivOperator
@@ -98,6 +124,17 @@ public:
     DivOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Operator(_left, _right)
     {}
+
+    virtual void MipsCodeGen(std::ostream &dst, std::string DstReg){
+        left->MipsCodeGen(std::ostream &dst, DstReg);
+        int idx = Registers.allocate()
+        std::string tmp_reg = make_regname(idx);
+        dst<<"move "<<tmp_reg<<" " <<DstReg<<std::endl;
+        right->MipsCodeGen(std::ostream &dst, DstReg);
+        dst<<"div "<<DstReg<<" "<<tmp_reg<<std::endl;
+        dst<<"mfhi "<<DstReg<<" "<<std::endl;
+        Registers.free_reg(idx);
+    }
 };
 
 class ModOperator
@@ -110,6 +147,16 @@ public:
     ModOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Operator(_left, _right)
     {}
+    virtual void MipsCodeGen(std::ostream &dst, std::string DstReg){
+        right->MipsCodeGen(std::ostream &dst, DstReg);
+        int idx = Registers.allocate()
+        std::string tmp_reg = make_regname(idx);
+        dst<<"move "<<tmp_reg<<" " <<DstReg<<std::endl;
+        left->MipsCodeGen(std::ostream &dst, DstReg);
+        dst<<"div "<<DstReg<<" "<<tmp_reg<<std::endl;
+        dst<<"mflo "<<DstReg<<" "<<std::endl;
+        Registers.free_reg(idx);
+    }
 };
 
 

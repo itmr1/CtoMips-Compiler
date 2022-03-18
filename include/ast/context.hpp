@@ -25,18 +25,17 @@ public:
     int allocate(){
         for(int i = 8; i<26;i++){
             if(!regs[i]){
-                regs[i] =1;
+                use_reg(i)
                 return i;
             }
         }
         return -1;
     }
-
-    std::string make_regname(int i){
-        return "$"+std::to_string(i)
-    }
-
 };
+
+std::string make_regname(int i){
+    return "$"+std::to_string(i)
+}
 
 std::string make_label(std::string s){
     static int  count = 0;
