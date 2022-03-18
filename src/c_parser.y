@@ -22,7 +22,7 @@
 %token TOK_BIT_AND TOK_BIT_OR TOK_EQ TOK_NEQ
 %token TOK_GE TOK_LE TOK_G TOK_L
 %token TOK_IF TOK_WHILE TOK_ELSE
-%token TOK_RETURN TOK_BREAK
+%token TOK_RETURN TOK_BREAK TOK_CONT
 %token TOK_MUL TOK_DIVIDE TOK_PLUS TOK_MINUS TOK_MOD
 %token TOK_LBRACKET TOK_RBRACKET TOK_SEMICOLON TOK_LCBRACKET TOK_RCBRACKET TOK_LSQBRACKET TOK_RSQBRACKET TOK_COMMA
 %token TOK_N TOK_VAR VARTYPE_INT
@@ -138,17 +138,18 @@ FUNC_STATEMENT : TOK_LCBRACKET TOK_RCBRACKET
                    | TOK_LCBRACKET REC_DECLARATION TOK_RCBRACKET {$$ = $2;}
                    | TOK_LCBRACKET REC_DECLARATION REC_STATEMENT TOK_RCBRACKET {$$ = new RecExpr($2, $3);}
 
-SELECT_STATEMENT : TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT   {$$ = new IfStmnt($3, $5);} //Should there be {} around statemnet?
-                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT {$$ = new IfElseStmnt($3, $5, $7);} //Should there be {} around statemnet?
+SELECT_STATEMENT : TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT   {$$ = new IfStatement($3, $5, "if");} 
+                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT {$$ = new IfStatement($3, $5, $7);}
                  ;
 
-ITER_STATEMENT : TOK_WHILE TOK_LBRACKET EXPR TOK_RBRACKET STATEMENT {$$ = new WhileStmnt($3, $5);} //Should there be {} around statemnet? //shoudl Expr by Logic Expr
+ITER_STATEMENT : TOK_WHILE TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT {$$ = new WhileStatement($3, $5,"while");}
                ;
 
-JUMP_STATEMENT : TOK_BREAK TOK_SEMICOLON {$$ = new BreakStmnt();}
-               | TOK_CONT TOK_SEMICOLON {$$ = new ContinueStmnt();}
-               | TOK_RETURN TOK_SEMICOLON //is this even a thing can add {$$ = new ReturnNoneStmnt();}
-               | TOK_RETURN EXPR TOK_SEMICOLON {$$ = new ReturnStmnt($2);}
+JUMP_STATEMENT : TOK_BREAK TOK_SEMICOLON {$$ = new JumpStatement("break");}
+               | TOK_CONT TOK_SEMICOLON {$$ = new JumpStatement("continue");}
+               | TOK_RETURN TOK_SEMICOLON {$$ = new JumpStatement("return");}
+               | TOK_RETURN FUNCTION TOK_SEMICOLON {$$ = new JumpStatement($2);}
+               | TOK_RETURN LOGIC_EXPR TOK_SEMICOLON {$$ = new JumpStatement($2);}
                ;
 %%
 
