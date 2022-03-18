@@ -13,7 +13,7 @@
 extern "C" int fileno(FILE *stream);
 
 /* End the embedded code section. */
-#include "maths_parser.tab.hpp"
+#include "c_parser.tab.hpp"
 #include <string>
 %}
 

@@ -34,8 +34,8 @@
 /* Undocumented macros, especially those whose name start with YY_,
    are private implementation details.  Do not rely on them.  */
 
-#ifndef YY_YY_SRC_MATHS_PARSER_TAB_HPP_INCLUDED
-# define YY_YY_SRC_MATHS_PARSER_TAB_HPP_INCLUDED
+#ifndef YY_YY_SRC_C_PARSER_TAB_HPP_INCLUDED
+# define YY_YY_SRC_C_PARSER_TAB_HPP_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -44,7 +44,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 1 "src/maths_parser.y"
+#line 1 "src/c_parser.y"
 
   #include "ast.hpp"
 
@@ -58,7 +58,7 @@ extern int yydebug;
   int yylex(void);
   void yyerror(const char *);
 
-#line 62 "src/maths_parser.tab.hpp"
+#line 62 "src/c_parser.tab.hpp"
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -78,28 +78,29 @@ extern int yydebug;
     TOK_ELSE = 268,
     TOK_RETURN = 269,
     TOK_BREAK = 270,
-    TOK_MUL = 271,
-    TOK_DIVIDE = 272,
-    TOK_PLUS = 273,
-    TOK_MINUS = 274,
-    TOK_MOD = 275,
-    TOK_LBRACKET = 276,
-    TOK_RBRACKET = 277,
-    TOK_SEMICOLON = 278,
-    TOK_LCBRACKET = 279,
-    TOK_RCBRACKET = 280,
-    TOK_LSQBRACKET = 281,
-    TOK_RSQBRACKET = 282,
-    TOK_COMMA = 283,
-    TOK_N = 284,
-    TOK_VAR = 285,
-    VARTYPE_INT = 286,
-    TOK_SUBASSIGN = 287,
-    TOK_MULASSIGN = 288,
-    TOK_DIVASSIGN = 289,
-    TOK_ADDASSIGN = 290,
-    TOK_EQASSIGN = 291,
-    TOK_MODASSIGN = 292
+    TOK_CONT = 271,
+    TOK_MUL = 272,
+    TOK_DIVIDE = 273,
+    TOK_PLUS = 274,
+    TOK_MINUS = 275,
+    TOK_MOD = 276,
+    TOK_LBRACKET = 277,
+    TOK_RBRACKET = 278,
+    TOK_SEMICOLON = 279,
+    TOK_LCBRACKET = 280,
+    TOK_RCBRACKET = 281,
+    TOK_LSQBRACKET = 282,
+    TOK_RSQBRACKET = 283,
+    TOK_COMMA = 284,
+    TOK_N = 285,
+    TOK_VAR = 286,
+    VARTYPE_INT = 287,
+    TOK_SUBASSIGN = 288,
+    TOK_MULASSIGN = 289,
+    TOK_DIVASSIGN = 290,
+    TOK_ADDASSIGN = 291,
+    TOK_EQASSIGN = 292,
+    TOK_MODASSIGN = 293
   };
 #endif
 
@@ -107,13 +108,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 17 "src/maths_parser.y"
+#line 17 "src/c_parser.y"
 
   const Expression *expr;
   double number;
   std::string *string;
 
-#line 117 "src/maths_parser.tab.hpp"
+#line 118 "src/c_parser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -126,4 +127,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_SRC_MATHS_PARSER_TAB_HPP_INCLUDED  */
+#endif /* !YY_YY_SRC_C_PARSER_TAB_HPP_INCLUDED  */
