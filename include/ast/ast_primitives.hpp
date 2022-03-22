@@ -29,7 +29,14 @@ public:
         // TODO-B : Run bin/eval_expr with a variable binding to make sure you understand how this works.
         // If the binding does not exist, this will throw an error
         return bindings.at(id);
-    }    
+    }  
+
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+       CurrSize+=0;
+   }
+
+   
 };
 
 class Number
@@ -53,6 +60,11 @@ public:
     virtual void MipsCodeGen(std::ostream &dst, std::string DstReg){
         dst << "li $"<< DstReg <<","<< value<<std::endl;
     }
+
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+       CurrSize+=0;
+   }
 };
 
 class InitVar
@@ -88,7 +100,10 @@ public:
             right->print(dst);
         }
     }
-   
+
+    virtual void CountFrameSize(int &CurrSize) const override{
+        CurrSize++;
+    }
 };
 
 class Array
@@ -119,7 +134,10 @@ public:
             dst<<"[]";
         }
     }
-   
+   virtual void CountFrameSize(int &CurrSize) const override
+   {
+       CurrSize+=size;
+   }
 };
 
 

@@ -56,6 +56,11 @@ public:
             right->print(dst);
         }*/
     }
+
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+       right->CountFrameSize(int &CurrSize);
+   }
 };
 
 class AssignOperator

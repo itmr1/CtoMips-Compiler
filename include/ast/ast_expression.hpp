@@ -53,6 +53,12 @@ public:
         right->print(dst);
     }
 
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+       left->CountFrameSize(int &CurrSize);
+       right->CountFrameSize(int &CurrSize);
+   }
+
 };
 
 #endif
