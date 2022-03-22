@@ -48,8 +48,8 @@ EXPR  : FUNCTION { $$ = $1; }
       | DECLARATION {$$= $1; }
       ;
 
-FUNCTION : VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET FUNC_STATEMENT {$$ = new Function("int",$2,$4,$6);}
-         | VARTYPE_INT DECLARATOR TOK_LBRACKET TOK_RBRACKET FUNC_STATEMENT {$$ = new Function("int", $2,$5);}
+FUNCTION : VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET FUNC_STATEMENT {$$ = new FuncWithArgs("int",$2,$4,$6);}
+         | VARTYPE_INT DECLARATOR TOK_LBRACKET TOK_RBRACKET FUNC_STATEMENT {$$ = new FuncNoArgs("int", $2,$5);}
          ;
 
 /*REC_FUNCTION : FUNCTION {$$=$1;}
@@ -59,11 +59,11 @@ REC_DECLARATION : DECLARATION {$$=$1;}
                 | REC_DECLARATION DECLARATION {$$= new RecExpr($1, $2);}
                 ;
 
-DECLARATION : VARTYPE_INT DECLARATOR TOK_SEMICOLON { $$ = new InitVar("int", $2); }
+DECLARATION : VARTYPE_INT DECLARATOR TOK_SEMICOLON { $$ = new DeclareVar("int", $2); }
          | VARTYPE_INT DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON {$$= new InitVar("int",$2,$4);}
          ;
 
-FUNC_ARGS: VARTYPE_INT DECLARATOR { $$ = new InitVar("int", $2); }
+FUNC_ARGS: VARTYPE_INT DECLARATOR { $$ = new DeclareVar("int", $2); }
          | FUNC_ARGS TOK_COMMA VARTYPE_INT DECLARATOR {$$ = new RecExpr($1, $4);}
          ;
 
@@ -139,17 +139,17 @@ FUNC_STATEMENT : TOK_LCBRACKET TOK_RCBRACKET
                    | TOK_LCBRACKET REC_DECLARATION REC_STATEMENT TOK_RCBRACKET {$$ = new RecExpr($2, $3);}
 
 SELECT_STATEMENT : TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT   {$$ = new IfStatement($3, $5, "if");} 
-                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT {$$ = new IfStatement($3, $5, $7);}
+                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT {$$ = new IfElseStatement($3, $5, $7);}
                  ;
 
 ITER_STATEMENT : TOK_WHILE TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT {$$ = new WhileStatement($3, $5,"while");}
                ;
 
-JUMP_STATEMENT : TOK_BREAK TOK_SEMICOLON {$$ = new JumpStatement("break");}
-               | TOK_CONT TOK_SEMICOLON {$$ = new JumpStatement("continue");}
-               | TOK_RETURN TOK_SEMICOLON {$$ = new JumpStatement("return");}
-               | TOK_RETURN FUNCTION TOK_SEMICOLON {$$ = new JumpStatement($2);}
-               | TOK_RETURN LOGIC_EXPR TOK_SEMICOLON {$$ = new JumpStatement($2);}
+JUMP_STATEMENT : TOK_BREAK TOK_SEMICOLON {$$ = new BreakStatement("break");}
+               | TOK_CONT TOK_SEMICOLON {$$ = new ContinueStatement("continue");}
+               | TOK_RETURN TOK_SEMICOLON {$$ = new ReturnStatement("return");}
+               | TOK_RETURN FUNCTION TOK_SEMICOLON {$$ = new ReturnExprStatement($2);}
+               | TOK_RETURN LOGIC_EXPR TOK_SEMICOLON {$$ = new ReturnExprStatement($2);}
                ;
 %%
 

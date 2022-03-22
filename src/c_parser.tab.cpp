@@ -1480,13 +1480,13 @@ yyreduce:
 
   case 7:
 #line 51 "src/c_parser.y"
-                                                                                     {(yyval.expr) = new Function("int",(yyvsp[-4].expr),(yyvsp[-2].expr),(yyvsp[0].expr));}
+                                                                                     {(yyval.expr) = new FuncWithArgs("int",(yyvsp[-4].expr),(yyvsp[-2].expr),(yyvsp[0].expr));}
 #line 1485 "src/c_parser.tab.cpp"
     break;
 
   case 8:
 #line 52 "src/c_parser.y"
-                                                                           {(yyval.expr) = new Function("int", (yyvsp[-3].expr),(yyvsp[0].expr));}
+                                                                           {(yyval.expr) = new FuncNoArgs("int", (yyvsp[-3].expr),(yyvsp[0].expr));}
 #line 1491 "src/c_parser.tab.cpp"
     break;
 
@@ -1504,7 +1504,7 @@ yyreduce:
 
   case 11:
 #line 62 "src/c_parser.y"
-                                                   { (yyval.expr) = new InitVar("int", (yyvsp[-1].expr)); }
+                                                   { (yyval.expr) = new DeclareVar("int", (yyvsp[-1].expr)); }
 #line 1509 "src/c_parser.tab.cpp"
     break;
 
@@ -1516,7 +1516,7 @@ yyreduce:
 
   case 13:
 #line 66 "src/c_parser.y"
-                                  { (yyval.expr) = new InitVar("int", (yyvsp[0].expr)); }
+                                  { (yyval.expr) = new DeclareVar("int", (yyvsp[0].expr)); }
 #line 1521 "src/c_parser.tab.cpp"
     break;
 
@@ -1798,7 +1798,7 @@ yyreduce:
 
   case 62:
 #line 142 "src/c_parser.y"
-                                                                                            {(yyval.expr) = new IfStatement((yyvsp[-4].expr), (yyvsp[-2].expr), (yyvsp[0].expr));}
+                                                                                            {(yyval.expr) = new IfElseStatement((yyvsp[-4].expr), (yyvsp[-2].expr), (yyvsp[0].expr));}
 #line 1803 "src/c_parser.tab.cpp"
     break;
 
@@ -1810,31 +1810,31 @@ yyreduce:
 
   case 64:
 #line 148 "src/c_parser.y"
-                                         {(yyval.expr) = new JumpStatement("break");}
+                                         {(yyval.expr) = new BreakStatement("break");}
 #line 1815 "src/c_parser.tab.cpp"
     break;
 
   case 65:
 #line 149 "src/c_parser.y"
-                                        {(yyval.expr) = new JumpStatement("continue");}
+                                        {(yyval.expr) = new ContinueStatement("continue");}
 #line 1821 "src/c_parser.tab.cpp"
     break;
 
   case 66:
 #line 150 "src/c_parser.y"
-                                          {(yyval.expr) = new JumpStatement("return");}
+                                          {(yyval.expr) = new ReturnStatement("return");}
 #line 1827 "src/c_parser.tab.cpp"
     break;
 
   case 67:
 #line 151 "src/c_parser.y"
-                                                   {(yyval.expr) = new JumpStatement((yyvsp[-1].expr));}
+                                                   {(yyval.expr) = new ReturnExprStatement((yyvsp[-1].expr));}
 #line 1833 "src/c_parser.tab.cpp"
     break;
 
   case 68:
 #line 152 "src/c_parser.y"
-                                                     {(yyval.expr) = new JumpStatement((yyvsp[-1].expr));}
+                                                     {(yyval.expr) = new ReturnExprStatement((yyvsp[-1].expr));}
 #line 1839 "src/c_parser.tab.cpp"
     break;
 

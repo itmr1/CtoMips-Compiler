@@ -42,7 +42,6 @@ public:
 
     virtual void print(std::ostream &dst) const override
     {   
-        
         dst<<getType();
         dst<<" ";
         Declarator->print(dst);
@@ -51,10 +50,32 @@ public:
         dst<<"){";
         Statement->print(dst);
         dst<<"}";
-        
     }
 
 };
 
+class FuncNoArgs
+    : public Function
+{
+public:
+    FuncNoArgs(const std::string &_type, ExpressionPtr _Declarator,ExpressionPtr _Statement)
+        : Function(_type, _Declarator, _Statement)
+    {}
+    /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
+        //TODO
+    }*/
+};
+
+class FuncWithArgs
+    : public Function
+{
+public:
+    FuncWithArgs(const std::string &_type, ExpressionPtr _Declarator,ExpressionPtr _Args,ExpressionPtr _Statement)
+        : Function(_type, _Declarator,_Args, _Statement)
+    {}
+    /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
+        //TODO
+    }*/
+};
 
 #endif

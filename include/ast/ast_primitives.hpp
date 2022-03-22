@@ -17,19 +17,14 @@ public:
     const std::string getId() const
     { return id; }
 
+   // const int getSize()
+
     virtual void print(std::ostream &dst) const override
     {
         dst<<id;
     }
 
-    virtual double evaluate(
-        const std::map<std::string,double> &bindings
-    ) const override
-    {
-        // TODO-B : Run bin/eval_expr with a variable binding to make sure you understand how this works.
-        // If the binding does not exist, this will throw an error
-        return bindings.at(id);
-    }    
+     
 };
 
 class Number
@@ -55,6 +50,27 @@ public:
     }
 };
 
+class DeclareVar
+    : public Expression
+{
+private:
+    std::string type;
+    ExpressionPtr right;
+public:
+    DeclareVar(const std::string &_type, ExpressionPtr _right)
+        : type(_type)
+        , right(_right)
+    {}
+
+    virtual void print(std::ostream &dst) const override
+    {
+        dst<<type;
+        dst<<" ";
+        right->print(dst);
+    }
+   
+};
+
 class InitVar
     : public Expression
 {
@@ -63,32 +79,19 @@ private:
     ExpressionPtr right;
     ExpressionPtr val;
 public:
-    InitVar(const std::string &_type, ExpressionPtr _right)
-        : type(_type)
-        , right(_right)
-    {}
     InitVar(const std::string &_type, ExpressionPtr _right, ExpressionPtr _val)
         : type(_type)
         , right(_right)
         , val(_val)
     {}
-
     virtual void print(std::ostream &dst) const override
     {
-        if(val){
-            dst<<type;
-            dst<<" ";
-            right->print(dst);
-            dst<<"=";
-            val->print(dst);
-        }
-        else{
-            dst<<type;
-            dst<<" ";
-            right->print(dst);
-        }
+        dst<<type;
+        dst<<" ";
+        right->print(dst);
+        dst<<"=";
+        val->print(dst);
     }
-   
 };
 
 class Array

@@ -51,6 +51,11 @@ struct variable
   //enum Specifier type = Specifier::_int; // keeps track of type, int by default (refactor this to enum if possible at some point)
 };
 
+struct stackframe
+{
+    std::map<std::string, val> bindings;
+};
+
 struct function
 {
   unsigned int size; // Total size of arguments
