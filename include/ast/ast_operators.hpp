@@ -54,7 +54,7 @@ public:
     AddOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Operator(_left, _right)
     {}
-    virtual void MipsCodeGen(std::ostream &dst, std::string DstReg){
+    virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         std::string reg1;
         std::string reg2;
         left->MipsCodeGen(std::ostream &dst, reg1);

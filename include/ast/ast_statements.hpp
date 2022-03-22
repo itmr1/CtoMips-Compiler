@@ -37,6 +37,7 @@ public:
         delete Statement;
         delete Statement2;
     }
+   // virtual std::string MipsCodeGen(std::ostream &dst, std::string DestReg) const override{}
 
     virtual void print(std::ostream &dst) const override
     {   
@@ -89,10 +90,21 @@ public:
     IfStatement(ExpressionPtr _Cond, ExpressionPtr _Statement, const std::string &_type)
         : SetStatement(_Cond, _Statement, _type)
     {}
+    /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
+        //TODO
+    }*/
+};
 
-    IfStatement(ExpressionPtr _Cond, ExpressionPtr _Statement, ExpressionPtr _Statement2)
+class IfElseStatement
+    : public SetStatement
+{
+public:
+    IfElseStatement(ExpressionPtr _Cond, ExpressionPtr _Statement, ExpressionPtr _Statement2)
         : SetStatement(_Cond, _Statement, _Statement2)
     {}
+    /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
+        //TODO
+    }*/
 };
 
 class WhileStatement
@@ -102,18 +114,57 @@ public:
     WhileStatement(ExpressionPtr _Cond, ExpressionPtr _Statement, const std::string &_type)
         : SetStatement(_Cond, _Statement, _type)
     {}
+    /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
+       //TODO
+    }*/
 };
 
-class JumpStatement
+class ReturnExprStatement
     : public SetStatement
 {
 public:
-    JumpStatement(ExpressionPtr _Statement)
+    ReturnExprStatement(ExpressionPtr _Statement)
         : SetStatement(_Statement)
     {}
-    JumpStatement(const std::string &_type)
+    /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
+        //TODO
+    }*/
+};
+
+class ReturnStatement
+    : public SetStatement
+{
+public:
+    ReturnStatement(const std::string &_type)
         : SetStatement(_type)
     {}
+    /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
+        //TODO
+    }*/
+};
+
+class BreakStatement
+    : public SetStatement
+{
+public:
+    BreakStatement(const std::string &_type)
+        : SetStatement(_type)
+    {}
+    /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
+        //TODO
+    }*/
+};
+
+class ContinueStatement
+    : public SetStatement
+{
+public:
+    ContinueStatement(const std::string &_type)
+        : SetStatement(_type)
+    {}
+    /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
+        //TODO
+    }*/
 };
 
 
