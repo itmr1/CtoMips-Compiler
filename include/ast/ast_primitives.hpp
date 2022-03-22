@@ -49,13 +49,9 @@ public:
     {
         dst<<value;
     }
-
-    virtual double evaluate(
-        const std::map<std::string,double> &bindings
-    ) const override
-    {
-        // TODO-A : Run bin/eval_expr with a numeric expression to make sure you understand how this works.
-        return value;
+    
+    virtual void MipsCodeGen(std::ostream &dst, std::string DstReg){
+        dst << "li $"<< DstReg <<","<< value<<std::endl;
     }
 };
 

@@ -42,3 +42,17 @@ std::string make_label(std::string s){
     static int  count = 0;
     return s+"__"+std::to_string(count++);
 }
+
+struct variable
+{
+  unsigned int size; // How many bytes does the variable take up
+  int offset; // Offset from frame pointer (+ for arguments, - for variables)
+  int reg; // Keeps track of which register the variable is in (-1 := not stored in reg)
+  //enum Specifier type = Specifier::_int; // keeps track of type, int by default (refactor this to enum if possible at some point)
+};
+
+struct function
+{
+  unsigned int size; // Total size of arguments
+  std::vector<unsigned int> argSize; // Individual size of each argument
+};
