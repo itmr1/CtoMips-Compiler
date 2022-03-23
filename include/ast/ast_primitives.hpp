@@ -68,7 +68,7 @@ public:
         dst<<value;
     }
     
-    virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg){
+    virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg) const override{
         dst << "li $"<< DstReg <<","<< value<<std::endl;
     }
 

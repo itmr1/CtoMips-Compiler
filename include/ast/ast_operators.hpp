@@ -57,14 +57,14 @@ public:
     AddOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Operator(_left, _right)
     {}
-    virtual void MipsCodeGen(std::ostream &dst, std::string DstReg){
-        left->MipsCodeGen(std::ostream &dst, DstReg);
-        int idx = Registers.allocate()
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        left->MipsCodeGen(std::ostream &dst,data, DstReg);
+        int idx = data.registers.allocate()
         std::string tmp_reg = make_regname(idx);
         dst<<"move "<<tmp_reg<<" " <<DstReg<<std::endl;
-        right->MipsCodeGen(std::ostream &dst, DstReg);
+        right->MipsCodeGen(std::ostream &dst,data, DstReg);
         dst<<"add "<<DstReg<<" "<<DstReg<<" "<<tmp_reg<<std::endl;
-        Registers.free_reg(idx);
+        data.registers.free_reg(idx);
     }
 };
 
@@ -79,7 +79,7 @@ public:
         : Operator(_left, _right)
     {}
 
-    virtual void MipsCodeGen(std::ostream &dst, std::string DstReg){
+    virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         right->MipsCodeGen(std::ostream &dst, DstReg);
         int idx = Registers.allocate()
         std::string tmp_reg = make_regname(idx);
