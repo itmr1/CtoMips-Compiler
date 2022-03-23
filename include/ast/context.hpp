@@ -2,7 +2,8 @@
 
 class Registers
 {
-private:
+public:
+
     int regs[32] = 
     {   1, // 0 register 
         1, // dont change
@@ -17,7 +18,6 @@ private:
         1, // frame pointer 
         1 // jump register 
     };
-public:
 
     void free_reg(int i) {regs[i] = 0;}
     void use_reg (int i) {regs[i] = 1;}
@@ -43,17 +43,25 @@ std::string make_label(std::string s){
     return s+"__"+std::to_string(count++);
 }
 
+class Data
+{
+public:
+    Registers registers;
+    std::vector<stackframe> Stack;
+    std::map<std::string, std::type> globaldec;
+}
+
 struct variable
 {
   unsigned int size; // How many bytes does the variable take up
   int offset; // Offset from frame pointer (+ for arguments, - for variables)
-  int reg; // Keeps track of which register the variable is in (-1 := not stored in reg)
   //enum Specifier type = Specifier::_int; // keeps track of type, int by default (refactor this to enum if possible at some point)
 };
 
 struct stackframe
 {
-    std::map<std::string, val> bindings;
+    int frameSize =0; //size of frame
+    std::map<std::string, variable> bindings;
 };
 
 struct function

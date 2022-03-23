@@ -41,7 +41,7 @@ public:
         dst<<" )";
     }
 
-    virtual std::string MipsCodeGen(std::ostream &dst, std::string DestReg) const override{}
+    virtual std::string MipsCodeGen(std::ostream &dst,Data &data,int DestReg) const override{}
 };
 
 class AddOperator
@@ -54,9 +54,9 @@ public:
     AddOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Operator(_left, _right)
     {}
-    virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
-        std::string reg1;
-        std::string reg2;
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        int reg1;
+        int reg2;
         left->MipsCodeGen(std::ostream &dst, reg1);
         right->MipsCodeGen(std::ostream &dst, reg2);
         dst<<"add "<<DstReg<<" "<<reg1<<" "<<reg2;
