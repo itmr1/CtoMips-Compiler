@@ -93,6 +93,11 @@ public:
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         //TODO
     }*/
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+       Cond->CountFrameSize(CurrSize);
+       Statement->CountFrameSize(CurrSize);
+   }
 };
 
 class IfElseStatement
@@ -105,6 +110,10 @@ public:
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         //TODO
     }*/
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+       right->CountFrameSize(int &CurrSize);
+   }
 };
 
 class WhileStatement

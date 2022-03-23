@@ -54,6 +54,11 @@ public:
         // TODO-F: Implement this similar to how AddOperator was implemented.
        // throw std::runtime_error("NegOperator::evaluate is not implemented.");
     }
+
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+       Unary->CountFrameSize(int &CurrSize);
+   }
 };
 
 #endif

@@ -59,7 +59,7 @@ public:
 
     virtual void CountFrameSize(int &CurrSize) const override
    {
-       right->CountFrameSize(int &CurrSize);
+       right->CountFrameSize(CurrSize);
    }
 };
 
