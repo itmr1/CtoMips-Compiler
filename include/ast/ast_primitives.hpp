@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 
+#include "ast/context.hpp"
+
 class Variable
     : public Expression
 {
@@ -17,25 +19,35 @@ public:
     const std::string getId() const
     { return id; }
 
-   // const int getSize()
+    const int getSize() const
+    {
+        if(data.Stack.back().bindings.find(id) == data.Stack.back().bindings.end()){ //if not in stack
+            std::cerr << "L" << std::endl; //doesnt exist
+            exit(1);
+        }
+        else{return data.Stack.back().bindings.find(id)->second.size()}
+    }
 
     virtual void print(std::ostream &dst) const override
     {
         dst<<id;
     }
-    virtual double evaluate(
-        const std::map<std::string,double> &bindings
-    ) const override
-    {
-        // TODO-B : Run bin/eval_expr with a variable binding to make sure you understand how this works.
-        // If the binding does not exist, this will throw an error
-        return bindings.at(id);
-    }  
 
     virtual void CountFrameSize(int &CurrSize) const override
    {
        CurrSize+=0;
    }
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        variable curVar;
+        if(data.Stack.back().bindings.find(id) == data.Stack.back().bindings.end()){ //if not in stack
+            std::cerr << "L" << std::endl; //doesnt exist
+            exit(1);
+        }
+        else{
+            hold = data.Stack.back().bindings.find(id)->second; //get variable struct
+        }
+        dst << "lw $"<<DstReg<< hold.offset<<" $30" <<std::endl; //load into DstReg from (sp+offset) 
+    }
 };
 
 class Number
@@ -56,7 +68,7 @@ public:
         dst<<value;
     }
     
-    virtual void MipsCodeGen(std::ostream &dst, std::string DstReg){
+    virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg){
         dst << "li $"<< DstReg <<","<< value<<std::endl;
     }
 
@@ -83,6 +95,13 @@ public:
         dst<<type;
         dst<<" ";
         right->print(dst);
+    }
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg){
+        std::string id = right->getId();
+        int size = sizeof(int);
+        data.Stack.back().offset += size; //increase frame size
+        //dst << "addiu $29 $29 -"<<size<<std::endl;
+        data.Stack.back().bindings[id] = {size, -Stack.back().offset};
     }
    
 };
@@ -111,6 +130,18 @@ public:
 
     virtual void CountFrameSize(int &CurrSize) const override{
         CurrSize++;
+    virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg){
+        std::string id = right->getId();
+        int size = sizeof(int);
+        data.Stack.back().offset += size; //increase frame size
+        //dst << "addiu $29 $29 -"<<size<<std::endl;
+        if(data.registers.regs[DstReg]){ //if reg is used
+            DstReg = data.registers.allocate();
+        }
+        val->MipsCodeGen(dst,data,DstReg);
+        data.Stack.back().bindings[id] = {size, -data.Stack.back().offset}
+        dst << "sw $" << DstReg << -size << " $29"<<std::endl; //store val into sp
+        data.registers.free_reg(DstReg);
     }
 };
 
