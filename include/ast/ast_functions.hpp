@@ -52,6 +52,12 @@ public:
         dst<<"}";
     }
 
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+       if(Args) Args->CountFrameSize(CurrSize);
+       Statement->CountFrameSize(CurrSize);
+   }
+
 };
 
 class FuncNoArgs
@@ -64,6 +70,7 @@ public:
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         //TODO
     }*/
+    
 };
 
 class FuncWithArgs

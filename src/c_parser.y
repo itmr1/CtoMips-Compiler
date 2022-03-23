@@ -84,7 +84,7 @@ ASSIGN_EXPR : LOGIC_EXPR {$$ = $1;}
 LOGIC_EXPR : EQ_EXPR {$$ = $1;}
            | LOGIC_EXPR TOK_BIT_AND EQ_EXPR {$$ = new BitwiseAndOperator($1, $3);}
            | LOGIC_EXPR TOK_BIT_OR EQ_EXPR {$$ = new BitwiseOrOperator($1, $3);}
-           ;
+           ;//Add ^ BXOR Logical OR and Logical AND && and MUX 
 
 EQ_EXPR : REL_EXPR {$$=$1;}
         | EQ_EXPR TOK_EQ ADD_EXPR  {$$ = new EqOperator($1, $3);}
@@ -97,7 +97,7 @@ REL_EXPR: ADD_EXPR {$$ = $1;}
         | REL_EXPR TOK_G ADD_EXPR {$$ = new GreaterThanOperator($1, $3);}
         | REL_EXPR TOK_L ADD_EXPR {$$ = new LessThanOperator($1, $3);}
         ;
-
+//Add << and >>
 ADD_EXPR : MULT_EXPR {$$ = $1;}
          | ADD_EXPR TOK_PLUS MULT_EXPR {$$ = new AddOperator($1, $3) ; }
          | ADD_EXPR TOK_MINUS MULT_EXPR  {$$ = new SubOperator($1, $3); }
@@ -110,7 +110,7 @@ MULT_EXPR : UNARY {$$ = $1;}
           ; 
 
 UNARY : FACTOR      { $$ = $1; }
-      | TOK_MINUS UNARY   { $$ = new NegOperator($2);}
+      | TOK_MINUS UNARY   { $$ = new NegOperator($2);} //Add ! and ~
       ;
 
 FACTOR : TOK_N     { $$ = new Number( $1 ); }
@@ -138,16 +138,16 @@ FUNC_STATEMENT : TOK_LCBRACKET TOK_RCBRACKET
                    | TOK_LCBRACKET REC_DECLARATION TOK_RCBRACKET {$$ = $2;}
                    | TOK_LCBRACKET REC_DECLARATION REC_STATEMENT TOK_RCBRACKET {$$ = new RecExpr($2, $3);}
 
-SELECT_STATEMENT : TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT   {$$ = new IfStatement($3, $5, "if");} 
-                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT {$$ = new IfElseStatement($3, $5, $7);}
+SELECT_STATEMENT : TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT   {$$ = new IfStatement($3, $5);} 
+                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT {$$ = new IfElseStatement($3, $5, $7);} 
                  ;
 
-ITER_STATEMENT : TOK_WHILE TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT {$$ = new WhileStatement($3, $5,"while");}
+ITER_STATEMENT : TOK_WHILE TOK_LBRACKET EXPR TOK_RBRACKET STATEMENT {$$ = new WhileStatement($3, $5);} 
                ;
 
-JUMP_STATEMENT : TOK_BREAK TOK_SEMICOLON {$$ = new BreakStatement("break");}
-               | TOK_CONT TOK_SEMICOLON {$$ = new ContinueStatement("continue");}
-               | TOK_RETURN TOK_SEMICOLON {$$ = new ReturnStatement("return");}
+JUMP_STATEMENT : TOK_BREAK TOK_SEMICOLON {$$ = new BreakStatement();}
+               | TOK_CONT TOK_SEMICOLON {$$ = new ContinueStatement();}
+               | TOK_RETURN TOK_SEMICOLON {$$ = new ReturnStatement();}
                | TOK_RETURN FUNCTION TOK_SEMICOLON {$$ = new ReturnExprStatement($2);}
                | TOK_RETURN LOGIC_EXPR TOK_SEMICOLON {$$ = new ReturnExprStatement($2);}
                ;

@@ -11,7 +11,6 @@ private:
     ExpressionPtr Cond;
     ExpressionPtr Statement;
     ExpressionPtr Statement2;
-    std::string type;
 
 protected:
     SetStatement(ExpressionPtr _Cond, ExpressionPtr _Statement, ExpressionPtr _Statement2)
@@ -19,14 +18,12 @@ protected:
         , Statement(_Statement)
         , Statement2(_Statement2)
     {}
-    SetStatement(ExpressionPtr _Cond, ExpressionPtr _Statement, const std::string &_type)
+    SetStatement(ExpressionPtr _Cond, ExpressionPtr _Statement)
         : Cond(_Cond)
         , Statement(_Statement)
-        , type(_type)
     {}
-    SetStatement(const std::string &_type)
-        : type(_type)
-    {}
+    SetStatement();
+  
     SetStatement(ExpressionPtr _Statement)
         : Statement(_Statement)
     {}
@@ -38,17 +35,12 @@ public:
         delete Statement2;
     }
    // virtual std::string MipsCodeGen(std::ostream &dst, std::string DestReg) const override{}
+    virtual const std::string *getCondStmntTrue() const =0;
+    virtual const std::string *getCondStmntFalse() const =0;
+    virtual const std::string *getKeyWord()  const =0;
 
     virtual void print(std::ostream &dst) const override
     {   
-        if(type=="if"){ //if
-            dst<<type;
-            dst<<"(";
-            Cond->print(dst);
-            dst<<"){";
-            Statement->print(dst);
-            dst<<"}";
-        }
         else if(type=="while"){ //while
             dst<<type;
             dst<<"(";
@@ -87,9 +79,22 @@ class IfStatement
     : public SetStatement
 {
 public:
-    IfStatement(ExpressionPtr _Cond, ExpressionPtr _Statement, const std::string &_type)
-        : SetStatement(_Cond, _Statement, _type)
+    IfStatement(ExpressionPtr _Cond, ExpressionPtr _Statement)
+        : SetStatement(_Cond, _Statement)
     {}
+
+    virtual const std::string *getCondStmntTrue() const override{
+        return "if";
+    }
+
+    virtual void print(std::ostream &dst){
+        dst<<getCondStmntTrue();
+        dst<<"(";
+        Cond->print(dst);
+        dst<<"){";
+        Statement->print(dst);
+        dst<<"}";
+    }
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         //TODO
     }*/
@@ -110,9 +115,30 @@ public:
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         //TODO
     }*/
+    virtual void std::string *getCondStmntTrue() const override{
+        return "if";
+    }
+
+    virtual void std::string *getCondStmntFalse() const override{
+        return "else";
+    }
+    
+    virtual void print(std::ostream &dst){
+        dst<<getCondStmntTrue();
+        dst<<"( ";
+        Cond->print(dst);
+        dst<<") ";
+        dst<<getCondStmntFalse();
+        dst<<" {";
+        Statement->print(dst);
+        dst<<"}";
+    }
+
     virtual void CountFrameSize(int &CurrSize) const override
    {
-       right->CountFrameSize(int &CurrSize);
+        Cond->CountFrameSize(CurrSize);
+        Statement->CountFrameSize(CurrSize);
+        Statement2->CountFrameSize(CurrSize);
    }
 };
 
@@ -126,6 +152,24 @@ public:
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
        //TODO
     }*/
+    virtual void std::string *getCondStmntTrue() const override{
+        return "while";
+    }
+
+    virtual void print(std::ostream &dst){
+        dst<<getCondStmntTrue();
+        dst<<"(";
+        Cond->print(dst);
+        dst<<"){";
+        Statement->print(dst);
+        dst<<"}";
+    }
+
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+        Cond->CountFrameSize(CurrSize);
+        Statement->CountFrameSize(CurrSize);
+   }
 };
 
 class ReturnExprStatement
@@ -138,42 +182,97 @@ public:
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         //TODO
     }*/
+    virtual void std::string *getKeyWord() const override{
+        return "return";
+    }
+
+    virtual void print(std::ostream &dst){
+        dst<<getKeyWord();
+        dst<<"( ";
+        Statement->print(dst);
+        dst<<" )";
+        dst<<";";
+    }
+
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+        Statement->CountFrameSize(CurrSize);
+   }
+
+
 };
 
 class ReturnStatement
     : public SetStatement
 {
 public:
-    ReturnStatement(const std::string &_type)
-        : SetStatement(_type)
-    {}
+    ReturnStatement();
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         //TODO
     }*/
+
+    virtual void std::string *getKeyWord() const override{
+        return "return";
+    }
+    
+    virtual void print(std::ostream &dst){
+        dst<<getKeyWord();
+        dst<<";";
+    }
+
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+        CurrSize+=0;
+   }
+
 };
 
 class BreakStatement
     : public SetStatement
 {
 public:
-    BreakStatement(const std::string &_type)
-        : SetStatement(_type)
-    {}
+    BreakStatement();
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         //TODO
     }*/
+
+    virtual void std::string *getKeyWord() const override{
+        return "break";
+    }
+    
+    virtual void print(std::ostream &dst){
+        dst<<getKeyWord();
+        dst<<";";
+    }
+
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+        CurrSize+=0;
+   }
 };
 
 class ContinueStatement
     : public SetStatement
 {
 public:
-    ContinueStatement(const std::string &_type)
-        : SetStatement(_type)
-    {}
+    ContinueStatement();
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         //TODO
     }*/
+
+    virtual void std::string *getKeyWord() const override{
+        return "continue";
+    }
+    
+    virtual void print(std::ostream &dst){
+        dst<<getKeyWord();
+        dst<<";";
+    }
+
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+        CurrSize+=0;
+   }
 };
 
 
