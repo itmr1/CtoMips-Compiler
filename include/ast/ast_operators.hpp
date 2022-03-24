@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 #include <cmath>
-#include context.hpp
+#include "ast/context.hpp"
 
 class Operator
     : public Expression
@@ -43,7 +43,11 @@ public:
         right->print(dst);
         dst<<" )";
     }
-
+    virtual void CountFrameSize(int &CurrSize) const override
+    {
+       right->CountFrameSize(CurrSize);
+       left->CountFrameSize(CurrSize);
+    }
     virtual std::string MipsCodeGen(std::ostream &dst,Data &data,int DestReg) const override{}
 };
 
@@ -75,18 +79,18 @@ protected:
     virtual const char *getOpcode() const override
     { return "-"; }
 public:
-    SubOperator(ExpressionPtr _left, ExpressionPtr _right)
+    SubOperator(ExpressionPtr _left,Data &data, ExpressionPtr _right)
         : Operator(_left, _right)
     {}
 
     virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
-        right->MipsCodeGen(std::ostream &dst, DstReg);
-        int idx = Registers.allocate()
+        right->MipsCodeGen(std::ostream &dst,data, DstReg);
+        int idx = data.registers.allocate()
         std::string tmp_reg = make_regname(idx);
         dst<<"move "<<tmp_reg<<" " <<DstReg<<std::endl;
-        left->MipsCodeGen(std::ostream &dst, DstReg);
+        left->MipsCodeGen(std::ostream &dst,data, DstReg);
         dst<<"sub "<<DstReg<<" "<<DstReg<<" "<<tmp_reg<<std::endl;
-        Registers.free_reg(idx);
+        data.registers.free_reg(idx);
     }
 };
 
@@ -102,15 +106,15 @@ public:
         : Operator(_left, _right)
     {}
 
-    virtual void MipsCodeGen(std::ostream &dst, std::string DstReg){
-        left->MipsCodeGen(std::ostream &dst, DstReg);
-        int idx = Registers.allocate()
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, std::string DstReg)const override{
+        left->MipsCodeGen(std::ostream &dst,data, DstReg);
+        int idx = data.registers.allocate()
         std::string tmp_reg = make_regname(idx);
         dst<<"move "<<tmp_reg<<" " <<DstReg<<std::endl;
-        right->MipsCodeGen(std::ostream &dst, DstReg);
+        right->MipsCodeGen(std::ostream &dst,data, DstReg);
         dst<<"mul "<<DstReg<<" "<<tmp_reg<<std::endl;
         dst<<"mflo "<<DstReg<<std::endl;
-        Registers.free_reg(idx);
+        data.registers.free_reg(idx);
     }
 };
 
@@ -125,15 +129,15 @@ public:
         : Operator(_left, _right)
     {}
 
-    virtual void MipsCodeGen(std::ostream &dst, std::string DstReg){
-        left->MipsCodeGen(std::ostream &dst, DstReg);
-        int idx = Registers.allocate()
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, std::string DstReg)const override{
+        left->MipsCodeGen(std::ostream &dst,data, DstReg);
+        int idx = data.registers.allocate()
         std::string tmp_reg = make_regname(idx);
         dst<<"move "<<tmp_reg<<" " <<DstReg<<std::endl;
-        right->MipsCodeGen(std::ostream &dst, DstReg);
+        right->MipsCodeGen(std::ostream &dst,data, DstReg);
         dst<<"div "<<DstReg<<" "<<tmp_reg<<std::endl;
         dst<<"mfhi "<<DstReg<<" "<<std::endl;
-        Registers.free_reg(idx);
+        data.registers.free_reg(idx);
     }
 };
 
@@ -147,15 +151,15 @@ public:
     ModOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Operator(_left, _right)
     {}
-    virtual void MipsCodeGen(std::ostream &dst, std::string DstReg){
-        right->MipsCodeGen(std::ostream &dst, DstReg);
-        int idx = Registers.allocate()
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, std::string DstReg) const override{
+        right->MipsCodeGen(std::ostream &dst,data, DstReg);
+        int idx = data.registers.allocate()
         std::string tmp_reg = make_regname(idx);
         dst<<"move "<<tmp_reg<<" " <<DstReg<<std::endl;
-        left->MipsCodeGen(std::ostream &dst, DstReg);
+        left->MipsCodeGen(std::ostream &dst,data, DstReg);
         dst<<"div "<<DstReg<<" "<<tmp_reg<<std::endl;
         dst<<"mflo "<<DstReg<<" "<<std::endl;
-        Registers.free_reg(idx);
+        data.registers.free_reg(idx);
     }
 };
 

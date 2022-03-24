@@ -96,7 +96,7 @@ public:
         dst<<" ";
         right->print(dst);
     }
-    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg){
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
         std::string id = right->getId();
         int size = sizeof(int);
         data.Stack.back().offset += size; //increase frame size
@@ -130,15 +130,16 @@ public:
 
     virtual void CountFrameSize(int &CurrSize) const override{
         CurrSize++;
-    virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg){
+    }
+    virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
         std::string id = right->getId();
         int size = sizeof(int);
         data.Stack.back().offset += size; //increase frame size
         //dst << "addiu $29 $29 -"<<size<<std::endl;
         if(data.registers.regs[DstReg]){ //if reg is used
-            DstReg = data.registers.allocate();
+            DstReg = data.registers.allocate(); //get a free register
         }
-        val->MipsCodeGen(dst,data,DstReg);
+        val->MipsCodeGen(dst,data,DstReg); //store val in this register
         data.Stack.back().bindings[id] = {size, -data.Stack.back().offset}
         dst << "sw $" << DstReg << -size << " $29"<<std::endl; //store val into sp
         data.registers.free_reg(DstReg);
@@ -178,6 +179,31 @@ public:
        CurrSize+=size;
    }
 };
+
+class FuncCall
+    : public Expression
+{
+private:
+    std::string name;
+    ExpressionPtr args;
+public:
+    FuncCall(const std::string &_name, ExpressionPtr _args)
+        : name(_name)
+        , args(_args)
+    {}
+    FuncCall(const std::string &_name)
+        : name(_name)
+    {}
+    virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
+        if(args){
+            //TODO
+        }
+        else{
+            //TODO
+        }
+    }
+
+}:
 
 
 #endif
