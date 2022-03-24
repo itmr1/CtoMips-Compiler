@@ -67,6 +67,10 @@ FUNC_ARGS: VARTYPE_INT DECLARATOR { $$ = new DeclareVar("int", $2); }
          | FUNC_ARGS TOK_COMMA VARTYPE_INT DECLARATOR {$$ = new RecExpr($1, $4);}
          ;
 
+FUNC_CALL_ARGS: ASSIGN_EXPR {$$=$1;}
+              | FUNC_CALL_ARGS TOK_COMMA ASSIGN_EXPR {$$ = new RecExpr($1, $2);}
+              ;
+
 DECLARATOR : TOK_VAR { $$ = new Variable(*$1);}
            | TOK_VAR TOK_LSQBRACKET LOGIC_EXPR TOK_RSQBRACKET {$$ = new Array(*$1, $3);}
            | TOK_VAR TOK_LSQBRACKET TOK_RSQBRACKET {$$ = new Array(*$1);}
@@ -116,6 +120,8 @@ UNARY : FACTOR      { $$ = $1; }
 FACTOR : TOK_N     { $$ = new Number( $1 ); }
        | TOK_VAR  { $$ = new Variable(*$1);}
        | TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET { $$ = $2; }
+       | TOK_VAR TOK_LBRACKET TOK_RBRACKET {$$ = new FuncCall($1);}
+       | TOK_VAR TOK_LBRACKET FUNC_CALL_ARGS TOK_RBRACKET {$$ = new FuncCall($1, $3);}
        ;
 
 REC_STATEMENT : STATEMENT {$$ = $1;}

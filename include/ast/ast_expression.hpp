@@ -21,7 +21,7 @@ public:
     virtual void print(std::ostream &dst) const =0;
 
     virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const = 0;
-    
+    virtual void CountFrameSize(int &CurrSize) const=0;
 };
 
 
@@ -44,7 +44,7 @@ public:
     }
     virtual void print(std::ostream &dst) const override
     {   
-       
+        
         left->print(dst);
         dst<<" ";
         right->print(dst);
@@ -54,6 +54,11 @@ public:
    {
        right->CountFrameSize(CurrSize);
        left->CountFrameSize(CurrSize);
+   }
+
+   virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
+       left->MipsCodeGen(dst, data, DstReg);
+       right->MipsCodeGen(dst, data, DstReg);
    }
 
 };
