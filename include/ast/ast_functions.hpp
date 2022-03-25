@@ -60,6 +60,30 @@ public:
        std::cout<<"size of frame: "<<CurrSize<<std::endl;
    }
 
+   virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
+        std::string label = Declarator->getId();
+        dst<<label<<": "<<std::endl;
+        Data.Stack.back().framesize = 0;
+        CountFrameSize(Data.Stack.back().framesize);
+        Data.stack.back().framesize+=2;
+        int frealsize = Data.Stack.back().framesize*4;
+        dst<<"addiu"<<" $29,"<<"$29,"<<"-"<<frealsize<<std::endl;
+        dst<<"sw"<<" $30,"<<frealsize - 4<<"($29)"<<std::endl;
+        dst<<"move"<<" $30,$29"<<std::endl;
+        if(Args){
+            int ArgSize = 0;
+            Args->CountFrameSize(ArgSize);
+            Args->MipsCodeGen(std::ostream &dst, Data &data, int DstReg);
+            for(int i = 4; i<ArgSize+4; i++){
+                dst<<"sw"<<" $"<<i<<4*(i-3)<<"($29)"<<std::endl;
+            }
+        }
+        Statement->MipsCodeGen(std::ostream &dst, Data &data, int DstReg);
+        //dst<<"move"<<" 30,$29"<<std::endl;
+        dst<<"lw"<<" $30,"<<frealsize - 4<<"($29)"<<std::endl;
+        dst<<"addiu"<<" $29,"<<"$29,"<<frealsize<<std::endl;
+    }
+
 };
 
 class FuncNoArgs

@@ -102,9 +102,9 @@ public:
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
         std::string id = right->getId();
         int size = sizeof(int);
-        data.Stack.back().frameSize += size; //increase frame size
+        data.Stack.back().curroffset += size; //increase frame size
         //dst << "addiu $29 $29 -"<<size<<std::endl;
-        data.Stack.back().bindings[id] = {size, -data.Stack.back().frameSize};
+        data.Stack.back().bindings[id] = {size, -data.Stack.back().curroffset};
     }
    
 };
@@ -137,14 +137,14 @@ public:
     virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
         std::string id = right->getId();
         int size = sizeof(int);
-        data.Stack.back().frameSize += size; //increase frame size
+        data.Stack.back().curroffset += size; //increase frame size
         //dst << "addiu $29 $29 -"<<size<<std::endl;
         if(data.registers.regs[DstReg]){ //if reg is used
             DstReg = data.registers.allocate(); //get a free register
         }
         val->MipsCodeGen(dst,data,DstReg); //store val in this register
-        data.Stack.back().bindings[id] = {size, -data.Stack.back().frameSize};
-        dst << "sw $" << DstReg << -size << " $29"<<std::endl; //store val into sp
+        data.Stack.back().bindings[id] = {size, data.Stack.back().curroffset};
+        dst << "sw $" << DstReg <<","<< data.stack.back().curroffset << "($29)"<<std::endl; //store val into sp
         data.registers.free_reg(DstReg);
     }
 };
