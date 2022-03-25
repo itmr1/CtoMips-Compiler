@@ -62,6 +62,8 @@ REC_DECLARATION : DECLARATION {$$=$1;}
 
 DECLARATION : VARTYPE_INT DECLARATOR TOK_SEMICOLON { $$ = new DeclareVar("int", $2); }
          | VARTYPE_INT DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON {$$= new InitVar("int",$2,$4);}
+         | VARTYPE_INT DECLARATOR TOK_EQASSIGN TOK_LCBRACKET TOK_RCBRACKET TOK_SEMICOLON {$$ = new DeclareArray("int",$2);}
+         | VARTYPE_INT DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON {$$ = new InitArray("int",$2,$5);}
          ;
 
 FUNC_ARGS: VARTYPE_INT DECLARATOR { $$ = new DeclareVar("int", $2); }
@@ -73,7 +75,7 @@ FUNC_CALL_ARGS: ASSIGN_EXPR {$$=$1;}
               ;
 
 DECLARATOR : TOK_VAR { $$ = new Variable(*$1);}
-           | TOK_VAR TOK_LSQBRACKET ASSIGN_EXPR TOK_RSQBRACKET {$$ = new Array(*$1, $3);}
+           | TOK_VAR TOK_LSQBRACKET LOGIC_EXPR TOK_RSQBRACKET {$$ = new Array(*$1, $3);}
            | TOK_VAR TOK_LSQBRACKET TOK_RSQBRACKET {$$ = new Array(*$1);}
            ;
 

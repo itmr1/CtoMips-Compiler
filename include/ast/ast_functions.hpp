@@ -55,6 +55,7 @@ public:
 
     virtual void CountFrameSize(int &CurrSize) const override
    {
+       //CurrSize = 0;
        if(Args) Args->CountFrameSize(CurrSize);
        Statement->CountFrameSize(CurrSize);
        std::cout<<"size of frame: "<<CurrSize<<std::endl;
