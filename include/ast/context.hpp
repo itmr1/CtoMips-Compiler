@@ -38,12 +38,7 @@ public:
     }
     std::string make_regname(int i){
         return "$"+std::to_string(i);
-    }
-
-    std::string make_label(std::string s){
-        static int  count = 0;
-        return s+"__"+std::to_string(count++);
-    }
+    } 
 
 };
 
@@ -60,6 +55,7 @@ class stackframe
 {
 public:
     int frameSize =0; //size of frame
+    int curroffset =0;
     std::map<std::string, variable> bindings;
 };
 
