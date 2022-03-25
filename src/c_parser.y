@@ -65,7 +65,7 @@ DECLARATION : VARTYPE_INT DECLARATOR TOK_SEMICOLON { $$ = new DeclareVar("int", 
          ;
 
 FUNC_ARGS: VARTYPE_INT DECLARATOR { $$ = new DeclareVar("int", $2); }
-         | FUNC_ARGS TOK_COMMA VARTYPE_INT DECLARATOR {$$ = new RecExpr($1, $4);}
+         | FUNC_ARGS TOK_COMMA FUNC_ARGS {$$ = new RecExpr($1, $3);}
          ;
 
 FUNC_CALL_ARGS: ASSIGN_EXPR {$$=$1;}
