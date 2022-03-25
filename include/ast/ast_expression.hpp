@@ -21,7 +21,7 @@ public:
     virtual void print(std::ostream &dst) const =0;
     virtual std::string getId()const {return "";}
     virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const {return;}
-    virtual void CountFrameSize(int &CurrSize) const {return;}
+    virtual void CountFrameSize(int &CurrSize)const {return;}
 };
 
 class RecExpr
@@ -51,8 +51,8 @@ public:
 
     virtual void CountFrameSize(int &CurrSize) const override
    {
-       right->CountFrameSize(CurrSize);
        left->CountFrameSize(CurrSize);
+       right->CountFrameSize(CurrSize);
    }
 
    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{

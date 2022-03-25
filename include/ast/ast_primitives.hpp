@@ -97,7 +97,7 @@ public:
         right->print(dst);
     }
     virtual void CountFrameSize(int &CurrSize) const override{
-        CurrSize++;
+        CurrSize+=1;
     }
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
         std::string id = right->getId();
@@ -132,7 +132,7 @@ public:
     }
 
     virtual void CountFrameSize(int &CurrSize) const override{
-        CurrSize++;
+        CurrSize+=1;
     }
     virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
         std::string id = right->getId();
@@ -169,7 +169,7 @@ public:
     }
 
     virtual void CountFrameSize(int &CurrSize) const override{
-        CurrSize++;
+        CurrSize+=1;
     }
 
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
@@ -208,6 +208,7 @@ public:
     virtual void CountFrameSize(int &CurrSize) const override{
         CurrSize++;
     }
+
     virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
         std::string id = right->getId();
         int size = sizeof(int);
