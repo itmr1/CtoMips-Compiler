@@ -1,7 +1,8 @@
 #ifndef ast_functions_hpp
 #define ast_functions_hpp
 
-#include "ast_expression.hpp"
+//#include "ast_expression.hpp"
+//#include "context.hpp"
 
 #include <string>
 #include <iostream>
@@ -56,6 +57,7 @@ public:
    {
        if(Args) Args->CountFrameSize(CurrSize);
        Statement->CountFrameSize(CurrSize);
+       std::cout<<"size of frame: "<<CurrSize<<std::endl;
    }
 
 };

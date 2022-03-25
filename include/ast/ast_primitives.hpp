@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 
-#include "ast/context.hpp"
+//#include "context.hpp"
 
 class Variable
     : public Expression
@@ -16,16 +16,16 @@ public:
         : id(_id)
     {}
 
-    const std::string getId() const
-    { return id; }
+    virtual std::string getId() const override
+     { return id; }
 
-    const int getSize() const
+    const int getSize(Data &data) const
     {
         if(data.Stack.back().bindings.find(id) == data.Stack.back().bindings.end()){ //if not in stack
             std::cerr << "L" << std::endl; //doesnt exist
             exit(1);
         }
-        else{return data.Stack.back().bindings.find(id)->second.size()}
+        else{return data.Stack.back().bindings.find(id)->second.size;}
     }
 
     virtual void print(std::ostream &dst) const override
@@ -44,9 +44,9 @@ public:
             exit(1);
         }
         else{
-            hold = data.Stack.back().bindings.find(id)->second; //get variable struct
+            curVar = data.Stack.back().bindings.find(id)->second; //get variable struct
         }
-        dst << "lw $"<<DstReg<< hold.offset<<" $30" <<std::endl; //load into DstReg from (sp+offset) 
+        dst << "lw $"<<DstReg<< curVar.offset<<" $30" <<std::endl; //load into DstReg from (sp+offset) 
     }
 };
 
@@ -99,9 +99,9 @@ public:
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
         std::string id = right->getId();
         int size = sizeof(int);
-        data.Stack.back().offset += size; //increase frame size
+        data.Stack.back().frameSize += size; //increase frame size
         //dst << "addiu $29 $29 -"<<size<<std::endl;
-        data.Stack.back().bindings[id] = {size, -Stack.back().offset};
+        data.Stack.back().bindings[id] = {size, -data.Stack.back().frameSize};
     }
    
 };
@@ -134,13 +134,13 @@ public:
     virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
         std::string id = right->getId();
         int size = sizeof(int);
-        data.Stack.back().offset += size; //increase frame size
+        data.Stack.back().frameSize += size; //increase frame size
         //dst << "addiu $29 $29 -"<<size<<std::endl;
         if(data.registers.regs[DstReg]){ //if reg is used
             DstReg = data.registers.allocate(); //get a free register
         }
         val->MipsCodeGen(dst,data,DstReg); //store val in this register
-        data.Stack.back().bindings[id] = {size, -data.Stack.back().offset}
+        data.Stack.back().bindings[id] = {size, -data.Stack.back().frameSize};
         dst << "sw $" << DstReg << -size << " $29"<<std::endl; //store val into sp
         data.registers.free_reg(DstReg);
     }
@@ -174,10 +174,10 @@ public:
             dst<<"[]";
         }
     }
-   virtual void CountFrameSize(int &CurrSize) const override
+   /*virtual void CountFrameSize(int &CurrSize) const override
    {
        CurrSize+=size;
-   }
+   }*/
 };
 
 class FuncCall
@@ -194,6 +194,9 @@ public:
     FuncCall(const std::string &_name)
         : name(_name)
     {}
+    virtual void print(std::ostream &dst) const override
+    {}
+    
     virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
         if(args){
             //TODO
@@ -203,7 +206,7 @@ public:
         }
     }
 
-}:
+};
 
 
 #endif

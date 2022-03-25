@@ -9,6 +9,7 @@
 #include "ast/ast_logic.hpp"
 #include "ast/ast_assignops.hpp"
 #include "ast/ast_statements.hpp"
+#include "ast/context.hpp"
 
 extern const Expression *parseAST();
 

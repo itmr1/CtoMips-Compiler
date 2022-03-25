@@ -7,12 +7,15 @@
 class SetStatement
     : public Expression
 {
-private:    
+/*private:    
+    ExpressionPtr Cond;
+    ExpressionPtr Statement;
+    ExpressionPtr Statement2;*/
+
+protected:
     ExpressionPtr Cond;
     ExpressionPtr Statement;
     ExpressionPtr Statement2;
-
-protected:
     SetStatement(ExpressionPtr _Cond, ExpressionPtr _Statement, ExpressionPtr _Statement2)
         : Cond(_Cond)
         , Statement(_Statement)
@@ -22,7 +25,8 @@ protected:
         : Cond(_Cond)
         , Statement(_Statement)
     {}
-    SetStatement();
+    SetStatement()
+    {}
   
     SetStatement(ExpressionPtr _Statement)
         : Statement(_Statement)
@@ -35,43 +39,11 @@ public:
         delete Statement2;
     }
    // virtual std::string MipsCodeGen(std::ostream &dst, std::string DestReg) const override{}
-    virtual const std::string *getCondStmntTrue() const =0;
-    virtual const std::string *getCondStmntFalse() const =0;
-    virtual const std::string *getKeyWord()  const =0;
+    virtual const char *getCondStmntTrue() const {return "";}
+    virtual const char *getCondStmntFalse() const {return "";}
+    virtual const char *getKeyWord()  const {return "";}
 
-    virtual void print(std::ostream &dst) const override
-    {   
-        else if(type=="while"){ //while
-            dst<<type;
-            dst<<"(";
-            Cond->print(dst);
-            dst<<"){";
-            Statement->print(dst);
-            dst<<"}";
-        }
-        else if(Statement2){ //if else
-            dst<<"if(";
-            Cond->print(dst);
-            dst<<"){";
-            Statement->print(dst);
-            dst<<"}else{";
-            Statement2->print(dst);
-            dst<<"}";
-        }
-        else if(type=="return"){
-            dst<<"return;";
-        }
-        else if(type=="break"){
-            dst<<"break;";
-        }
-        else if(type=="continue"){
-            dst<<"continue;";
-        }
-        else{
-            dst<<"return ";
-            Statement->print(dst);
-        }
-    }
+    virtual void print(std::ostream &dst) const override{}
 
 };
 
@@ -83,7 +55,7 @@ public:
         : SetStatement(_Cond, _Statement)
     {}
 
-    virtual const std::string *getCondStmntTrue() const override{
+    virtual const char *getCondStmntTrue() const override{
         return "if";
     }
 
@@ -115,11 +87,11 @@ public:
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         //TODO
     }*/
-    virtual void std::string *getCondStmntTrue() const override{
+    virtual const char *getCondStmntTrue() const override{
         return "if";
     }
 
-    virtual void std::string *getCondStmntFalse() const override{
+    virtual const char *getCondStmntFalse() const override{
         return "else";
     }
     
@@ -146,13 +118,13 @@ class WhileStatement
     : public SetStatement
 {
 public:
-    WhileStatement(ExpressionPtr _Cond, ExpressionPtr _Statement, const std::string &_type)
-        : SetStatement(_Cond, _Statement, _type)
+    WhileStatement(ExpressionPtr _Cond, ExpressionPtr _Statement)
+        : SetStatement(_Cond, _Statement)
     {}
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
        //TODO
     }*/
-    virtual void std::string *getCondStmntTrue() const override{
+    virtual const char *getCondStmntTrue() const override{
         return "while";
     }
 
@@ -182,7 +154,7 @@ public:
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         //TODO
     }*/
-    virtual void std::string *getKeyWord() const override{
+    virtual const char *getKeyWord() const override{
         return "return";
     }
 
@@ -206,12 +178,14 @@ class ReturnStatement
     : public SetStatement
 {
 public:
-    ReturnStatement();
+    ReturnStatement()
+        : SetStatement()
+    {}
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         //TODO
     }*/
 
-    virtual void std::string *getKeyWord() const override{
+    virtual const char *getKeyWord() const override{
         return "return";
     }
     
@@ -231,12 +205,14 @@ class BreakStatement
     : public SetStatement
 {
 public:
-    BreakStatement();
+    BreakStatement()
+        : SetStatement()
+    {}
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         //TODO
     }*/
 
-    virtual void std::string *getKeyWord() const override{
+    virtual const char *getKeyWord() const override{
         return "break";
     }
     
@@ -255,12 +231,14 @@ class ContinueStatement
     : public SetStatement
 {
 public:
-    ContinueStatement();
+    ContinueStatement()
+        : SetStatement()
+    {}
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         //TODO
     }*/
 
-    virtual void std::string *getKeyWord() const override{
+    virtual const char *getKeyWord() const override{
         return "continue";
     }
     

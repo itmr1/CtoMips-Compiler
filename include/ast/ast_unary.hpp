@@ -7,9 +7,10 @@
 class Unary
     : public Expression
 {
-private:
-    ExpressionPtr expr;
+//private:
+  //  ExpressionPtr expr;
 protected:
+    ExpressionPtr expr;
     Unary(const ExpressionPtr _expr)
         : expr(_expr)
     {}
@@ -45,19 +46,9 @@ public:
     virtual const char *getOpcode() const override
     { return "-"; }
 
-    virtual double evaluate(
-        const std::map<std::string, double> &bindings
-    ) const override
-    {
-	double vl = getExpr()->evaluate(bindings);
-	return -vl;
-        // TODO-F: Implement this similar to how AddOperator was implemented.
-       // throw std::runtime_error("NegOperator::evaluate is not implemented.");
-    }
-
     virtual void CountFrameSize(int &CurrSize) const override
    {
-       Unary->CountFrameSize(int &CurrSize);
+       expr->CountFrameSize(CurrSize);
    }
 };
 

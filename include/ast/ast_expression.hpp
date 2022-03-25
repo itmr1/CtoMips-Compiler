@@ -1,6 +1,7 @@
 #ifndef ast_expression_hpp
 #define ast_expression_hpp
 
+#include "context.hpp"
 #include <string>
 #include <iostream>
 #include <map>
@@ -16,14 +17,12 @@ class Expression
 public:
     virtual ~Expression()
     {}
-
     //! Tell and expression to print itself to the given stream
     virtual void print(std::ostream &dst) const =0;
-
-    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const = 0;
-    virtual void CountFrameSize(int &CurrSize) const=0;
+    virtual std::string getId()const {return "";}
+    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const {return;}
+    virtual void CountFrameSize(int &CurrSize) const {return;}
 };
-
 
 class RecExpr
     : public Expression
@@ -44,7 +43,7 @@ public:
     }
     virtual void print(std::ostream &dst) const override
     {   
-        
+
         left->print(dst);
         dst<<" ";
         right->print(dst);
