@@ -1,5 +1,10 @@
-#include <string>
+#ifndef context_hpp
+#define context_hpp
 
+#include <string>
+#include <vector>
+#include <iostream>
+#include <map>
 class Registers
 {
 public:
@@ -25,35 +30,28 @@ public:
     int allocate(){
         for(int i = 8; i<26;i++){
             if(!regs[i]){
-                use_reg(i)
+                use_reg(i);
                 return i;
             }
         }
         return -1;
     }
+    std::string make_regname(int i){
+        return "$"+std::to_string(i);
+    }
+
+    std::string make_label(std::string s){
+        static int  count = 0;
+        return s+"__"+std::to_string(count++);
+    }
+
 };
 
-std::string make_regname(int i){
-    return "$"+std::to_string(i)
-}
-
-std::string make_label(std::string s){
-    static int  count = 0;
-    return s+"__"+std::to_string(count++);
-}
-
-class Data
-{
-public:
-    Registers registers;
-    std::vector<stackframe> Stack;
-    std::map<std::string, std::type> globaldec;
-}
 
 class variable
 {
 public:
-  unsigned int size; // How many bytes does the variable take up
+  /*unsigned*/ int size; // How many bytes does the variable take up
   int offset; // Offset from frame pointer (+ for arguments, - for variables)
   //enum Specifier type = Specifier::_int; // keeps track of type, int by default (refactor this to enum if possible at some point)
 };
@@ -65,11 +63,21 @@ public:
     std::map<std::string, variable> bindings;
 };
 
+class Data
+{
+public:
+    Registers registers;
+    std::vector<stackframe> Stack;
+    std::map<std::string, std::string> globaldec;
+};
+
 class function
 {
 public:
-  unsigned int size; // Total size of arguments
+  /*unsigned*/ int size; // Total size of arguments
   std::vector<unsigned int> argSize; // Individual size of each argument
 };
 
-int FrameSize;
+//int FrameSize;
+
+#endif
