@@ -219,7 +219,7 @@ public:
         }
         val->MipsCodeGen(dst,data,DstReg); //store val in this register
         data.Stack.back().bindings[id] = {size, data.Stack.back().curroffset};
-        dst << "sw $" << DstReg <<","<< data.stack.back().curroffset << "($29)"<<std::endl; //store val into sp
+        dst << "sw $" << DstReg <<","<< data.Stack.back().curroffset << "($29)"<<std::endl; //store val into sp
         data.registers.free_reg(DstReg);
     }
 };
