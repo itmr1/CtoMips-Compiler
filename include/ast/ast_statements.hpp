@@ -42,7 +42,7 @@ public:
     virtual const char *getCondStmntTrue() const {return "";}
     virtual const char *getCondStmntFalse() const {return "";}
     virtual const char *getKeyWord()  const {return "";}
-
+    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{}
     virtual void print(std::ostream &dst) const override{}
 
 };
@@ -171,6 +171,10 @@ public:
         Statement->CountFrameSize(CurrSize);
    }
 
+    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
+        Statement->MipsCodeGen(dst, data, 2);
+        dst<<"b"<<Data.CurrLabel<<std::endl;
+   }
 
 };
 
@@ -199,6 +203,9 @@ public:
         CurrSize+=0;
    }
 
+   virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
+        dst<<"b"<<Data.CurrLabel<<std::endl;
+   }
 };
 
 class BreakStatement

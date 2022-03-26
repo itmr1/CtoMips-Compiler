@@ -65,6 +65,13 @@ public:
     Registers registers;
     std::vector<stackframe> Stack;
     std::map<std::string, std::string> globaldec;
+    std::string CurrLabel ="";
+    std::string MakeLabel(std::string s){
+        static count = 0;
+        std::string label = s+std::tostring(count);
+        count++;
+        return label;
+    }
 };
 
 class function

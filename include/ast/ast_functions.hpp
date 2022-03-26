@@ -82,8 +82,12 @@ public:
         }
         Statement->MipsCodeGen(dst, data, DstReg);
         //dst<<"move"<<" 30,$29"<<std::endl;
+        data.CurrLabel = data.MakeLabel("EoF");
+        dst<<data.CurrLabel<<":"<<std::endl;
         dst<<"lw"<<" $30,"<<frealsize - 4<<"($29)"<<std::endl;
         dst<<"addiu"<<" $29,"<<"$29,"<<frealsize<<std::endl;
+        dst<<"j $31"<<std::endl;
+        dst<<"nop"<<std::endl;
     }
 
 };
