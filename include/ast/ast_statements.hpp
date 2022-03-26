@@ -42,7 +42,7 @@ public:
     virtual const char *getCondStmntTrue() const {return "";}
     virtual const char *getCondStmntFalse() const {return "";}
     virtual const char *getKeyWord()  const {return "";}
-    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{}
+    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{return;}
     virtual void print(std::ostream &dst) const override{}
 
 };
@@ -75,10 +75,10 @@ public:
        Cond->CountFrameSize(CurrSize);
        Statement->CountFrameSize(CurrSize);
    }
-
-   MipsCodeGen(std::ostream &dst, Data &data, int DstReg) const override{
+    
+   virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg) const override{
     Cond->MipsCodeGen(dst, data, DstReg);
-    EndIf = Data.MakeLabel("EndIf");
+    std::string EndIf = data.MakeLabel("EndIf");
     dst<<"beq $0,$"<<DstReg<<EndIf<<std::endl;
     Statement->MipsCodeGen(dst, data, DstReg);
     dst<<EndIf<<std::endl;
@@ -121,16 +121,16 @@ public:
         Statement2->CountFrameSize(CurrSize);
    }
 
-   MipsCodeGen(std::ostream &dst, Data &data, int DstReg) const override{
-    Cond->MipsCodeGen(dst, data, DstReg);
-    Else = Data.MakeLabel("Else");
-    EndIfElse = Data.MakeLabel("EndIfElse");
-    dst<<"beq $0,$"<<DstReg<<Else<<std::endl;
-    Statement->MipsCodeGen(dst, data, DstReg);
-    dst<<"b"<<EndIfElse<<std::endl;
-    dst<<Else<<std::endl;
-    Statement2->MipsCodeGen(dst, data, DstReg);
-    dst<<EndIfElse<<std::endl;
+   virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg) const override{
+        Cond->MipsCodeGen(dst, data, DstReg);
+        std::string Else = data.MakeLabel("Else");
+        std::string EndIfElse = data.MakeLabel("EndIfElse");
+        dst<<"beq $0,$"<<DstReg<<Else<<std::endl;
+        Statement->MipsCodeGen(dst, data, DstReg);
+        dst<<"b"<<EndIfElse<<std::endl;
+        dst<<Else<<std::endl;
+        Statement2->MipsCodeGen(dst, data, DstReg);
+        dst<<EndIfElse<<std::endl;
    }
 };
 
@@ -163,11 +163,11 @@ public:
         Statement->CountFrameSize(CurrSize);
    }
 
-   MipsCodeGen(std::ostream &dst, Data &data, int DstReg) const override{
+   virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg) const override{
     int idx = data.registers.allocate();
     Cond->MipsCodeGen(dst, data, idx);
-    LoopStart = data.MakeLabel("LoopStart");
-    LoopEnd = data.MakeLabel("LoopEnd");
+    std::string LoopStart = data.MakeLabel("LoopStart");
+    std::string LoopEnd = data.MakeLabel("LoopEnd");
     dst<<"beq $0,$"<<idx<<LoopEnd<<std::endl;
     dst<<LoopStart<<std::endl;
     Statement->MipsCodeGen(dst, data, DstReg);
@@ -207,7 +207,7 @@ public:
 
     virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
         Statement->MipsCodeGen(dst, data, 2);
-        dst<<"b"<<Data.CurrLabel<<std::endl;
+        dst<<"b"<<data.CurrLabel<<std::endl;
    }
 
 };
@@ -238,7 +238,7 @@ public:
    }
 
    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
-        dst<<"b"<<Data.CurrLabel<<std::endl;
+        dst<<"b "<<data.CurrLabel<<std::endl;
    }
 };
 
