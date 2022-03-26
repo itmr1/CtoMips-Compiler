@@ -75,6 +75,14 @@ public:
        Cond->CountFrameSize(CurrSize);
        Statement->CountFrameSize(CurrSize);
    }
+
+   MipsCodeGen(std::ostream &dst, Data &data, int DstReg) const override{
+    Cond->MipsCodeGen(dst, data, DstReg);
+    EndIf = Data.MakeLabel("EndIf");
+    dst<<"beq $0,$"<<DstReg<<EndIf<<std::endl;
+    Statement->MipsCodeGen(dst, data, DstReg);
+    dst<<EndIf<<std::endl;
+   }
 };
 
 class IfElseStatement
@@ -112,6 +120,18 @@ public:
         Statement->CountFrameSize(CurrSize);
         Statement2->CountFrameSize(CurrSize);
    }
+
+   MipsCodeGen(std::ostream &dst, Data &data, int DstReg) const override{
+    Cond->MipsCodeGen(dst, data, DstReg);
+    Else = Data.MakeLabel("Else");
+    EndIfElse = Data.MakeLabel("EndIfElse");
+    dst<<"beq $0,$"<<DstReg<<Else<<std::endl;
+    Statement->MipsCodeGen(dst, data, DstReg);
+    dst<<"b"<<EndIfElse<<std::endl;
+    dst<<Else<<std::endl;
+    Statement2->MipsCodeGen(dst, data, DstReg);
+    dst<<EndIfElse<<std::endl;
+   }
 };
 
 class WhileStatement
@@ -141,6 +161,20 @@ public:
    {
         Cond->CountFrameSize(CurrSize);
         Statement->CountFrameSize(CurrSize);
+   }
+
+   MipsCodeGen(std::ostream &dst, Data &data, int DstReg) const override{
+    int idx = data.registers.allocate();
+    Cond->MipsCodeGen(dst, data, idx);
+    LoopStart = data.MakeLabel("LoopStart");
+    LoopEnd = data.MakeLabel("LoopEnd");
+    dst<<"beq $0,$"<<idx<<LoopEnd<<std::endl;
+    dst<<LoopStart<<std::endl;
+    Statement->MipsCodeGen(dst, data, DstReg);
+    Cond->MipsCodeGen(dst, data, idx);
+    dst<<"bne $0,$"<<idx<<LoopStart<<std::endl;
+    dst<<LoopEnd<<std::endl;
+    data.registers.free_reg(idx);
    }
 };
 

@@ -30,7 +30,6 @@ class RecExpr
 private:
     ExpressionPtr left;
     ExpressionPtr right;
-
 public:
     RecExpr(ExpressionPtr _left, ExpressionPtr _right)
         : left(_left)
