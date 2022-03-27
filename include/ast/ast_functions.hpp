@@ -66,50 +66,30 @@ public:
         
         std::string label = Declarator->getId();
         dst<<label<<": "<<std::endl;
-        //dst<<"HERE_0"<<std::endl;
         stackframe func;
         data.Stack.push_back(func);
         data.Stack.back().frameSize = 0;
-        //std::cout<<"HERE_1"<<std::endl;
         CountFrameSize(data.Stack.back().frameSize);
-         //std::cout<<"HERE_2"<<std::endl;
         data.Stack.back().frameSize+=2;
-         //std::cout<<"HERE_3"<<std::endl;
         int frealsize = data.Stack.back().frameSize*4;
-         //std::cout<<"HERE_4"<<std::endl;
         dst<<"addiu"<<" $29,"<<"$29,"<<"-"<<frealsize<<std::endl;
-         //std::cout<<"HERE_5"<<std::endl;
         dst<<"sw"<<" $30,"<<frealsize - 4<<"($29)"<<std::endl;
-         //std::cout<<"HERE_6"<<std::endl;
         dst<<"move"<<" $30,$29"<<std::endl;
-        // std::cout<<"HERE_7"<<std::endl;
         if(Args){
-            // std::cout<<"HERE_8"<<std::endl;
             int ArgSize = 0;
-            // std::cout<<"HERE_9"<<std::endl;
             Args->CountFrameSize(ArgSize);
-            // std::cout<<"HERE_10"<<std::endl;
             Args->MipsCodeGen(dst, data, DstReg);
-            // std::cout<<"HERE_11"<<std::endl;
             for(int i = 4; i<ArgSize+4; i++){
-                // std::cout<<"HERE_12"<<std::endl;
                 dst<<"sw $"<<i<<","<<4*(i-3)<<"($29)"<<std::endl;
             }
-             //std::cout<<"HERE_13"<<std::endl;
+             
         }
         data.CurrLabel = data.MakeLabel("EoF");
         Statement->MipsCodeGen(dst, data, DstReg);
-         //std::cout<<"HERE_14"<<std::endl;
-        //dst<<"move"<<" 30,$29"<<std::endl;
-         //std::cout<<"HERE_15"<<std::endl;
         dst<<data.CurrLabel<<":"<<std::endl;
-         //std::cout<<"HERE_16"<<std::endl;
         dst<<"lw"<<" $30,"<<frealsize - 4<<"($29)"<<std::endl;
-        // std::cout<<"HERE_17"<<std::endl;
         dst<<"addiu"<<" $29,"<<"$29,"<<frealsize<<std::endl;
-        // std::cout<<"HERE_18"<<std::endl;
         dst<<"j $31"<<std::endl;
-        // std::cout<<"HERE_19"<<std::endl;
         dst<<"nop"<<std::endl;
     }
 

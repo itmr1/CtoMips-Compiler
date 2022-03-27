@@ -5,9 +5,9 @@ move $30,$29
 sw $4,4($29)
 sw $5,8($29)
 lw $2,4($30)
-move $8, $2
+move $8,$2
 lw $2,8($30)
-div $2, $8
+div $8,$2
 mfhi $2
 b EoF0
 EoF0:
