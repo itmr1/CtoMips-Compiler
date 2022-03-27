@@ -143,8 +143,8 @@ public:
             DstReg = data.registers.allocate(); //get a free register
         }
         val->MipsCodeGen(dst,data,DstReg); //store val in this register
-        data.Stack.back().bindings[id] = {size, -data.Stack.back().frameSize};
-        dst << "sw $" << DstReg << -size << " $29"<<std::endl; //store val into sp
+        data.Stack.back().bindings[id] = {size, data.Stack.back().frameSize};
+        dst << "sw $" << DstReg << size << " $29"<<std::endl; //store val into sp
         data.registers.free_reg(DstReg);
     }
 };
