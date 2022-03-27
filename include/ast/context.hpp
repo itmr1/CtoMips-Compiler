@@ -67,20 +67,20 @@ public:
     std::map<std::string, std::string> globaldec;
     std::string CurrLabel ="";
     std::string MakeLabel(std::string s){
-        static count = 0;
-        std::string label = s+std::tostring(count);
+        static int count = 0;
+        std::string label = s+std::to_string(count);
         count++;
         return label;
     }
 };
 
-class function
+/*class function
 {
 public:
-  /*unsigned*/ int size; // Total size of arguments
+  unsigned int size; // Total size of arguments
   std::vector<unsigned int> argSize; // Individual size of each argument
 };
 
 //int FrameSize;
-
+*/
 #endif
