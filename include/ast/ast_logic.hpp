@@ -51,6 +51,16 @@ public:
     EqOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Logic(_left, _right)
     {}
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        left->MipsCodeGen(dst,data, DstReg);
+        int idx = data.registers.allocate();
+        std::string tmp_reg = data.registers.make_regname(idx);
+        dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+        right->MipsCodeGen(dst,data, DstReg);
+        dst<<"xor $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        dst<<"slti $"<<DstReg<<",$"<<DstReg<<"1"<<std::endl;
+        data.registers.free_reg(idx);
+    }
 };
 
 class NeqOperator
@@ -63,6 +73,16 @@ public:
     NeqOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Logic(_left, _right)
     {}
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        left->MipsCodeGen(dst,data, DstReg);
+        int idx = data.registers.allocate();
+        std::string tmp_reg = data.registers.make_regname(idx);
+        dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+        right->MipsCodeGen(dst,data, DstReg);
+        dst<<"xor $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        dst<<"slt $"<<DstReg<<",$0,"<<DstReg<<std::endl;
+        data.registers.free_reg(idx);
+    }
 };
 
 class BitwiseAndOperator
@@ -75,6 +95,15 @@ public:
     BitwiseAndOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Logic(_left, _right)
     {}
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        left->MipsCodeGen(dst,data, DstReg);
+        int idx = data.registers.allocate();
+        std::string tmp_reg = data.registers.make_regname(idx);
+        dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+        right->MipsCodeGen(dst,data, DstReg);
+        dst<<"and $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        data.registers.free_reg(idx);
+    }
 };
 
 class BitwiseOrOperator
@@ -87,6 +116,15 @@ public:
     BitwiseOrOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Logic(_left, _right)
     {}
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        left->MipsCodeGen(dst,data, DstReg);
+        int idx = data.registers.allocate();
+        std::string tmp_reg = data.registers.make_regname(idx);
+        dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+        right->MipsCodeGen(dst,data, DstReg);
+        dst<<"or $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        data.registers.free_reg(idx);
+    }
 };
 
 class GreaterThanOperator
@@ -99,6 +137,16 @@ public:
     GreaterThanOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Logic(_left, _right)
     {} 
+
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        left->MipsCodeGen(dst,data, DstReg);
+        int idx = data.registers.allocate();
+        std::string tmp_reg = data.registers.make_regname(idx);
+        dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+        right->MipsCodeGen(dst,data, DstReg);
+        dst<<"slt $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        data.registers.free_reg(idx);
+    }
 };
 
 class LessThanOperator
@@ -111,6 +159,16 @@ public:
     LessThanOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Logic(_left, _right)
     {}
+
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        left->MipsCodeGen(dst,data, DstReg);
+        int idx = data.registers.allocate();
+        std::string tmp_reg = data.registers.make_regname(idx);
+        dst<<"move "<<tmp_reg<<",$" <<DstReg<<std::endl;
+        right->MipsCodeGen(dst,data, DstReg);
+        dst<<"slt $"<<DstReg<<","<<tmp_reg<<",$"<<DstReg<<std::endl;
+        data.registers.free_reg(idx);
+    }
 };
 
 class GreaterThanEqualOperator
@@ -123,6 +181,16 @@ public:
     GreaterThanEqualOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Logic(_left, _right)
     {} 
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        left->MipsCodeGen(dst,data, DstReg);
+        int idx = data.registers.allocate();
+        std::string tmp_reg = data.registers.make_regname(idx);
+        dst<<"move "<<tmp_reg<<",$" <<DstReg<<std::endl;
+        right->MipsCodeGen(dst,data, DstReg);
+        dst<<"slt $"<<DstReg<<","<<tmp_reg<<",$"<<DstReg<<std::endl;
+        dst<<"xori $"<<DstReg<<",$"<<DstReg<<",1"<<std::endl;
+        data.registers.free_reg(idx);
+    }
 };
 
 class LessThanEqualOperator
@@ -135,6 +203,17 @@ public:
     LessThanEqualOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Logic(_left, _right)
     {}
+
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        left->MipsCodeGen(dst,data, DstReg);
+        int idx = data.registers.allocate();
+        std::string tmp_reg = data.registers.make_regname(idx);
+        dst<<"move "<<tmp_reg<<",$" <<DstReg<<std::endl;
+        right->MipsCodeGen(dst,data, DstReg);
+        dst<<"slt $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        dst<<"xori $"<<DstReg<<",$"<<DstReg<<",1"<<std::endl;
+        data.registers.free_reg(idx);
+    }
 };
 
 #endif
