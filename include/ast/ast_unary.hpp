@@ -33,6 +33,9 @@ public:
         expr->print(dst);
         dst << " )";
     }
+    /*virtual void GetArgs(std::vector<ExpressionPtr> &arglist)const override{
+       arglist.pushback(expr)
+   }*/
 };
 
 class NegOperator
@@ -75,7 +78,6 @@ public:
    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
         expr->MipsCodeGen(dst,data, DstReg);
         dst<<"nor $"<<DstReg<<",$0"<<",$"<<DstReg<<std::endl;
-       // data.registers.free_reg(idx);
     }
 };
 
@@ -97,7 +99,6 @@ public:
    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
         expr->MipsCodeGen(dst,data, DstReg);
         dst<<"slti $"<<DstReg<<",$"<<DstReg<<",1"<<std::endl;
-        //data.registers.free_reg(idx);
     }
 };
 

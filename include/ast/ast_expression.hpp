@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include <vector>
 
 #include <memory>
 
@@ -22,6 +23,7 @@ public:
     virtual std::string getId()const {return "";}
     virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const {return;}
     virtual void CountFrameSize(int &CurrSize)const {return;}
+    virtual void GetArgs(std::vector<ExpressionPtr> &arglist) const {return;}
 };
 
 class RecExpr
@@ -57,6 +59,10 @@ public:
    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
        left->MipsCodeGen(dst, data, DstReg);
        right->MipsCodeGen(dst, data, DstReg);
+   }
+   virtual void GetArgs(std::vector<int> &arglist)const override{
+       arglist.push_back(left);
+       arglist.push_back(right);
    }
 
 };

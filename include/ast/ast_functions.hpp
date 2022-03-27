@@ -82,7 +82,6 @@ public:
             for(int i = 4; i<ArgSize+4; i++){
                 dst<<"sw $"<<i<<","<<4*(i-3)<<"($29)"<<std::endl;
             }
-             
         }
         data.CurrLabel = data.MakeLabel("EoF");
         Statement->MipsCodeGen(dst, data, DstReg);
