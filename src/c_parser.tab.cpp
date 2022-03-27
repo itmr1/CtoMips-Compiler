@@ -114,7 +114,7 @@ extern int yydebug;
   #include <cassert>
 
   extern const Expression *g_root; // A way of getting the AST out
-
+  extern FILE *yyin;
   // ! This is to fix problems when generating C++
   // We are declaring the functions provided by Flex, so
   // that Bison generated code can call them.
@@ -2127,8 +2127,9 @@ yyreturn:
 
 const Expression *g_root;
 
-const Expression *parseAST()
+const Expression *parseAST(std::string file)
 {
+  yyin = fopen(file.c_str(), "r"); 
   g_root=0;
   yyparse();
   return g_root;

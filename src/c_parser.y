@@ -4,7 +4,7 @@
   #include <cassert>
 
   extern const Expression *g_root; // A way of getting the AST out
-
+  extern FILE *yyin;
   // ! This is to fix problems when generating C++
   // We are declaring the functions provided by Flex, so
   // that Bison generated code can call them.
@@ -176,8 +176,9 @@ JUMP_STATEMENT : TOK_BREAK TOK_SEMICOLON {$$ = new BreakStatement();}
 
 const Expression *g_root;
 
-const Expression *parseAST()
+const Expression *parseAST(std::string file)
 {
+  yyin = fopen(file.c_str(), "r"); 
   g_root=0;
   yyparse();
   return g_root;
