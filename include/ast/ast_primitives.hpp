@@ -19,7 +19,7 @@ public:
     virtual std::string getId() const override
      { return id; }
 
-    const int getSize(Data &data) const
+    int getSize(Data &data) const
     {
         if(data.Stack.back().bindings.find(id) == data.Stack.back().bindings.end()){ //if not in stack
             std::cerr << "L" << std::endl; //doesnt exist

@@ -9,10 +9,9 @@
 class Logic 
     : public Expression
 {
-private:
+protected:
     ExpressionPtr left;
     ExpressionPtr right;
-protected:
     Logic(ExpressionPtr _left, ExpressionPtr _right)
         :left(_left)
         , right(_right)
@@ -61,7 +60,7 @@ public:
         dst<<"sll $"<<DstReg<<","<<tmp_reg<<",$"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
     }
-}
+};
 
 class RightShiftOperator
     :public Logic
@@ -82,7 +81,7 @@ public:
         dst<<"sra $"<<DstReg<<","<<tmp_reg<<",$"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
     }
-}
+};
 
 
 
@@ -154,7 +153,7 @@ public:
         dst<<"nop"<<std::endl;
         dst<<And0<<std::endl;
         dst<<"move $"<<DstReg<<",$0"<<std::endl;
-        dst<<And1<<std::endl
+        dst<<And1<<std::endl;
     }
 };
 
@@ -235,7 +234,7 @@ protected:
     virtual const char *getOpcode() const override
     {return "^";}
 public:
-    BitwiseXOrOperator(ExpressionPtr _left, ExpressionPtr _right)
+    BitwiseXorOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Logic(_left, _right)
     {}
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
