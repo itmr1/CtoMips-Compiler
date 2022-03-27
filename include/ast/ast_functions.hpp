@@ -90,20 +90,13 @@ public:
             Args->CountFrameSize(ArgSize);
             // std::cout<<"HERE_10"<<std::endl;
             Args->MipsCodeGen(dst, data, DstReg);
-            // std::cout<<"HERE_11"<<std::endl;
             for(int i = 4; i<ArgSize+4; i++){
-                // std::cout<<"HERE_12"<<std::endl;
                 dst<<"sw $"<<i<<","<<4*(i-3)<<"($29)"<<std::endl;
             }
-             //std::cout<<"HERE_13"<<std::endl;
         }
         data.CurrLabel = data.MakeLabel("EoF");
         Statement->MipsCodeGen(dst, data, DstReg);
-         //std::cout<<"HERE_14"<<std::endl;
-        //dst<<"move"<<" 30,$29"<<std::endl;
-         //std::cout<<"HERE_15"<<std::endl;
         dst<<data.CurrLabel<<":"<<std::endl;
-         //std::cout<<"HERE_16"<<std::endl;
         dst<<"lw"<<" $30,"<<frealsize - 4<<"($29)"<<std::endl;
         // std::cout<<"HERE_17"<<std::endl;
         dst<<"addiu"<<" $29,"<<"$29,"<<frealsize<<std::endl;
