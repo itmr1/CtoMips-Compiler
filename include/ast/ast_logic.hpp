@@ -1,6 +1,7 @@
 #ifndef ast_logic_hpp
 #define ast_logic_hpp
 
+
 #include <string>
 #include <iostream>
 #include <cmath>
@@ -40,6 +41,50 @@ public:
         right->print(dst);
     }
 };
+
+class LeftShiftOperator
+    :public Logic
+{
+protected:
+    virtual const char *getOpcode() const override
+    {return "<<";}
+public:
+    LeftShiftOperator(ExpressionPtr _left, ExpressionPtr _right)
+        : Logic(_left, _right)
+    {}
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        left->MipsCodeGen(dst,data, DstReg);
+        int idx = data.registers.allocate();
+        std::string tmp_reg = data.registers.make_regname(idx);
+        dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+        right->MipsCodeGen(dst,data, DstReg);
+        dst<<"sll $"<<DstReg<<","<<tmp_reg<<",$"<<DstReg<<std::endl;
+        data.registers.free_reg(idx);
+    }
+}
+
+class RightShiftOperator
+    :public Logic
+{
+protected:
+    virtual const char *getOpcode() const override
+    {return ">>";}
+public:
+    RightShiftOperator(ExpressionPtr _left, ExpressionPtr _right)
+        : Logic(_left, _right)
+    {}
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        left->MipsCodeGen(dst,data, DstReg);
+        int idx = data.registers.allocate();
+        std::string tmp_reg = data.registers.make_regname(idx);
+        dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+        right->MipsCodeGen(dst,data, DstReg);
+        dst<<"sra $"<<DstReg<<","<<tmp_reg<<",$"<<DstReg<<std::endl;
+        data.registers.free_reg(idx);
+    }
+}
+
+
 
 class EqOperator
  : public Logic
@@ -85,6 +130,62 @@ public:
     }
 };
 
+class LogicalAndOperator
+ : public Logic
+{
+protected:
+    virtual const char *getOpcode() const override
+    {return "&&";}
+public:
+    LogicalAndOperator(ExpressionPtr _left, ExpressionPtr _right)
+        : Logic(_left, _right)
+    {}
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        std::string And0 = data.MakeLabel("A");
+        std::string And1 = data.MakeLabel("A");
+        left->MipsCodeGen(dst,data, DstReg);
+        dst<<"beq $"<<DstReg<<",$0"<<And0<<std::endl;
+        dst<<"nop"<<std::endl;
+        right->MipsCodeGen(dst,data, DstReg);
+        dst<<"beq $"<<DstReg<<",$0"<<And0<<std::endl;
+        dst<<"nop"<<std::endl;
+        dst<<"li $"<<DstReg<<",1"<<std::endl;
+        dst<<"b "<<And1<<std::endl;
+        dst<<"nop"<<std::endl;
+        dst<<And0<<std::endl;
+        dst<<"move $"<<DstReg<<",$0"<<std::endl;
+        dst<<And1<<std::endl
+    }
+};
+
+class LogicalOrOperator
+ : public Logic
+{
+protected:
+    virtual const char *getOpcode() const override
+    {return "&&";}
+public:
+    LogicalOrOperator(ExpressionPtr _left, ExpressionPtr _right)
+        : Logic(_left, _right)
+    {}
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        std::string Or0 = data.MakeLabel("O");
+        std::string Or1 = data.MakeLabel("O");
+        left->MipsCodeGen(dst,data, DstReg);
+        dst<<"bne $"<<DstReg<<",$0"<<Or1<<std::endl;
+        dst<<"nop"<<std::endl;
+        right->MipsCodeGen(dst,data, DstReg);
+        dst<<"bne $"<<DstReg<<",$0"<<Or1<<std::endl;
+        dst<<"nop"<<std::endl;
+        dst<<"move $"<<DstReg<<",$0"<<std::endl;
+        dst<<"b "<<Or0<<std::endl;
+        dst<<"nop"<<std::endl;
+        dst<<Or1<<std::endl;
+        dst<<"li $"<<DstReg<<",1"<<std::endl;
+        dst<<Or0<<std::endl;
+    }
+};
+
 class BitwiseAndOperator
  : public Logic
 {
@@ -123,6 +224,27 @@ public:
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
         right->MipsCodeGen(dst,data, DstReg);
         dst<<"or $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        data.registers.free_reg(idx);
+    }
+};
+
+class BitwiseXorOperator
+ : public Logic
+{
+protected:
+    virtual const char *getOpcode() const override
+    {return "^";}
+public:
+    BitwiseXOrOperator(ExpressionPtr _left, ExpressionPtr _right)
+        : Logic(_left, _right)
+    {}
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        left->MipsCodeGen(dst,data, DstReg);
+        int idx = data.registers.allocate();
+        std::string tmp_reg = data.registers.make_regname(idx);
+        dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+        right->MipsCodeGen(dst,data, DstReg);
+        dst<<"xor $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
         data.registers.free_reg(idx);
     }
 };

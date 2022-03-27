@@ -47,14 +47,23 @@ extern "C" int fileno(FILE *stream);
 "="               {return TOK_EQASSIGN; }
 
 "=="              { return TOK_EQ; }
-"!="             { return TOK_NEQ; }
+"!="              { return TOK_NEQ; }
 "<="              { return TOK_LE; }
 ">="              { return TOK_GE; }
 ">"               { return TOK_G; }
 "<"               { return TOK_L; }
 
+"<<"              { return TOK_LSHIFT; }
+">>"              { return TOK_RSHIFT;}
+
 [&]               { return TOK_BIT_AND; }
 [|]               { return TOK_BIT_OR; }
+[~]               { return TOK_BIT_NOT; }
+[^]               { return TOK_BIT_XOR; }
+
+[!]               { return TOK_LOGIC_NOT; }
+[&&]              { return TOK_LOGIC_AND; }
+[||]              { return TOK_LOGIC_OR; }
 
 [\[]              { return TOK_LSQBRACKET;}
 [\]]              { return TOK_RSQBRACKET;}
