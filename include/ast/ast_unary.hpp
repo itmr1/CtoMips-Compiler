@@ -50,6 +50,55 @@ public:
    {
        expr->CountFrameSize(CurrSize);
    }
+   virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        expr->MipsCodeGen(dst,data, DstReg);
+        dst<<"sub $"<<DstReg<<",$0"<<",$"<<DstReg<<std::endl;
+        data.registers.free_reg(idx);
+    }
+};
+
+class BitNotOperator
+    : public Unary
+{
+public:
+    BitNotOperator(const ExpressionPtr _expr)
+        : Unary(_expr)
+    {}
+
+    virtual const char *getOpcode() const override
+    { return "~"; }
+
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+       expr->CountFrameSize(CurrSize);
+   }
+   virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        expr->MipsCodeGen(dst,data, DstReg);
+        dst<<"nor $"<<DstReg<<",$0"<<",$"<<DstReg<<std::endl;
+        data.registers.free_reg(idx);
+    }
+};
+
+class LogicalNotOperator
+    : public Unary
+{
+public:
+    LogicalNotOperator(const ExpressionPtr _expr)
+        : Unary(_expr)
+    {}
+
+    virtual const char *getOpcode() const override
+    { return "!"; }
+
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+       expr->CountFrameSize(CurrSize);
+   }
+   virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        expr->MipsCodeGen(dst,data, DstReg);
+        dst<<"slti $"<<DstReg<<",$"<<DstReg<<",1"<<std::endl;
+        data.registers.free_reg(idx);
+    }
 };
 
 #endif

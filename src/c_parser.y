@@ -20,7 +20,7 @@
   std::string *string;
 }
 
-%token TOK_BIT_AND TOK_BIT_OR TOK_EQ TOK_NEQ
+%token TOK_BIT_AND TOK_BIT_OR TOK_EQ TOK_NEQ TOK_BIT_XOR TOK_LOGIC_AND TOK_LOGIC_OR TOK_LSHIFT TOK_RSHIFT
 %token TOK_GE TOK_LE TOK_G TOK_L
 %token TOK_IF TOK_WHILE TOK_ELSE
 %token TOK_RETURN TOK_BREAK TOK_CONT
@@ -29,7 +29,7 @@
 %token TOK_N TOK_VAR VARTYPE_INT
 %token TOK_SUBASSIGN TOK_MULASSIGN TOK_DIVASSIGN TOK_ADDASSIGN TOK_EQASSIGN TOK_MODASSIGN
 
-%type <expr> ROOT EXPR_TREE EXPR ASSIGN_EXPR LOGIC_EXPR EQ_EXPR REL_EXPR ADD_EXPR MULT_EXPR UNARY FACTOR FUNCTION DECLARATION DECLARATOR FUNC_ARGS FUNC_CALL_ARGS STATEMENT EXPR_STATEMENT FUNC_STATEMENT SELECT_STATEMENT ITER_STATEMENT JUMP_STATEMENT REC_STATEMENT REC_DECLARATION 
+%type <expr> ROOT EXPR_TREE EXPR ASSIGN_EXPR LOGIC_EXPR BIT_EXPR EQ_EXPR REL_EXPR SHIFT_EXPR ADD_EXPR MULT_EXPR UNARY FACTOR FUNCTION DECLARATION DECLARATOR FUNC_ARGS FUNC_CALL_ARGS STATEMENT EXPR_STATEMENT FUNC_STATEMENT SELECT_STATEMENT ITER_STATEMENT JUMP_STATEMENT REC_STATEMENT REC_DECLARATION 
 %type <number> TOK_N
 %type <string> TOK_VAR VARTYPE_INT
 
@@ -75,7 +75,7 @@ FUNC_CALL_ARGS: ASSIGN_EXPR {$$=$1;}
               ;
 
 DECLARATOR : TOK_VAR { $$ = new Variable(*$1);}
-           | TOK_VAR TOK_LSQBRACKET LOGIC_EXPR TOK_RSQBRACKET {$$ = new Array(*$1, $3);}
+           | TOK_VAR TOK_LSQBRACKET LOGIC_EXPR TOK_RSQBRACKET {$$ = new Array(*$1, $3);} // int p[] = {}
            | TOK_VAR TOK_LSQBRACKET TOK_RSQBRACKET {$$ = new Array(*$1);}
            ;
 
@@ -88,23 +88,33 @@ ASSIGN_EXPR : LOGIC_EXPR {$$ = $1;}
             | TOK_VAR TOK_MODASSIGN ASSIGN_EXPR {$$ = new ModAssignOperator(*$1,$3);}
             ;
 
-LOGIC_EXPR : EQ_EXPR {$$ = $1;}
-           | LOGIC_EXPR TOK_BIT_AND EQ_EXPR {$$ = new BitwiseAndOperator($1, $3);}
-           | LOGIC_EXPR TOK_BIT_OR EQ_EXPR {$$ = new BitwiseOrOperator($1, $3);}
-           ;//Add ^ BXOR Logical OR and Logical AND && and MUX 
+LOGIC_EXPR : BIT_EXPR {$$ = $1;}
+            | LOGIC_EXPR TOK_LOGIC_AND BIT_EXPR {$$ new LogicAndOperator($1, $3);}
+            | LOGIC_EXPR TOK_LOGIC_OR BIT_EXPR {$$ new LogicOrOperator($1, $3);}
+            ;
+
+BIT_EXPR : EQ_EXPR {$$ = $1;}
+           | BIT_EXPR TOK_BIT_AND EQ_EXPR {$$ = new BitwiseAndOperator($1, $3);}
+           | BIT_EXPR TOK_BIT_OR EQ_EXPR {$$ = new BitwiseOrOperator($1, $3);}
+           | BIT_EXPR TOK_BIT_XOR EQ_EXPR {$$ = new BitwiseXorOperator($1, $3);}
+           ;//Add ^ BXOR Logical OR || and Logical AND && and MUX 
 
 EQ_EXPR : REL_EXPR {$$=$1;}
-        | EQ_EXPR TOK_EQ ADD_EXPR  {$$ = new EqOperator($1, $3);}
-        | EQ_EXPR TOK_NEQ ADD_EXPR {$$ = new NeqOperator($1, $3);}
+        | EQ_EXPR TOK_EQ REL_EXPR  {$$ = new EqOperator($1, $3);}
+        | EQ_EXPR TOK_NEQ REL_EXPR {$$ = new NeqOperator($1, $3);}
         ;
 
-REL_EXPR: ADD_EXPR {$$ = $1;}
-        | REL_EXPR TOK_LE ADD_EXPR {$$ = new LessThanEqualOperator($1, $3);}
-        | REL_EXPR TOK_GE ADD_EXPR {$$ = new GreaterThanEqualOperator($1, $3);}
-        | REL_EXPR TOK_G ADD_EXPR {$$ = new GreaterThanOperator($1, $3);}
-        | REL_EXPR TOK_L ADD_EXPR {$$ = new LessThanOperator($1, $3);}
+REL_EXPR: SHIFT_EXPR {$$ = $1;}
+        | REL_EXPR TOK_LE SHIFT_EXPR {$$ = new LessThanEqualOperator($1, $3);}
+        | REL_EXPR TOK_GE SHIFT_EXPR {$$ = new GreaterThanEqualOperator($1, $3);}
+        | REL_EXPR TOK_G SHIFT_EXPR {$$ = new GreaterThanOperator($1, $3);}
+        | REL_EXPR TOK_L SHIFT_EXPR {$$ = new LessThanOperator($1, $3);}
         ;
 //Add << and >>
+SHIFT_EXPR: ADD_EXPR {$$ = $1;}
+          | SHIFT_EXPR TOK_LSHIFT ADD_EXPR {$$ = new LeftShiftOperator($1, $3);}
+          | SHIFT_EXPR TOK_RSHIFT ADD_EXPR {$$ = new RightShiftOperator($1, $3);}
+
 ADD_EXPR : MULT_EXPR {$$ = $1;}
          | ADD_EXPR TOK_PLUS MULT_EXPR {$$ = new AddOperator($1, $3) ; }
          | ADD_EXPR TOK_MINUS MULT_EXPR  {$$ = new SubOperator($1, $3); }
@@ -117,7 +127,9 @@ MULT_EXPR : UNARY {$$ = $1;}
           ; 
 
 UNARY : FACTOR      { $$ = $1; }
-      | TOK_MINUS UNARY   { $$ = new NegOperator($2);} //Add ! and ~
+      | TOK_MINUS UNARY   { $$ = new NegOperator($2);} 
+      | TOK_LOGIC_NOT     { $$ = new LogicNotOperator($2); }
+      | TOK_BIT_NOT       { $$ = new BitNotOperator($2); }
       ;
 
 FACTOR : TOK_N     { $$ = new Number( $1 ); }

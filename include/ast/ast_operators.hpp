@@ -67,9 +67,9 @@ public:
         left->MipsCodeGen(dst,data, DstReg);
         int idx = data.registers.allocate();
         std::string tmp_reg = data.registers.make_regname(idx);
-        dst<<"move "<<tmp_reg<<", $" <<DstReg<<std::endl;
+        dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
         right->MipsCodeGen(dst,data, DstReg);
-        dst<<"add $"<<DstReg<<", $"<<DstReg<<", "<<tmp_reg<<std::endl;
+        dst<<"add $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
         data.registers.free_reg(idx);
     }
 };
@@ -89,9 +89,9 @@ public:
         right->MipsCodeGen(dst,data, DstReg);
         int idx = data.registers.allocate();
         std::string tmp_reg = data.registers.make_regname(idx);
-        dst<<"move "<<tmp_reg<<", $" <<DstReg<<std::endl;
+        dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
         left->MipsCodeGen(dst,data, DstReg);
-        dst<<"sub $"<<DstReg<<", $"<<DstReg<<", "<<tmp_reg<<std::endl;
+        dst<<"sub $"<<DstReg<<","<<tmp_reg<<",$"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
     }
 };
@@ -112,9 +112,9 @@ public:
         left->MipsCodeGen(dst,data, DstReg);
         int idx = data.registers.allocate();
         std::string tmp_reg = data.registers.make_regname(idx);
-        dst<<"move "<<tmp_reg<<", $" <<DstReg<<std::endl;
+        dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
         right->MipsCodeGen(dst,data, DstReg);
-        dst<<"mul $"<<DstReg<<", "<<tmp_reg<<std::endl;
+        dst<<"mul $"<<DstReg<<","<<tmp_reg<<std::endl;
         dst<<"mflo $"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
     }
@@ -135,9 +135,9 @@ public:
         left->MipsCodeGen(dst,data, DstReg);
         int idx = data.registers.allocate();
         std::string tmp_reg = data.registers.make_regname(idx);
-        dst<<"move "<<tmp_reg<<", $" <<DstReg<<std::endl;
+        dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
         right->MipsCodeGen(dst,data, DstReg);
-        dst<<"div $"<<DstReg<<", "<<tmp_reg<<std::endl;
+        dst<<"div "<<tmp_reg<<",$"<<DstReg<<std::endl;
         dst<<"mfhi $"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
     }
@@ -157,9 +157,9 @@ public:
         right->MipsCodeGen(dst,data, DstReg);
         int idx = data.registers.allocate();
         std::string tmp_reg = data.registers.make_regname(idx);
-        dst<<"move "<<tmp_reg<<", $" <<DstReg<<std::endl;
+        dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
         left->MipsCodeGen(dst,data, DstReg);
-        dst<<"div $"<<DstReg<<", "<<tmp_reg<<std::endl;
+        dst<<"div "<<tmp_reg<<",$"<<DstReg<<std::endl;
         dst<<"mflo $"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
     }
