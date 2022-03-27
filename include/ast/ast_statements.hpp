@@ -127,7 +127,7 @@ public:
         std::string EndIfElse = data.MakeLabel("EndIfElse");
         dst<<"beq $0,$"<<DstReg<<Else<<std::endl;
         Statement->MipsCodeGen(dst, data, DstReg);
-        dst<<"b"<<EndIfElse<<std::endl;
+        dst<<"b "<<EndIfElse<<std::endl;
         dst<<Else<<std::endl;
         Statement2->MipsCodeGen(dst, data, DstReg);
         dst<<EndIfElse<<std::endl;
@@ -207,7 +207,7 @@ public:
 
     virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
         Statement->MipsCodeGen(dst, data, 2);
-        dst<<"b"<<data.CurrLabel<<std::endl;
+        dst<<"b "<<data.CurrLabel<<std::endl;
    }
 
 };

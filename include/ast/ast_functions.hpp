@@ -58,7 +58,7 @@ public:
        CurrSize = 0;
        if(Args){Args->CountFrameSize(CurrSize);}
        Statement->CountFrameSize(CurrSize);
-       std::cout<<"size of variables: "<<CurrSize<<std::endl;
+       //std::cout<<"size of variables: "<<CurrSize<<std::endl;
        
    }
 
@@ -93,7 +93,7 @@ public:
             // std::cout<<"HERE_11"<<std::endl;
             for(int i = 4; i<ArgSize+4; i++){
                 // std::cout<<"HERE_12"<<std::endl;
-                dst<<"sw"<<" $"<<i<<4*(i-3)<<"($29)"<<std::endl;
+                dst<<"sw $"<<i<<","<<4*(i-3)<<"($29)"<<std::endl;
             }
              //std::cout<<"HERE_13"<<std::endl;
         }

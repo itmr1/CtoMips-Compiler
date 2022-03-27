@@ -11,6 +11,6 @@
 #include "ast/ast_statements.hpp"
 #include "ast/context.hpp"
 
-extern const Expression *parseAST();
+extern const Expression *parseAST(std::string file);
 
 #endif
