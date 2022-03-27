@@ -1,5 +1,5 @@
-State 117 conflicts: 1 shift/reduce
-State 153 conflicts: 1 shift/reduce
+State 118 conflicts: 1 shift/reduce
+State 154 conflicts: 1 shift/reduce
 
 
 Grammar
@@ -99,20 +99,21 @@ Grammar
 
    71 EXPR_STATEMENT: ASSIGN_EXPR TOK_SEMICOLON
 
-   72 FUNC_STATEMENT: TOK_LCBRACKET REC_STATEMENT TOK_RCBRACKET
-   73               | TOK_LCBRACKET REC_DECLARATION TOK_RCBRACKET
-   74               | TOK_LCBRACKET REC_DECLARATION REC_STATEMENT TOK_RCBRACKET
+   72 FUNC_STATEMENT: TOK_LCBRACKET TOK_RCBRACKET
+   73               | TOK_LCBRACKET REC_STATEMENT TOK_RCBRACKET
+   74               | TOK_LCBRACKET REC_DECLARATION TOK_RCBRACKET
+   75               | TOK_LCBRACKET REC_DECLARATION REC_STATEMENT TOK_RCBRACKET
 
-   75 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT
-   76                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
+   76 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT
+   77                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
 
-   77 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET EXPR TOK_RBRACKET STATEMENT
+   78 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET STATEMENT
 
-   78 JUMP_STATEMENT: TOK_BREAK TOK_SEMICOLON
-   79               | TOK_CONT TOK_SEMICOLON
-   80               | TOK_RETURN TOK_SEMICOLON
-   81               | TOK_RETURN FUNCTION TOK_SEMICOLON
-   82               | TOK_RETURN LOGIC_EXPR TOK_SEMICOLON
+   79 JUMP_STATEMENT: TOK_BREAK TOK_SEMICOLON
+   80               | TOK_CONT TOK_SEMICOLON
+   81               | TOK_RETURN TOK_SEMICOLON
+   82               | TOK_RETURN FUNCTION TOK_SEMICOLON
+   83               | TOK_RETURN LOGIC_EXPR TOK_SEMICOLON
 
 
 Terminals, with rules where they appear
@@ -134,22 +135,22 @@ Terminals, with rules where they appear
     TOK_LE (270) 41
     TOK_G (271) 43
     TOK_L (272) 44
-    TOK_IF (273) 75 76
-    TOK_WHILE (274) 77
-    TOK_ELSE (275) 76
-    TOK_RETURN (276) 80 81 82
-    TOK_BREAK (277) 78
-    TOK_CONT (278) 79
+    TOK_IF (273) 76 77
+    TOK_WHILE (274) 78
+    TOK_ELSE (275) 77
+    TOK_RETURN (276) 81 82 83
+    TOK_BREAK (277) 79
+    TOK_CONT (278) 80
     TOK_MUL (279) 52
     TOK_DIVIDE (280) 53
     TOK_PLUS (281) 49
     TOK_MINUS (282) 50 56
     TOK_MOD (283) 54
-    TOK_LBRACKET (284) 6 7 8 9 61 62 63 75 76 77
-    TOK_RBRACKET (285) 6 7 8 9 61 62 63 75 76 77
-    TOK_SEMICOLON (286) 8 9 12 13 14 15 71 78 79 80 81 82
-    TOK_LCBRACKET (287) 14 15 72 73 74
-    TOK_RCBRACKET (288) 14 15 72 73 74
+    TOK_LBRACKET (284) 6 7 8 9 61 62 63 76 77 78
+    TOK_RBRACKET (285) 6 7 8 9 61 62 63 76 77 78
+    TOK_SEMICOLON (286) 8 9 12 13 14 15 71 79 80 81 82 83
+    TOK_LCBRACKET (287) 14 15 72 73 74 75
+    TOK_RCBRACKET (288) 14 15 72 73 74 75
     TOK_LSQBRACKET (289) 21 22
     TOK_RSQBRACKET (290) 21 22
     TOK_COMMA (291) 17 19
@@ -176,13 +177,13 @@ Nonterminals, with rules where they appear
         on right: 1 3
     EXPR <expr> (49)
         on left: 4 5
-        on right: 2 3 77
+        on right: 2 3
     FUNCTION <expr> (50)
         on left: 6 7 8 9
-        on right: 4 81
+        on right: 4 82
     REC_DECLARATION <expr> (51)
         on left: 10 11
-        on right: 11 73 74
+        on right: 11 74 75
     DECLARATION <expr> (52)
         on left: 12 13 14 15
         on right: 5 10 11
@@ -197,10 +198,10 @@ Nonterminals, with rules where they appear
         on right: 6 7 8 9 12 13 14 15 16
     ASSIGN_EXPR <expr> (56)
         on left: 23 24 25 26 27 28 29
-        on right: 13 18 19 24 25 26 27 28 29 61 71
+        on right: 13 18 19 24 25 26 27 28 29 61 71 78
     LOGIC_EXPR <expr> (57)
         on left: 30 31 32
-        on right: 21 23 31 32 75 76 82
+        on right: 21 23 31 32 76 77 83
     BIT_EXPR <expr> (58)
         on left: 33 34 35 36
         on right: 30 31 32 34 35 36
@@ -227,24 +228,24 @@ Nonterminals, with rules where they appear
         on right: 55
     REC_STATEMENT <expr> (66)
         on left: 64 65
-        on right: 65 72 74
+        on right: 65 73 75
     STATEMENT <expr> (67)
         on left: 66 67 68 69 70
-        on right: 64 65 75 76 77
+        on right: 64 65 76 77 78
     EXPR_STATEMENT <expr> (68)
         on left: 71
         on right: 66
     FUNC_STATEMENT <expr> (69)
-        on left: 72 73 74
+        on left: 72 73 74 75
         on right: 6 7 70
     SELECT_STATEMENT <expr> (70)
-        on left: 75 76
+        on left: 76 77
         on right: 69
     ITER_STATEMENT <expr> (71)
-        on left: 77
+        on left: 78
         on right: 67
     JUMP_STATEMENT <expr> (72)
-        on left: 78 79 80 81 82
+        on left: 79 80 81 82 83
         on right: 68
 
 
@@ -1119,9 +1120,10 @@ State 62
 
 State 63
 
-   72 FUNC_STATEMENT: TOK_LCBRACKET . REC_STATEMENT TOK_RCBRACKET
-   73               | TOK_LCBRACKET . REC_DECLARATION TOK_RCBRACKET
-   74               | TOK_LCBRACKET . REC_DECLARATION REC_STATEMENT TOK_RCBRACKET
+   72 FUNC_STATEMENT: TOK_LCBRACKET . TOK_RCBRACKET
+   73               | TOK_LCBRACKET . REC_STATEMENT TOK_RCBRACKET
+   74               | TOK_LCBRACKET . REC_DECLARATION TOK_RCBRACKET
+   75               | TOK_LCBRACKET . REC_DECLARATION REC_STATEMENT TOK_RCBRACKET
 
     TOK_LOGIC_NOT  shift, and go to state 15
     TOK_BIT_NOT    shift, and go to state 16
@@ -1133,13 +1135,14 @@ State 63
     TOK_MINUS      shift, and go to state 17
     TOK_LBRACKET   shift, and go to state 18
     TOK_LCBRACKET  shift, and go to state 63
+    TOK_RCBRACKET  shift, and go to state 104
     TOK_N          shift, and go to state 20
     TOK_VAR        shift, and go to state 35
-    VARTYPE_INT    shift, and go to state 104
+    VARTYPE_INT    shift, and go to state 105
 
-    REC_DECLARATION   go to state 105
-    DECLARATION       go to state 106
-    ASSIGN_EXPR       go to state 107
+    REC_DECLARATION   go to state 106
+    DECLARATION       go to state 107
+    ASSIGN_EXPR       go to state 108
     LOGIC_EXPR        go to state 37
     BIT_EXPR          go to state 23
     EQ_EXPR           go to state 24
@@ -1149,13 +1152,13 @@ State 63
     MULT_EXPR         go to state 28
     UNARY             go to state 29
     FACTOR            go to state 30
-    REC_STATEMENT     go to state 108
-    STATEMENT         go to state 109
-    EXPR_STATEMENT    go to state 110
-    FUNC_STATEMENT    go to state 111
-    SELECT_STATEMENT  go to state 112
-    ITER_STATEMENT    go to state 113
-    JUMP_STATEMENT    go to state 114
+    REC_STATEMENT     go to state 109
+    STATEMENT         go to state 110
+    EXPR_STATEMENT    go to state 111
+    FUNC_STATEMENT    go to state 112
+    SELECT_STATEMENT  go to state 113
+    ITER_STATEMENT    go to state 114
+    JUMP_STATEMENT    go to state 115
 
 
 State 64
@@ -1177,10 +1180,10 @@ State 66
     6 FUNCTION: VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET . FUNC_STATEMENT
     8         | VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET . TOK_SEMICOLON
 
-    TOK_SEMICOLON  shift, and go to state 115
+    TOK_SEMICOLON  shift, and go to state 116
     TOK_LCBRACKET  shift, and go to state 63
 
-    FUNC_STATEMENT  go to state 116
+    FUNC_STATEMENT  go to state 117
 
 
 State 67
@@ -1189,14 +1192,14 @@ State 67
 
     VARTYPE_INT  shift, and go to state 32
 
-    FUNC_ARGS  go to state 117
+    FUNC_ARGS  go to state 118
 
 
 State 68
 
    14 DECLARATION: VARTYPE_INT DECLARATOR TOK_EQASSIGN TOK_LCBRACKET TOK_RCBRACKET . TOK_SEMICOLON
 
-    TOK_SEMICOLON  shift, and go to state 118
+    TOK_SEMICOLON  shift, and go to state 119
 
 
 State 69
@@ -1204,8 +1207,8 @@ State 69
    15 DECLARATION: VARTYPE_INT DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS . TOK_RCBRACKET TOK_SEMICOLON
    19 FUNC_CALL_ARGS: FUNC_CALL_ARGS . TOK_COMMA ASSIGN_EXPR
 
-    TOK_RCBRACKET  shift, and go to state 119
-    TOK_COMMA      shift, and go to state 120
+    TOK_RCBRACKET  shift, and go to state 120
+    TOK_COMMA      shift, and go to state 121
 
 
 State 70
@@ -1226,7 +1229,7 @@ State 71
     TOK_N          shift, and go to state 20
     TOK_VAR        shift, and go to state 35
 
-    ASSIGN_EXPR  go to state 121
+    ASSIGN_EXPR  go to state 122
     LOGIC_EXPR   go to state 37
     BIT_EXPR     go to state 23
     EQ_EXPR      go to state 24
@@ -1249,7 +1252,7 @@ State 72
     TOK_N          shift, and go to state 20
     TOK_VAR        shift, and go to state 35
 
-    ASSIGN_EXPR  go to state 122
+    ASSIGN_EXPR  go to state 123
     LOGIC_EXPR   go to state 37
     BIT_EXPR     go to state 23
     EQ_EXPR      go to state 24
@@ -1272,7 +1275,7 @@ State 73
     TOK_N          shift, and go to state 20
     TOK_VAR        shift, and go to state 35
 
-    ASSIGN_EXPR  go to state 123
+    ASSIGN_EXPR  go to state 124
     LOGIC_EXPR   go to state 37
     BIT_EXPR     go to state 23
     EQ_EXPR      go to state 24
@@ -1295,7 +1298,7 @@ State 74
     TOK_N          shift, and go to state 20
     TOK_VAR        shift, and go to state 35
 
-    ASSIGN_EXPR  go to state 124
+    ASSIGN_EXPR  go to state 125
     LOGIC_EXPR   go to state 37
     BIT_EXPR     go to state 23
     EQ_EXPR      go to state 24
@@ -1318,7 +1321,7 @@ State 75
     TOK_N          shift, and go to state 20
     TOK_VAR        shift, and go to state 35
 
-    ASSIGN_EXPR  go to state 125
+    ASSIGN_EXPR  go to state 126
     LOGIC_EXPR   go to state 37
     BIT_EXPR     go to state 23
     EQ_EXPR      go to state 24
@@ -1341,7 +1344,7 @@ State 76
     TOK_N          shift, and go to state 20
     TOK_VAR        shift, and go to state 35
 
-    ASSIGN_EXPR  go to state 126
+    ASSIGN_EXPR  go to state 127
     LOGIC_EXPR   go to state 37
     BIT_EXPR     go to state 23
     EQ_EXPR      go to state 24
@@ -1379,8 +1382,8 @@ State 80
    19 FUNC_CALL_ARGS: FUNC_CALL_ARGS . TOK_COMMA ASSIGN_EXPR
    63 FACTOR: TOK_VAR TOK_LBRACKET FUNC_CALL_ARGS . TOK_RBRACKET
 
-    TOK_RBRACKET  shift, and go to state 127
-    TOK_COMMA     shift, and go to state 120
+    TOK_RBRACKET  shift, and go to state 128
+    TOK_COMMA     shift, and go to state 121
 
 
 State 81
@@ -1602,36 +1605,36 @@ State 98
 
 State 99
 
-   75 SELECT_STATEMENT: TOK_IF . TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT
-   76                 | TOK_IF . TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
-
-    TOK_LBRACKET  shift, and go to state 128
-
-
-State 100
-
-   77 ITER_STATEMENT: TOK_WHILE . TOK_LBRACKET EXPR TOK_RBRACKET STATEMENT
+   76 SELECT_STATEMENT: TOK_IF . TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT
+   77                 | TOK_IF . TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
 
     TOK_LBRACKET  shift, and go to state 129
 
 
+State 100
+
+   78 ITER_STATEMENT: TOK_WHILE . TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET STATEMENT
+
+    TOK_LBRACKET  shift, and go to state 130
+
+
 State 101
 
-   80 JUMP_STATEMENT: TOK_RETURN . TOK_SEMICOLON
-   81               | TOK_RETURN . FUNCTION TOK_SEMICOLON
-   82               | TOK_RETURN . LOGIC_EXPR TOK_SEMICOLON
+   81 JUMP_STATEMENT: TOK_RETURN . TOK_SEMICOLON
+   82               | TOK_RETURN . FUNCTION TOK_SEMICOLON
+   83               | TOK_RETURN . LOGIC_EXPR TOK_SEMICOLON
 
     TOK_LOGIC_NOT  shift, and go to state 15
     TOK_BIT_NOT    shift, and go to state 16
     TOK_MINUS      shift, and go to state 17
     TOK_LBRACKET   shift, and go to state 18
-    TOK_SEMICOLON  shift, and go to state 130
+    TOK_SEMICOLON  shift, and go to state 131
     TOK_N          shift, and go to state 20
     TOK_VAR        shift, and go to state 21
-    VARTYPE_INT    shift, and go to state 131
+    VARTYPE_INT    shift, and go to state 132
 
-    FUNCTION    go to state 132
-    LOGIC_EXPR  go to state 133
+    FUNCTION    go to state 133
+    LOGIC_EXPR  go to state 134
     BIT_EXPR    go to state 23
     EQ_EXPR     go to state 24
     REL_EXPR    go to state 25
@@ -1644,19 +1647,26 @@ State 101
 
 State 102
 
-   78 JUMP_STATEMENT: TOK_BREAK . TOK_SEMICOLON
-
-    TOK_SEMICOLON  shift, and go to state 134
-
-
-State 103
-
-   79 JUMP_STATEMENT: TOK_CONT . TOK_SEMICOLON
+   79 JUMP_STATEMENT: TOK_BREAK . TOK_SEMICOLON
 
     TOK_SEMICOLON  shift, and go to state 135
 
 
+State 103
+
+   80 JUMP_STATEMENT: TOK_CONT . TOK_SEMICOLON
+
+    TOK_SEMICOLON  shift, and go to state 136
+
+
 State 104
+
+   72 FUNC_STATEMENT: TOK_LCBRACKET TOK_RCBRACKET .
+
+    $default  reduce using rule 72 (FUNC_STATEMENT)
+
+
+State 105
 
    12 DECLARATION: VARTYPE_INT . DECLARATOR TOK_SEMICOLON
    13            | VARTYPE_INT . DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON
@@ -1665,14 +1675,14 @@ State 104
 
     TOK_VAR  shift, and go to state 7
 
-    DECLARATOR  go to state 136
+    DECLARATOR  go to state 137
 
 
-State 105
+State 106
 
    11 REC_DECLARATION: REC_DECLARATION . DECLARATION
-   73 FUNC_STATEMENT: TOK_LCBRACKET REC_DECLARATION . TOK_RCBRACKET
-   74               | TOK_LCBRACKET REC_DECLARATION . REC_STATEMENT TOK_RCBRACKET
+   74 FUNC_STATEMENT: TOK_LCBRACKET REC_DECLARATION . TOK_RCBRACKET
+   75               | TOK_LCBRACKET REC_DECLARATION . REC_STATEMENT TOK_RCBRACKET
 
     TOK_LOGIC_NOT  shift, and go to state 15
     TOK_BIT_NOT    shift, and go to state 16
@@ -1684,13 +1694,13 @@ State 105
     TOK_MINUS      shift, and go to state 17
     TOK_LBRACKET   shift, and go to state 18
     TOK_LCBRACKET  shift, and go to state 63
-    TOK_RCBRACKET  shift, and go to state 137
+    TOK_RCBRACKET  shift, and go to state 138
     TOK_N          shift, and go to state 20
     TOK_VAR        shift, and go to state 35
-    VARTYPE_INT    shift, and go to state 104
+    VARTYPE_INT    shift, and go to state 105
 
-    DECLARATION       go to state 138
-    ASSIGN_EXPR       go to state 107
+    DECLARATION       go to state 139
+    ASSIGN_EXPR       go to state 108
     LOGIC_EXPR        go to state 37
     BIT_EXPR          go to state 23
     EQ_EXPR           go to state 24
@@ -1700,33 +1710,33 @@ State 105
     MULT_EXPR         go to state 28
     UNARY             go to state 29
     FACTOR            go to state 30
-    REC_STATEMENT     go to state 139
-    STATEMENT         go to state 109
-    EXPR_STATEMENT    go to state 110
-    FUNC_STATEMENT    go to state 111
-    SELECT_STATEMENT  go to state 112
-    ITER_STATEMENT    go to state 113
-    JUMP_STATEMENT    go to state 114
+    REC_STATEMENT     go to state 140
+    STATEMENT         go to state 110
+    EXPR_STATEMENT    go to state 111
+    FUNC_STATEMENT    go to state 112
+    SELECT_STATEMENT  go to state 113
+    ITER_STATEMENT    go to state 114
+    JUMP_STATEMENT    go to state 115
 
 
-State 106
+State 107
 
    10 REC_DECLARATION: DECLARATION .
 
     $default  reduce using rule 10 (REC_DECLARATION)
 
 
-State 107
+State 108
 
    71 EXPR_STATEMENT: ASSIGN_EXPR . TOK_SEMICOLON
 
-    TOK_SEMICOLON  shift, and go to state 140
+    TOK_SEMICOLON  shift, and go to state 141
 
 
-State 108
+State 109
 
    65 REC_STATEMENT: REC_STATEMENT . STATEMENT
-   72 FUNC_STATEMENT: TOK_LCBRACKET REC_STATEMENT . TOK_RCBRACKET
+   73 FUNC_STATEMENT: TOK_LCBRACKET REC_STATEMENT . TOK_RCBRACKET
 
     TOK_LOGIC_NOT  shift, and go to state 15
     TOK_BIT_NOT    shift, and go to state 16
@@ -1738,11 +1748,11 @@ State 108
     TOK_MINUS      shift, and go to state 17
     TOK_LBRACKET   shift, and go to state 18
     TOK_LCBRACKET  shift, and go to state 63
-    TOK_RCBRACKET  shift, and go to state 141
+    TOK_RCBRACKET  shift, and go to state 142
     TOK_N          shift, and go to state 20
     TOK_VAR        shift, and go to state 35
 
-    ASSIGN_EXPR       go to state 107
+    ASSIGN_EXPR       go to state 108
     LOGIC_EXPR        go to state 37
     BIT_EXPR          go to state 23
     EQ_EXPR           go to state 24
@@ -1752,71 +1762,71 @@ State 108
     MULT_EXPR         go to state 28
     UNARY             go to state 29
     FACTOR            go to state 30
-    STATEMENT         go to state 142
-    EXPR_STATEMENT    go to state 110
-    FUNC_STATEMENT    go to state 111
-    SELECT_STATEMENT  go to state 112
-    ITER_STATEMENT    go to state 113
-    JUMP_STATEMENT    go to state 114
+    STATEMENT         go to state 143
+    EXPR_STATEMENT    go to state 111
+    FUNC_STATEMENT    go to state 112
+    SELECT_STATEMENT  go to state 113
+    ITER_STATEMENT    go to state 114
+    JUMP_STATEMENT    go to state 115
 
 
-State 109
+State 110
 
    64 REC_STATEMENT: STATEMENT .
 
     $default  reduce using rule 64 (REC_STATEMENT)
 
 
-State 110
+State 111
 
    66 STATEMENT: EXPR_STATEMENT .
 
     $default  reduce using rule 66 (STATEMENT)
 
 
-State 111
+State 112
 
    70 STATEMENT: FUNC_STATEMENT .
 
     $default  reduce using rule 70 (STATEMENT)
 
 
-State 112
+State 113
 
    69 STATEMENT: SELECT_STATEMENT .
 
     $default  reduce using rule 69 (STATEMENT)
 
 
-State 113
+State 114
 
    67 STATEMENT: ITER_STATEMENT .
 
     $default  reduce using rule 67 (STATEMENT)
 
 
-State 114
+State 115
 
    68 STATEMENT: JUMP_STATEMENT .
 
     $default  reduce using rule 68 (STATEMENT)
 
 
-State 115
+State 116
 
     8 FUNCTION: VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET TOK_SEMICOLON .
 
     $default  reduce using rule 8 (FUNCTION)
 
 
-State 116
+State 117
 
     6 FUNCTION: VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET FUNC_STATEMENT .
 
     $default  reduce using rule 6 (FUNCTION)
 
 
-State 117
+State 118
 
    17 FUNC_ARGS: FUNC_ARGS . TOK_COMMA FUNC_ARGS
    17          | FUNC_ARGS TOK_COMMA FUNC_ARGS .
@@ -1827,21 +1837,21 @@ State 117
     $default   reduce using rule 17 (FUNC_ARGS)
 
 
-State 118
+State 119
 
    14 DECLARATION: VARTYPE_INT DECLARATOR TOK_EQASSIGN TOK_LCBRACKET TOK_RCBRACKET TOK_SEMICOLON .
 
     $default  reduce using rule 14 (DECLARATION)
 
 
-State 119
+State 120
 
    15 DECLARATION: VARTYPE_INT DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET . TOK_SEMICOLON
 
-    TOK_SEMICOLON  shift, and go to state 143
+    TOK_SEMICOLON  shift, and go to state 144
 
 
-State 120
+State 121
 
    19 FUNC_CALL_ARGS: FUNC_CALL_ARGS TOK_COMMA . ASSIGN_EXPR
 
@@ -1852,7 +1862,7 @@ State 120
     TOK_N          shift, and go to state 20
     TOK_VAR        shift, and go to state 35
 
-    ASSIGN_EXPR  go to state 144
+    ASSIGN_EXPR  go to state 145
     LOGIC_EXPR   go to state 37
     BIT_EXPR     go to state 23
     EQ_EXPR      go to state 24
@@ -1864,59 +1874,59 @@ State 120
     FACTOR       go to state 30
 
 
-State 121
+State 122
 
    26 ASSIGN_EXPR: TOK_VAR TOK_SUBASSIGN ASSIGN_EXPR .
 
     $default  reduce using rule 26 (ASSIGN_EXPR)
 
 
-State 122
+State 123
 
    27 ASSIGN_EXPR: TOK_VAR TOK_MULASSIGN ASSIGN_EXPR .
 
     $default  reduce using rule 27 (ASSIGN_EXPR)
 
 
-State 123
+State 124
 
    28 ASSIGN_EXPR: TOK_VAR TOK_DIVASSIGN ASSIGN_EXPR .
 
     $default  reduce using rule 28 (ASSIGN_EXPR)
 
 
-State 124
+State 125
 
    25 ASSIGN_EXPR: TOK_VAR TOK_ADDASSIGN ASSIGN_EXPR .
 
     $default  reduce using rule 25 (ASSIGN_EXPR)
 
 
-State 125
+State 126
 
    24 ASSIGN_EXPR: TOK_VAR TOK_EQASSIGN ASSIGN_EXPR .
 
     $default  reduce using rule 24 (ASSIGN_EXPR)
 
 
-State 126
+State 127
 
    29 ASSIGN_EXPR: TOK_VAR TOK_MODASSIGN ASSIGN_EXPR .
 
     $default  reduce using rule 29 (ASSIGN_EXPR)
 
 
-State 127
+State 128
 
    63 FACTOR: TOK_VAR TOK_LBRACKET FUNC_CALL_ARGS TOK_RBRACKET .
 
     $default  reduce using rule 63 (FACTOR)
 
 
-State 128
+State 129
 
-   75 SELECT_STATEMENT: TOK_IF TOK_LBRACKET . LOGIC_EXPR TOK_RBRACKET STATEMENT
-   76                 | TOK_IF TOK_LBRACKET . LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
+   76 SELECT_STATEMENT: TOK_IF TOK_LBRACKET . LOGIC_EXPR TOK_RBRACKET STATEMENT
+   77                 | TOK_IF TOK_LBRACKET . LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
 
     TOK_LOGIC_NOT  shift, and go to state 15
     TOK_BIT_NOT    shift, and go to state 16
@@ -1925,7 +1935,7 @@ State 128
     TOK_N          shift, and go to state 20
     TOK_VAR        shift, and go to state 21
 
-    LOGIC_EXPR  go to state 145
+    LOGIC_EXPR  go to state 146
     BIT_EXPR    go to state 23
     EQ_EXPR     go to state 24
     REL_EXPR    go to state 25
@@ -1936,25 +1946,37 @@ State 128
     FACTOR      go to state 30
 
 
-State 129
-
-   77 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET . EXPR TOK_RBRACKET STATEMENT
-
-    VARTYPE_INT  shift, and go to state 1
-
-    EXPR         go to state 146
-    FUNCTION     go to state 5
-    DECLARATION  go to state 6
-
-
 State 130
 
-   80 JUMP_STATEMENT: TOK_RETURN TOK_SEMICOLON .
+   78 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET . ASSIGN_EXPR TOK_RBRACKET STATEMENT
 
-    $default  reduce using rule 80 (JUMP_STATEMENT)
+    TOK_LOGIC_NOT  shift, and go to state 15
+    TOK_BIT_NOT    shift, and go to state 16
+    TOK_MINUS      shift, and go to state 17
+    TOK_LBRACKET   shift, and go to state 18
+    TOK_N          shift, and go to state 20
+    TOK_VAR        shift, and go to state 35
+
+    ASSIGN_EXPR  go to state 147
+    LOGIC_EXPR   go to state 37
+    BIT_EXPR     go to state 23
+    EQ_EXPR      go to state 24
+    REL_EXPR     go to state 25
+    SHIFT_EXPR   go to state 26
+    ADD_EXPR     go to state 27
+    MULT_EXPR    go to state 28
+    UNARY        go to state 29
+    FACTOR       go to state 30
 
 
 State 131
+
+   81 JUMP_STATEMENT: TOK_RETURN TOK_SEMICOLON .
+
+    $default  reduce using rule 81 (JUMP_STATEMENT)
+
+
+State 132
 
     6 FUNCTION: VARTYPE_INT . DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET FUNC_STATEMENT
     7         | VARTYPE_INT . DECLARATOR TOK_LBRACKET TOK_RBRACKET FUNC_STATEMENT
@@ -1963,42 +1985,42 @@ State 131
 
     TOK_VAR  shift, and go to state 7
 
-    DECLARATOR  go to state 147
-
-
-State 132
-
-   81 JUMP_STATEMENT: TOK_RETURN FUNCTION . TOK_SEMICOLON
-
-    TOK_SEMICOLON  shift, and go to state 148
+    DECLARATOR  go to state 148
 
 
 State 133
 
-   31 LOGIC_EXPR: LOGIC_EXPR . TOK_LOGIC_AND BIT_EXPR
-   32           | LOGIC_EXPR . TOK_LOGIC_OR BIT_EXPR
-   82 JUMP_STATEMENT: TOK_RETURN LOGIC_EXPR . TOK_SEMICOLON
+   82 JUMP_STATEMENT: TOK_RETURN FUNCTION . TOK_SEMICOLON
 
-    TOK_LOGIC_AND  shift, and go to state 43
-    TOK_LOGIC_OR   shift, and go to state 44
     TOK_SEMICOLON  shift, and go to state 149
 
 
 State 134
 
-   78 JUMP_STATEMENT: TOK_BREAK TOK_SEMICOLON .
+   31 LOGIC_EXPR: LOGIC_EXPR . TOK_LOGIC_AND BIT_EXPR
+   32           | LOGIC_EXPR . TOK_LOGIC_OR BIT_EXPR
+   83 JUMP_STATEMENT: TOK_RETURN LOGIC_EXPR . TOK_SEMICOLON
 
-    $default  reduce using rule 78 (JUMP_STATEMENT)
+    TOK_LOGIC_AND  shift, and go to state 43
+    TOK_LOGIC_OR   shift, and go to state 44
+    TOK_SEMICOLON  shift, and go to state 150
 
 
 State 135
 
-   79 JUMP_STATEMENT: TOK_CONT TOK_SEMICOLON .
+   79 JUMP_STATEMENT: TOK_BREAK TOK_SEMICOLON .
 
     $default  reduce using rule 79 (JUMP_STATEMENT)
 
 
 State 136
+
+   80 JUMP_STATEMENT: TOK_CONT TOK_SEMICOLON .
+
+    $default  reduce using rule 80 (JUMP_STATEMENT)
+
+
+State 137
 
    12 DECLARATION: VARTYPE_INT DECLARATOR . TOK_SEMICOLON
    13            | VARTYPE_INT DECLARATOR . TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON
@@ -2009,24 +2031,24 @@ State 136
     TOK_EQASSIGN   shift, and go to state 14
 
 
-State 137
-
-   73 FUNC_STATEMENT: TOK_LCBRACKET REC_DECLARATION TOK_RCBRACKET .
-
-    $default  reduce using rule 73 (FUNC_STATEMENT)
-
-
 State 138
+
+   74 FUNC_STATEMENT: TOK_LCBRACKET REC_DECLARATION TOK_RCBRACKET .
+
+    $default  reduce using rule 74 (FUNC_STATEMENT)
+
+
+State 139
 
    11 REC_DECLARATION: REC_DECLARATION DECLARATION .
 
     $default  reduce using rule 11 (REC_DECLARATION)
 
 
-State 139
+State 140
 
    65 REC_STATEMENT: REC_STATEMENT . STATEMENT
-   74 FUNC_STATEMENT: TOK_LCBRACKET REC_DECLARATION REC_STATEMENT . TOK_RCBRACKET
+   75 FUNC_STATEMENT: TOK_LCBRACKET REC_DECLARATION REC_STATEMENT . TOK_RCBRACKET
 
     TOK_LOGIC_NOT  shift, and go to state 15
     TOK_BIT_NOT    shift, and go to state 16
@@ -2038,11 +2060,11 @@ State 139
     TOK_MINUS      shift, and go to state 17
     TOK_LBRACKET   shift, and go to state 18
     TOK_LCBRACKET  shift, and go to state 63
-    TOK_RCBRACKET  shift, and go to state 150
+    TOK_RCBRACKET  shift, and go to state 151
     TOK_N          shift, and go to state 20
     TOK_VAR        shift, and go to state 35
 
-    ASSIGN_EXPR       go to state 107
+    ASSIGN_EXPR       go to state 108
     LOGIC_EXPR        go to state 37
     BIT_EXPR          go to state 23
     EQ_EXPR           go to state 24
@@ -2052,69 +2074,69 @@ State 139
     MULT_EXPR         go to state 28
     UNARY             go to state 29
     FACTOR            go to state 30
-    STATEMENT         go to state 142
-    EXPR_STATEMENT    go to state 110
-    FUNC_STATEMENT    go to state 111
-    SELECT_STATEMENT  go to state 112
-    ITER_STATEMENT    go to state 113
-    JUMP_STATEMENT    go to state 114
+    STATEMENT         go to state 143
+    EXPR_STATEMENT    go to state 111
+    FUNC_STATEMENT    go to state 112
+    SELECT_STATEMENT  go to state 113
+    ITER_STATEMENT    go to state 114
+    JUMP_STATEMENT    go to state 115
 
 
-State 140
+State 141
 
    71 EXPR_STATEMENT: ASSIGN_EXPR TOK_SEMICOLON .
 
     $default  reduce using rule 71 (EXPR_STATEMENT)
 
 
-State 141
-
-   72 FUNC_STATEMENT: TOK_LCBRACKET REC_STATEMENT TOK_RCBRACKET .
-
-    $default  reduce using rule 72 (FUNC_STATEMENT)
-
-
 State 142
+
+   73 FUNC_STATEMENT: TOK_LCBRACKET REC_STATEMENT TOK_RCBRACKET .
+
+    $default  reduce using rule 73 (FUNC_STATEMENT)
+
+
+State 143
 
    65 REC_STATEMENT: REC_STATEMENT STATEMENT .
 
     $default  reduce using rule 65 (REC_STATEMENT)
 
 
-State 143
+State 144
 
    15 DECLARATION: VARTYPE_INT DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON .
 
     $default  reduce using rule 15 (DECLARATION)
 
 
-State 144
+State 145
 
    19 FUNC_CALL_ARGS: FUNC_CALL_ARGS TOK_COMMA ASSIGN_EXPR .
 
     $default  reduce using rule 19 (FUNC_CALL_ARGS)
 
 
-State 145
+State 146
 
    31 LOGIC_EXPR: LOGIC_EXPR . TOK_LOGIC_AND BIT_EXPR
    32           | LOGIC_EXPR . TOK_LOGIC_OR BIT_EXPR
-   75 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR . TOK_RBRACKET STATEMENT
-   76                 | TOK_IF TOK_LBRACKET LOGIC_EXPR . TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
+   76 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR . TOK_RBRACKET STATEMENT
+   77                 | TOK_IF TOK_LBRACKET LOGIC_EXPR . TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
 
     TOK_LOGIC_AND  shift, and go to state 43
     TOK_LOGIC_OR   shift, and go to state 44
-    TOK_RBRACKET   shift, and go to state 151
-
-
-State 146
-
-   77 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET EXPR . TOK_RBRACKET STATEMENT
-
-    TOK_RBRACKET  shift, and go to state 152
+    TOK_RBRACKET   shift, and go to state 152
 
 
 State 147
+
+   78 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET ASSIGN_EXPR . TOK_RBRACKET STATEMENT
+
+    TOK_RBRACKET  shift, and go to state 153
+
+
+State 148
 
     6 FUNCTION: VARTYPE_INT DECLARATOR . TOK_LBRACKET FUNC_ARGS TOK_RBRACKET FUNC_STATEMENT
     7         | VARTYPE_INT DECLARATOR . TOK_LBRACKET TOK_RBRACKET FUNC_STATEMENT
@@ -2124,66 +2146,31 @@ State 147
     TOK_LBRACKET  shift, and go to state 12
 
 
-State 148
-
-   81 JUMP_STATEMENT: TOK_RETURN FUNCTION TOK_SEMICOLON .
-
-    $default  reduce using rule 81 (JUMP_STATEMENT)
-
-
 State 149
 
-   82 JUMP_STATEMENT: TOK_RETURN LOGIC_EXPR TOK_SEMICOLON .
+   82 JUMP_STATEMENT: TOK_RETURN FUNCTION TOK_SEMICOLON .
 
     $default  reduce using rule 82 (JUMP_STATEMENT)
 
 
 State 150
 
-   74 FUNC_STATEMENT: TOK_LCBRACKET REC_DECLARATION REC_STATEMENT TOK_RCBRACKET .
+   83 JUMP_STATEMENT: TOK_RETURN LOGIC_EXPR TOK_SEMICOLON .
 
-    $default  reduce using rule 74 (FUNC_STATEMENT)
+    $default  reduce using rule 83 (JUMP_STATEMENT)
 
 
 State 151
 
-   75 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET . STATEMENT
-   76                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET . STATEMENT TOK_ELSE STATEMENT
+   75 FUNC_STATEMENT: TOK_LCBRACKET REC_DECLARATION REC_STATEMENT TOK_RCBRACKET .
 
-    TOK_LOGIC_NOT  shift, and go to state 15
-    TOK_BIT_NOT    shift, and go to state 16
-    TOK_IF         shift, and go to state 99
-    TOK_WHILE      shift, and go to state 100
-    TOK_RETURN     shift, and go to state 101
-    TOK_BREAK      shift, and go to state 102
-    TOK_CONT       shift, and go to state 103
-    TOK_MINUS      shift, and go to state 17
-    TOK_LBRACKET   shift, and go to state 18
-    TOK_LCBRACKET  shift, and go to state 63
-    TOK_N          shift, and go to state 20
-    TOK_VAR        shift, and go to state 35
-
-    ASSIGN_EXPR       go to state 107
-    LOGIC_EXPR        go to state 37
-    BIT_EXPR          go to state 23
-    EQ_EXPR           go to state 24
-    REL_EXPR          go to state 25
-    SHIFT_EXPR        go to state 26
-    ADD_EXPR          go to state 27
-    MULT_EXPR         go to state 28
-    UNARY             go to state 29
-    FACTOR            go to state 30
-    STATEMENT         go to state 153
-    EXPR_STATEMENT    go to state 110
-    FUNC_STATEMENT    go to state 111
-    SELECT_STATEMENT  go to state 112
-    ITER_STATEMENT    go to state 113
-    JUMP_STATEMENT    go to state 114
+    $default  reduce using rule 75 (FUNC_STATEMENT)
 
 
 State 152
 
-   77 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET EXPR TOK_RBRACKET . STATEMENT
+   76 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET . STATEMENT
+   77                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET . STATEMENT TOK_ELSE STATEMENT
 
     TOK_LOGIC_NOT  shift, and go to state 15
     TOK_BIT_NOT    shift, and go to state 16
@@ -2198,7 +2185,7 @@ State 152
     TOK_N          shift, and go to state 20
     TOK_VAR        shift, and go to state 35
 
-    ASSIGN_EXPR       go to state 107
+    ASSIGN_EXPR       go to state 108
     LOGIC_EXPR        go to state 37
     BIT_EXPR          go to state 23
     EQ_EXPR           go to state 24
@@ -2209,34 +2196,16 @@ State 152
     UNARY             go to state 29
     FACTOR            go to state 30
     STATEMENT         go to state 154
-    EXPR_STATEMENT    go to state 110
-    FUNC_STATEMENT    go to state 111
-    SELECT_STATEMENT  go to state 112
-    ITER_STATEMENT    go to state 113
-    JUMP_STATEMENT    go to state 114
+    EXPR_STATEMENT    go to state 111
+    FUNC_STATEMENT    go to state 112
+    SELECT_STATEMENT  go to state 113
+    ITER_STATEMENT    go to state 114
+    JUMP_STATEMENT    go to state 115
 
 
 State 153
 
-   75 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT .
-   76                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT . TOK_ELSE STATEMENT
-
-    TOK_ELSE  shift, and go to state 155
-
-    TOK_ELSE  [reduce using rule 75 (SELECT_STATEMENT)]
-    $default  reduce using rule 75 (SELECT_STATEMENT)
-
-
-State 154
-
-   77 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET EXPR TOK_RBRACKET STATEMENT .
-
-    $default  reduce using rule 77 (ITER_STATEMENT)
-
-
-State 155
-
-   76 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE . STATEMENT
+   78 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET . STATEMENT
 
     TOK_LOGIC_NOT  shift, and go to state 15
     TOK_BIT_NOT    shift, and go to state 16
@@ -2251,7 +2220,7 @@ State 155
     TOK_N          shift, and go to state 20
     TOK_VAR        shift, and go to state 35
 
-    ASSIGN_EXPR       go to state 107
+    ASSIGN_EXPR       go to state 108
     LOGIC_EXPR        go to state 37
     BIT_EXPR          go to state 23
     EQ_EXPR           go to state 24
@@ -2261,16 +2230,69 @@ State 155
     MULT_EXPR         go to state 28
     UNARY             go to state 29
     FACTOR            go to state 30
-    STATEMENT         go to state 156
-    EXPR_STATEMENT    go to state 110
-    FUNC_STATEMENT    go to state 111
-    SELECT_STATEMENT  go to state 112
-    ITER_STATEMENT    go to state 113
-    JUMP_STATEMENT    go to state 114
+    STATEMENT         go to state 155
+    EXPR_STATEMENT    go to state 111
+    FUNC_STATEMENT    go to state 112
+    SELECT_STATEMENT  go to state 113
+    ITER_STATEMENT    go to state 114
+    JUMP_STATEMENT    go to state 115
+
+
+State 154
+
+   76 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT .
+   77                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT . TOK_ELSE STATEMENT
+
+    TOK_ELSE  shift, and go to state 156
+
+    TOK_ELSE  [reduce using rule 76 (SELECT_STATEMENT)]
+    $default  reduce using rule 76 (SELECT_STATEMENT)
+
+
+State 155
+
+   78 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET STATEMENT .
+
+    $default  reduce using rule 78 (ITER_STATEMENT)
 
 
 State 156
 
-   76 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT .
+   77 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE . STATEMENT
 
-    $default  reduce using rule 76 (SELECT_STATEMENT)
+    TOK_LOGIC_NOT  shift, and go to state 15
+    TOK_BIT_NOT    shift, and go to state 16
+    TOK_IF         shift, and go to state 99
+    TOK_WHILE      shift, and go to state 100
+    TOK_RETURN     shift, and go to state 101
+    TOK_BREAK      shift, and go to state 102
+    TOK_CONT       shift, and go to state 103
+    TOK_MINUS      shift, and go to state 17
+    TOK_LBRACKET   shift, and go to state 18
+    TOK_LCBRACKET  shift, and go to state 63
+    TOK_N          shift, and go to state 20
+    TOK_VAR        shift, and go to state 35
+
+    ASSIGN_EXPR       go to state 108
+    LOGIC_EXPR        go to state 37
+    BIT_EXPR          go to state 23
+    EQ_EXPR           go to state 24
+    REL_EXPR          go to state 25
+    SHIFT_EXPR        go to state 26
+    ADD_EXPR          go to state 27
+    MULT_EXPR         go to state 28
+    UNARY             go to state 29
+    FACTOR            go to state 30
+    STATEMENT         go to state 157
+    EXPR_STATEMENT    go to state 111
+    FUNC_STATEMENT    go to state 112
+    SELECT_STATEMENT  go to state 113
+    ITER_STATEMENT    go to state 114
+    JUMP_STATEMENT    go to state 115
+
+
+State 157
+
+   77 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT .
+
+    $default  reduce using rule 77 (SELECT_STATEMENT)
