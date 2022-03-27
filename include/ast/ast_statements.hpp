@@ -80,6 +80,7 @@ public:
     Cond->MipsCodeGen(dst, data, DstReg);
     std::string EndIf = data.MakeLabel("EndIf");
     dst<<"beq $0,$"<<DstReg<<EndIf<<std::endl;
+    dst<<"nop"<<std::endl;
     Statement->MipsCodeGen(dst, data, DstReg);
     dst<<EndIf<<std::endl;
    }
@@ -126,8 +127,10 @@ public:
         std::string Else = data.MakeLabel("Else");
         std::string EndIfElse = data.MakeLabel("EndIfElse");
         dst<<"beq $0,$"<<DstReg<<Else<<std::endl;
+        dst<<"nop"<<std::endl;
         Statement->MipsCodeGen(dst, data, DstReg);
         dst<<"b "<<EndIfElse<<std::endl;
+        dst<<"nop"<<std::endl;
         dst<<Else<<std::endl;
         Statement2->MipsCodeGen(dst, data, DstReg);
         dst<<EndIfElse<<std::endl;
@@ -169,10 +172,12 @@ public:
     std::string LoopStart = data.MakeLabel("LoopStart");
     std::string LoopEnd = data.MakeLabel("LoopEnd");
     dst<<"beq $0,$"<<idx<<LoopEnd<<std::endl;
+    dst<<"nop"<<std::endl;
     dst<<LoopStart<<std::endl;
     Statement->MipsCodeGen(dst, data, DstReg);
     Cond->MipsCodeGen(dst, data, idx);
     dst<<"bne $0,$"<<idx<<LoopStart<<std::endl;
+    dst<<"nop"<<std::endl;
     dst<<LoopEnd<<std::endl;
     data.registers.free_reg(idx);
    }
@@ -208,6 +213,7 @@ public:
     virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
         Statement->MipsCodeGen(dst, data, 2);
         dst<<"b "<<data.CurrLabel<<std::endl;
+        dst<<"nop"<<std::endl;
    }
 
 };
@@ -239,6 +245,7 @@ public:
 
    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
         dst<<"b "<<data.CurrLabel<<std::endl;
+        dst<<"nop"<<std::endl;
    }
 };
 

@@ -86,11 +86,11 @@ public:
     {}
 
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
-        right->MipsCodeGen(dst,data, DstReg);
+        left->MipsCodeGen(dst,data, DstReg);
         int idx = data.registers.allocate();
         std::string tmp_reg = data.registers.make_regname(idx);
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        left->MipsCodeGen(dst,data, DstReg);
+        right->MipsCodeGen(dst,data, DstReg);
         dst<<"sub $"<<DstReg<<","<<tmp_reg<<",$"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
     }
@@ -114,7 +114,7 @@ public:
         std::string tmp_reg = data.registers.make_regname(idx);
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
         right->MipsCodeGen(dst,data, DstReg);
-        dst<<"mul $"<<DstReg<<","<<tmp_reg<<std::endl;
+        dst<<"mult $"<<DstReg<<","<<tmp_reg<<std::endl;
         dst<<"mflo $"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
     }
@@ -138,7 +138,7 @@ public:
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
         right->MipsCodeGen(dst,data, DstReg);
         dst<<"div "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        dst<<"mfhi $"<<DstReg<<std::endl;
+        dst<<"mflo $"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
     }
 };
@@ -160,7 +160,7 @@ public:
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
         left->MipsCodeGen(dst,data, DstReg);
         dst<<"div "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        dst<<"mflo $"<<DstReg<<std::endl;
+        dst<<"mfhi $"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
     }
 };

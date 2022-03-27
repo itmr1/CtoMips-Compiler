@@ -14,3 +14,4 @@ lw $30,12($29)
 addiu $29,$29,16
 j $31
 nop
+.global f

@@ -8,10 +8,11 @@ lw $2,4($30)
 move $8,$2
 lw $2,8($30)
 div $8,$2
-mfhi $2
+mflo $2
 b EoF0
 EoF0:
 lw $30,12($29)
 addiu $29,$29,16
 j $31
 nop
+.global f

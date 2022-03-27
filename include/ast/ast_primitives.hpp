@@ -283,7 +283,7 @@ public:
     virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
         if(args){
             int ArgSize = 0;
-            Args->CountFrameSize(ArgSize);
+            args->CountFrameSize(ArgSize);
             if (ArgSize == 1){
                 args->MipsCodeGen(dst, data, 4);
             }

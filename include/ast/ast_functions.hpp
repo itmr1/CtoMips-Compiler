@@ -31,6 +31,11 @@ public:
         , Statement(_Statement)
     {}
 
+    Function(const std::string &_type, ExpressionPtr _Declarator)
+        :type(_type)
+        , Declarator(_Declarator)
+    {}
+
     virtual ~Function()
     {
         delete Declarator;
@@ -90,6 +95,7 @@ public:
         dst<<"addiu"<<" $29,"<<"$29,"<<frealsize<<std::endl;
         dst<<"j $31"<<std::endl;
         dst<<"nop"<<std::endl;
+        dst<<".global "<<label<<std::endl;
     }
 
 };
@@ -117,6 +123,22 @@ public:
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
         //TODO
     }*/
+};
+
+class FuncInstance
+    :public Function
+{
+public:
+    FuncInstance(const std::string &_type, ExpressionPtr _Declarator, ExpressionPtr _Args)
+        : Function(_type, _Declarator, _Args)
+    {}
+    FuncInstance(const std::string &_type, ExpressionPtr _Declarator)
+        : Function(_type, _Declarator)
+    {}
+    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
+        return;
+    }
+    virtual void CountFrameSize(int &CurrSize) const override {return;}    
 };
 
 #endif
