@@ -18,12 +18,6 @@ protected:
         :id(_id)
         , right(_right)
     {}
-
-    /*AssignOps(const std::string &_type,const std::string &_id, ExpressionPtr _right)
-        :type(_type)
-        , id(_id)
-        , right(_right)
-    {}*/
 public:
     virtual ~AssignOps()
     {
