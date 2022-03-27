@@ -18,6 +18,12 @@ protected:
         :id(_id)
         , right(_right)
     {}
+
+    /*AssignOps(const std::string &_type,const std::string &_id, ExpressionPtr _right)
+        :type(_type)
+        , id(_id)
+        , right(_right)
+    {}*/
 public:
     virtual ~AssignOps()
     {
@@ -70,6 +76,12 @@ public:
     /*AssignOperator(const std::string &_type,const std::string &_id, ExpressionPtr _right)
         : AssignOps(_type,_id, _right)
     {}*/
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
+        std::string name = id->getId();
+        right->MipsCodeGen(dst, data, DstReg);
+        int varoffset = data.stack.back().bindings[name].offset;
+        dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
+    }
 };
 
 class AddAssignOperator
@@ -82,6 +94,16 @@ public:
     AddAssignOperator(const std::string &_id, ExpressionPtr _right)
         : AssignOps(_id, _right)
     {}
+
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
+        std::string name = id->getId();
+        int idx = data.registers.allocate();
+        right->MipsCodeGen(dst, data, idx);
+        dst<<"add $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
+        data.registers.free_reg(idx);
+        int varoffset = data.stack.back().bindings[name].offset;
+        dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
+    }
 };
 
 class SubAssignOperator
@@ -94,6 +116,15 @@ public:
     SubAssignOperator(const std::string &_id, ExpressionPtr _right)
         : AssignOps(_id, _right)
     {}
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
+        std::string name = id->getId();
+        int idx = data.registers.allocate();
+        right->MipsCodeGen(dst, data, idx);
+        dst<<"sub $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
+        data.registers.free_reg(idx);
+        int varoffset = data.stack.back().bindings[name].offset;
+        dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
+    }
 };
 
 class MulAssignOperator
@@ -106,6 +137,16 @@ public:
     MulAssignOperator(const std::string &_id, ExpressionPtr _right)
         : AssignOps(_id, _right)
     {}
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
+        std::string name = id->getId();
+        int idx = data.registers.allocate();
+        right->MipsCodeGen(dst, data, idx);
+        dst<<"mul $"<<DstReg<<",$"<<idx<<std::endl;
+        dst<<"mflo $"<<DstReg<<std::endl;
+        data.registers.free_reg(idx);
+        int varoffset = data.stack.back().bindings[name].offset;
+        dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
+    }
 };
 
 class DivAssignOperator
@@ -118,6 +159,16 @@ public:
     DivAssignOperator(const std::string &_id, ExpressionPtr _right)
         : AssignOps(_id, _right)
     {}
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
+        std::string name = id->getId();
+        int idx = data.registers.allocate();
+        right->MipsCodeGen(dst, data, idx);
+        dst<<"div $"<<DstReg<<",$"<<idx<<std::endl;
+        dst<<"mfhi $"<<DstReg<<std::endl;
+        data.registers.free_reg(idx);
+        int varoffset = data.stack.back().bindings[name].offset;
+        dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
+    }
 };
 
 class ModAssignOperator
@@ -130,6 +181,16 @@ public:
     ModAssignOperator(const std::string &_id, ExpressionPtr _right)
         : AssignOps(_id, _right)
     {}
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
+        std::string name = id->getId();
+        int idx = data.registers.allocate();
+        right->MipsCodeGen(dst, data, idx);
+        dst<<"div $"<<DstReg<<",$"<<idx<<std::endl;
+        dst<<"mflo $"<<DstReg<<std::endl;
+        data.registers.free_reg(idx);
+        int varoffset = data.stack.back().bindings[name].offset;
+        dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
+    }
 };
 
 #endif

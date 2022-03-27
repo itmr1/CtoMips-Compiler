@@ -282,11 +282,21 @@ public:
     
     virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
         if(args){
-            //TODO
+            int ArgSize = 0;
+            Args->CountFrameSize(ArgSize);
+            if (ArgSize == 1){
+                args->MipsCodeGen(dst, data, 4);
+            }
+            else{
+                std::vector<ExpressionPtr> arglist;
+                args->GetArgs(arglist);
+                for(int i = 4; i<ArgSize+4; i++){
+                    arglist[i-4]->MipsCodeGen(dst, data, i);
+                }
+            }   
         }
-        else{
-            //TODO
-        }
+        dst<<"jal "<<name<<std::endl;
+        dst<<"nop"<<std::endl;
     }
 
 };
