@@ -1498,7 +1498,7 @@ yyreduce:
 
   case 3:
 #line 45 "src/c_parser.y"
-                        {(yyval.expr) = new SingleExpr((yyvsp[0].expr)) ;}
+                        {(yyval.expr) = (yyvsp[0].expr);}
 #line 1503 "src/c_parser.tab.cpp"
     break;
 

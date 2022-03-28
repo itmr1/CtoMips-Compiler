@@ -30,7 +30,7 @@ extern "C" int fileno(FILE *stream);
 [0-9]+                   {yylval.number = std::strtod(yytext,0);
                            return TOK_N;}
 
-[a-zA-Z]+                  {yylval.string = new std::string(yytext); 
+[a-zA-Z0-9]+                  {yylval.string = new std::string(yytext); 
                            return TOK_VAR;}
 
 [*]               { return TOK_MUL; }

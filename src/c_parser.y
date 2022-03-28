@@ -42,7 +42,7 @@ ROOT  : EXPR_TREE       { g_root = $1; }
       ;
 
 EXPR_TREE //: EXPR {$$ = $1 ;}
-          : EXPR_SINGLE {$$ = new SingleExpr($1) ;}
+          : EXPR_SINGLE {$$ = $1;}
           | EXPR_TREE EXPR_SINGLE   { $$ = new RecExpr($1,$2);}
           ;
 
@@ -173,6 +173,7 @@ SELECT_STATEMENT : TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT   {$$ =
                  ;
 
 ITER_STATEMENT : TOK_WHILE TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET STATEMENT {$$ = new WhileStatement($3, $5);} 
+               | TOK_FOR TOK_LBRACKET EXPR_STATEMENT EXPR_STATEMENT ASSIGN_EXPR TOK_RBRACKET STATEMENT {$$ = new ForStatement($3, $4, $5, $6);}
                ;
 
 JUMP_STATEMENT : TOK_BREAK TOK_SEMICOLON {$$ = new BreakStatement();}
