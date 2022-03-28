@@ -83,31 +83,32 @@ extern int yydebug;
     TOK_IF = 273,
     TOK_WHILE = 274,
     TOK_ELSE = 275,
-    TOK_RETURN = 276,
-    TOK_BREAK = 277,
-    TOK_CONT = 278,
-    TOK_MUL = 279,
-    TOK_DIVIDE = 280,
-    TOK_PLUS = 281,
-    TOK_MINUS = 282,
-    TOK_MOD = 283,
-    TOK_LBRACKET = 284,
-    TOK_RBRACKET = 285,
-    TOK_SEMICOLON = 286,
-    TOK_LCBRACKET = 287,
-    TOK_RCBRACKET = 288,
-    TOK_LSQBRACKET = 289,
-    TOK_RSQBRACKET = 290,
-    TOK_COMMA = 291,
-    TOK_N = 292,
-    TOK_VAR = 293,
-    VARTYPE_INT = 294,
-    TOK_SUBASSIGN = 295,
-    TOK_MULASSIGN = 296,
-    TOK_DIVASSIGN = 297,
-    TOK_ADDASSIGN = 298,
-    TOK_EQASSIGN = 299,
-    TOK_MODASSIGN = 300
+    TOK_FOR = 276,
+    TOK_RETURN = 277,
+    TOK_BREAK = 278,
+    TOK_CONT = 279,
+    TOK_MUL = 280,
+    TOK_DIVIDE = 281,
+    TOK_PLUS = 282,
+    TOK_MINUS = 283,
+    TOK_MOD = 284,
+    TOK_LBRACKET = 285,
+    TOK_RBRACKET = 286,
+    TOK_SEMICOLON = 287,
+    TOK_LCBRACKET = 288,
+    TOK_RCBRACKET = 289,
+    TOK_LSQBRACKET = 290,
+    TOK_RSQBRACKET = 291,
+    TOK_COMMA = 292,
+    TOK_N = 293,
+    TOK_VAR = 294,
+    VARTYPE_INT = 295,
+    TOK_SUBASSIGN = 296,
+    TOK_MULASSIGN = 297,
+    TOK_DIVASSIGN = 298,
+    TOK_ADDASSIGN = 299,
+    TOK_EQASSIGN = 300,
+    TOK_MODASSIGN = 301
   };
 #endif
 
@@ -121,7 +122,7 @@ union YYSTYPE
   double number;
   std::string *string;
 
-#line 125 "src/c_parser.tab.hpp"
+#line 126 "src/c_parser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

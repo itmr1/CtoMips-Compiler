@@ -190,7 +190,7 @@ public:
     data.registers.free_reg(idx);
    }
 };
-
+/*
 class ForStatement
     : public SetStatement
 {
@@ -200,7 +200,7 @@ public:
     {}
     /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
        //TODO
-    }*/
+    }
     virtual const char *getCondStmntTrue() const override{
         return "for";
     }
@@ -224,7 +224,7 @@ public:
     //TO DO ANDY!!!!
    }
 };
-
+*/
 class ReturnExprStatement
     : public SetStatement
 {

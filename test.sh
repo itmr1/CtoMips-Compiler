@@ -2,7 +2,7 @@
 wrong=0
 correct=0
 
-for driver in compiler_tests/functions/*_driver.c ; do
+for driver in compiler_tests/array/*_driver.c ; do
     base=${driver: : -9}
     pair="${base}.c"
     echo %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -65,8 +65,7 @@ extern "C" int fileno(FILE *stream);
 [!]               { return TOK_LOGIC_NOT; }
 "&&"              { return TOK_LOGIC_AND; }
 "||"              { return TOK_LOGIC_OR; }
-"++"              { return TOK_INCR;}
-"--"              {return TOK_DECR; }
+
 
 [\[]              { return TOK_LSQBRACKET;}
 [\]]              { return TOK_RSQBRACKET;}

@@ -3,6 +3,11 @@ Nonterminals useless in grammar
     EXPR
 
 
+Terminals unused in grammar
+
+    TOK_FOR
+
+
 State 125 conflicts: 1 shift/reduce
 State 162 conflicts: 1 shift/reduce
 
@@ -148,119 +153,120 @@ Terminals, with rules where they appear
     TOK_IF (273) 79 80
     TOK_WHILE (274) 81
     TOK_ELSE (275) 80
-    TOK_RETURN (276) 84 85 86
-    TOK_BREAK (277) 82
-    TOK_CONT (278) 83
-    TOK_MUL (279) 54
-    TOK_DIVIDE (280) 55
-    TOK_PLUS (281) 51
-    TOK_MINUS (282) 52 58
-    TOK_MOD (283) 56
-    TOK_LBRACKET (284) 6 7 8 9 63 64 65 79 80 81
-    TOK_RBRACKET (285) 6 7 8 9 63 64 65 79 80 81
-    TOK_SEMICOLON (286) 8 9 12 13 14 15 16 74 82 83 84 85 86
-    TOK_LCBRACKET (287) 15 16 75 76 77 78
-    TOK_RCBRACKET (288) 15 16 75 76 77 78
-    TOK_LSQBRACKET (289) 22 23 66
-    TOK_RSQBRACKET (290) 22 23 66
-    TOK_COMMA (291) 18 20
-    TOK_N <number> (292) 61
-    TOK_VAR <string> (293) 21 22 23 26 27 28 29 30 31 62 64 65 66
-    VARTYPE_INT <string> (294) 6 7 8 9 12 13 14 15 16 17
-    TOK_SUBASSIGN (295) 28
-    TOK_MULASSIGN (296) 29
-    TOK_DIVASSIGN (297) 30
-    TOK_ADDASSIGN (298) 27
-    TOK_EQASSIGN (299) 14 15 16 26
-    TOK_MODASSIGN (300) 31
+    TOK_FOR (276)
+    TOK_RETURN (277) 84 85 86
+    TOK_BREAK (278) 82
+    TOK_CONT (279) 83
+    TOK_MUL (280) 54
+    TOK_DIVIDE (281) 55
+    TOK_PLUS (282) 51
+    TOK_MINUS (283) 52 58
+    TOK_MOD (284) 56
+    TOK_LBRACKET (285) 6 7 8 9 63 64 65 79 80 81
+    TOK_RBRACKET (286) 6 7 8 9 63 64 65 79 80 81
+    TOK_SEMICOLON (287) 8 9 12 13 14 15 16 74 82 83 84 85 86
+    TOK_LCBRACKET (288) 15 16 75 76 77 78
+    TOK_RCBRACKET (289) 15 16 75 76 77 78
+    TOK_LSQBRACKET (290) 22 23 66
+    TOK_RSQBRACKET (291) 22 23 66
+    TOK_COMMA (292) 18 20
+    TOK_N <number> (293) 61
+    TOK_VAR <string> (294) 21 22 23 26 27 28 29 30 31 62 64 65 66
+    VARTYPE_INT <string> (295) 6 7 8 9 12 13 14 15 16 17
+    TOK_SUBASSIGN (296) 28
+    TOK_MULASSIGN (297) 29
+    TOK_DIVASSIGN (298) 30
+    TOK_ADDASSIGN (299) 27
+    TOK_EQASSIGN (300) 14 15 16 26
+    TOK_MODASSIGN (301) 31
 
 
 Nonterminals, with rules where they appear
 
-    $accept (46)
+    $accept (47)
         on left: 0
-    ROOT <expr> (47)
+    ROOT <expr> (48)
         on left: 1
         on right: 0
-    EXPR_TREE <expr> (48)
+    EXPR_TREE <expr> (49)
         on left: 2 3
         on right: 1 3
-    EXPR_SINGLE <expr> (49)
+    EXPR_SINGLE <expr> (50)
         on left: 4 5
         on right: 2 3
-    FUNCTION <expr> (50)
+    FUNCTION <expr> (51)
         on left: 6 7 8 9
         on right: 4 85
-    REC_DECLARATION <expr> (51)
+    REC_DECLARATION <expr> (52)
         on left: 10 11
         on right: 11 77 78
-    DECLARATION <expr> (52)
+    DECLARATION <expr> (53)
         on left: 12 13 14 15 16
         on right: 5 10 11
-    FUNC_ARGS <expr> (53)
+    FUNC_ARGS <expr> (54)
         on left: 17 18
         on right: 6 8 18
-    FUNC_CALL_ARGS <expr> (54)
+    FUNC_CALL_ARGS <expr> (55)
         on left: 19 20
         on right: 16 20 65
-    DECLARATOR <expr> (55)
+    DECLARATOR <expr> (56)
         on left: 21
         on right: 6 7 8 9 12 14 17
-    ARRAY_DECLARATOR <expr> (56)
+    ARRAY_DECLARATOR <expr> (57)
         on left: 22 23
         on right: 13 15 16
-    ARG_SINGLE <expr> (57)
+    ARG_SINGLE <expr> (58)
         on left: 24
         on right: 19 20
-    ASSIGN_EXPR <expr> (58)
+    ASSIGN_EXPR <expr> (59)
         on left: 25 26 27 28 29 30 31
         on right: 14 24 26 27 28 29 30 31 63 66 74 81
-    LOGIC_EXPR <expr> (59)
+    LOGIC_EXPR <expr> (60)
         on left: 32 33 34
         on right: 22 25 33 34 79 80 86
-    BIT_EXPR <expr> (60)
+    BIT_EXPR <expr> (61)
         on left: 35 36 37 38
         on right: 32 33 34 36 37 38
-    EQ_EXPR <expr> (61)
+    EQ_EXPR <expr> (62)
         on left: 39 40 41
         on right: 35 36 37 38 40 41
-    REL_EXPR <expr> (62)
+    REL_EXPR <expr> (63)
         on left: 42 43 44 45 46
         on right: 39 40 41 43 44 45 46
-    SHIFT_EXPR <expr> (63)
+    SHIFT_EXPR <expr> (64)
         on left: 47 48 49
         on right: 42 43 44 45 46 48 49
-    ADD_EXPR <expr> (64)
+    ADD_EXPR <expr> (65)
         on left: 50 51 52
         on right: 47 48 49 51 52
-    MULT_EXPR <expr> (65)
+    MULT_EXPR <expr> (66)
         on left: 53 54 55 56
         on right: 50 51 52 54 55 56
-    UNARY <expr> (66)
+    UNARY <expr> (67)
         on left: 57 58 59 60
         on right: 53 54 55 56 58 59 60
-    FACTOR <expr> (67)
+    FACTOR <expr> (68)
         on left: 61 62 63 64 65 66
         on right: 57
-    REC_STATEMENT <expr> (68)
+    REC_STATEMENT <expr> (69)
         on left: 67 68
         on right: 68 76 78
-    STATEMENT <expr> (69)
+    STATEMENT <expr> (70)
         on left: 69 70 71 72 73
         on right: 67 68 79 80 81
-    EXPR_STATEMENT <expr> (70)
+    EXPR_STATEMENT <expr> (71)
         on left: 74
         on right: 69
-    FUNC_STATEMENT <expr> (71)
+    FUNC_STATEMENT <expr> (72)
         on left: 75 76 77 78
         on right: 6 7 73
-    SELECT_STATEMENT <expr> (72)
+    SELECT_STATEMENT <expr> (73)
         on left: 79 80
         on right: 72
-    ITER_STATEMENT <expr> (73)
+    ITER_STATEMENT <expr> (74)
         on left: 81
         on right: 70
-    JUMP_STATEMENT <expr> (74)
+    JUMP_STATEMENT <expr> (75)
         on left: 82 83 84 85 86
         on right: 71
 

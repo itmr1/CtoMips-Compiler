@@ -10,17 +10,19 @@ class AssignOps
 {
 protected:
     std::string id;
+    ExpressionPtr idx;
     ExpressionPtr right;
+    
     AssignOps(/*ExpressionPtr _left*/const std::string &_id, ExpressionPtr _right)
         :id(_id)
         , right(_right)
     {}
 
-    /*AssignOps(const std::string &_type,const std::string &_id, ExpressionPtr _right)
-        :type(_type)
-        , id(_id)
+    AssignOps(const std::string &_type,ExpressionPtr _idx, ExpressionPtr _right)
+        : id(_id)
+        , idx(_idx)
         , right(_right)
-    {}*/
+    {}
 public:
     virtual ~AssignOps()
     {
