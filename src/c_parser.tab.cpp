@@ -1875,7 +1875,7 @@ yyreduce:
 
   case 66:
 #line 145 "src/c_parser.y"
-                                                           {}
+                                                           {(yyval.expr) = new ArrayCall(*(yyvsp[-3].string), (yyvsp[-1].expr));}
 #line 1880 "src/c_parser.tab.cpp"
     break;
 
