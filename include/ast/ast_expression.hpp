@@ -24,7 +24,7 @@ public:
     virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const {return;}
     virtual void CountFrameSize(int &CurrSize)const {return;}
     virtual void GetArgs(std::vector<ExpressionPtr> &arglist) const {return;}
-    virtual int evaluate(ExpressionPtr) const {return 0;}
+    virtual int evaluate() const {return 0;}
 };
 
 class RecExpr

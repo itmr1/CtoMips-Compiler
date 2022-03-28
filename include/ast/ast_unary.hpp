@@ -60,7 +60,7 @@ public:
     }
 
     virtual int evaluate(ExpressionPtr) const {
-        int e = expr->evaluate;
+        int e = expr->evaluate();
         return 0-e;
     }
 };
@@ -86,7 +86,7 @@ public:
     }
 
     virtual int evaluate(ExpressionPtr) const {
-        int e = expr->evaluate;
+        int e = expr->evaluate();
         return ~e;
     }
 };
@@ -112,7 +112,7 @@ public:
     }
 
     virtual int evaluate(ExpressionPtr) const {
-        int e = expr->evaluate;
+        int e = expr->evaluate();
         return !e;
     }
 };

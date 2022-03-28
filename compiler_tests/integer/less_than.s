@@ -9,6 +9,7 @@ move $8,$2
 lw $2,8($30)
 slt $2,$8,$2
 b EoF0
+nop
 EoF0:
 lw $30,12($29)
 addiu $29,$29,16

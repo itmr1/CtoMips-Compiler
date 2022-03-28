@@ -62,11 +62,11 @@ public:
     }
 
     virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l<<r;
     }
-}
+};
 
 class RightShiftOperator
     :public Logic
@@ -89,11 +89,11 @@ public:
     }
 
     virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l>>r;
     }
-}
+};
 
 
 
@@ -118,8 +118,8 @@ public:
         data.registers.free_reg(idx);
     }
     virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l==r;
     }
 };
@@ -145,8 +145,8 @@ public:
         data.registers.free_reg(idx);
     }
     virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l!=r;
     }
 };
@@ -179,8 +179,8 @@ public:
     }
 
     virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l&&r;
     }
 };
@@ -213,8 +213,8 @@ public:
     }
 
     virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l||r;
     }
 };
@@ -240,8 +240,8 @@ public:
     }
 
     virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l&r;
     }
 };
@@ -266,8 +266,8 @@ public:
         data.registers.free_reg(idx);
     }
     virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l|r;
     }
 };
@@ -293,8 +293,8 @@ public:
     }
 
     virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l^r;
     }
 };
@@ -321,8 +321,8 @@ public:
     }
 
     virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l>r;
     }
 };
@@ -349,8 +349,8 @@ public:
     }
 
     virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l<r;
     }
 };
@@ -377,8 +377,8 @@ public:
     }
 
     virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l>=r;
     }
 };
@@ -406,8 +406,8 @@ public:
     }
 
     virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l<=r;
     }
 };

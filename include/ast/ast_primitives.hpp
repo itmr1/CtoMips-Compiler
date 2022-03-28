@@ -78,7 +78,7 @@ public:
        CurrSize+=0;
    }
 
-   virtual int evaluate(ExpressionPtr) const {
+   virtual int evaluate() const override {
         return value;
     }
 };
@@ -151,7 +151,7 @@ public:
         }
         val->MipsCodeGen(dst,data,DstReg); //store val in this register
         data.Stack.back().bindings[id] = {size,data.Stack.back().curroffset};
-        dst << "sw " << DstReg<<","<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
+        dst << "sw $" << DstReg<<","<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
         data.registers.free_reg(DstReg);
     }
 };
@@ -213,25 +213,25 @@ public:
     }
 
     virtual void CountFrameSize(int &CurrSize) const override{
-        CurrSize+=right.size->evaluate;
+        CurrSize+=right->evaluate();
     }
 
     virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
         std::string id = right->getId();
-        int arrsize = right.size->evaluate;
+        int arrsize = right->evaluate();
         int size = sizeof(int);
         data.Stack.back().curroffset += size; //increase frame size
         //dst << "addiu $29 $29 -"<<size<<std::endl;
             std::vector<ExpressionPtr> valslist;
-            vals->GetArgs(valslist);
-            for(int i = 0; i<valslist.size(); i++){
+            val->GetArgs(valslist);
+            for(int i = 0; i<(int)valslist.size(); i++){
             valslist[i]->MipsCodeGen(dst, data, DstReg);
             data.Stack.back().bindings[id] = {size,data.Stack.back().curroffset};
             dst << "sw " << DstReg<<","<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
             data.Stack.back().curroffset += size;
             data.registers.free_reg(DstReg);
             }
-            if(arrsize>valslist.size()){
+            if(arrsize>(int)valslist.size()){
                 for(int i = valslist.size(); i<arrsize; i++){
                     data.Stack.back().bindings[id] = {size,data.Stack.back().curroffset};
                     dst << "sw $0,"<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
@@ -240,8 +240,7 @@ public:
             }
             
     
-            }   
-        }
+    }        
 };
 
 class Array
@@ -262,8 +261,9 @@ public:
     virtual std::string getId() const override
      { return var; }
     
-    virtual int getsize(){
-        left = size->get
+    virtual int evaluate() const override{
+        int left = size->evaluate();
+        return left;
     }
 
     virtual void print(std::ostream &dst) const override
