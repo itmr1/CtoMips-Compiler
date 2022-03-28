@@ -22,7 +22,7 @@
 
 %token TOK_BIT_AND TOK_BIT_OR TOK_EQ TOK_NEQ TOK_BIT_XOR TOK_LOGIC_AND TOK_LOGIC_OR TOK_LSHIFT TOK_RSHIFT TOK_LOGIC_NOT TOK_BIT_NOT
 %token TOK_GE TOK_LE TOK_G TOK_L
-%token TOK_IF TOK_WHILE TOK_ELSE
+%token TOK_IF TOK_WHILE TOK_ELSE TOK_FOR
 %token TOK_RETURN TOK_BREAK TOK_CONT
 %token TOK_MUL TOK_DIVIDE TOK_PLUS TOK_MINUS TOK_MOD
 %token TOK_LBRACKET TOK_RBRACKET TOK_SEMICOLON TOK_LCBRACKET TOK_RCBRACKET TOK_LSQBRACKET TOK_RSQBRACKET TOK_COMMA
@@ -137,6 +137,8 @@ UNARY : FACTOR      { $$ = $1; }
       | TOK_MINUS UNARY   { $$ = new NegOperator($2);} 
       | TOK_LOGIC_NOT UNARY   { $$ = new LogicalNotOperator($2); }
       | TOK_BIT_NOT UNARY     { $$ = new BitNotOperator($2); }
+      | TOK_INCR UNARY        {$$ = new IncrBeforeOperator($2);}
+      | TOK_DECR UNARY        {$$ = new DecrBeforeOperator($2);}
       ;
 
 FACTOR : TOK_N     { $$ = new Number( $1 ); }
@@ -145,6 +147,8 @@ FACTOR : TOK_N     { $$ = new Number( $1 ); }
        | TOK_VAR TOK_LBRACKET TOK_RBRACKET {$$ = new FuncCall(*$1);}
        | TOK_VAR TOK_LBRACKET FUNC_CALL_ARGS TOK_RBRACKET {$$ = new FuncCall(*$1, $3);}
        | TOK_VAR TOK_LSQBRACKET ASSIGN_EXPR TOK_RSQBRACKET {$$ = new ArrayCall(*$1, $3);}
+       | TOK_VAR TOK_INCR {$$ = new IncrAfterOperator(*$1);}
+       | TOK_VAR TOK_DECR {$$ = new DecrAfterOperator(*$1);}
        ;
 
 REC_STATEMENT : STATEMENT {$$ = $1;}

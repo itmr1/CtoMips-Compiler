@@ -21,6 +21,7 @@ extern "C" int fileno(FILE *stream);
 %%
 "int"             {return VARTYPE_INT;}
 "while"           { return TOK_WHILE; }
+"for"             {return TOK_FOR; }
 "if"              { return TOK_IF; }
 "else"            { return TOK_ELSE; }
 "return"          {return TOK_RETURN;}
@@ -64,6 +65,8 @@ extern "C" int fileno(FILE *stream);
 [!]               { return TOK_LOGIC_NOT; }
 "&&"              { return TOK_LOGIC_AND; }
 "||"              { return TOK_LOGIC_OR; }
+"++"              { return TOK_INCR;}
+"--"              {return TOK_DECR; }
 
 [\[]              { return TOK_LSQBRACKET;}
 [\]]              { return TOK_RSQBRACKET;}
