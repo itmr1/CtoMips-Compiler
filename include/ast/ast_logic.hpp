@@ -61,6 +61,12 @@ public:
         dst<<"sll $"<<DstReg<<","<<tmp_reg<<",$"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
     }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l<<r;
+    }
 }
 
 class RightShiftOperator
@@ -81,6 +87,12 @@ public:
         right->MipsCodeGen(dst,data, DstReg);
         dst<<"sra $"<<DstReg<<","<<tmp_reg<<",$"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
+    }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l>>r;
     }
 }
 
@@ -106,6 +118,11 @@ public:
         dst<<"slti $"<<DstReg<<",$"<<DstReg<<"1"<<std::endl;
         data.registers.free_reg(idx);
     }
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l==r;
+    }
 };
 
 class NeqOperator
@@ -127,6 +144,11 @@ public:
         dst<<"xor $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
         dst<<"slt $"<<DstReg<<",$0,"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
+    }
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l!=r;
     }
 };
 
@@ -156,6 +178,12 @@ public:
         dst<<"move $"<<DstReg<<",$0"<<std::endl;
         dst<<And1<<std::endl
     }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l&&r;
+    }
 };
 
 class LogicalOrOperator
@@ -163,7 +191,7 @@ class LogicalOrOperator
 {
 protected:
     virtual const char *getOpcode() const override
-    {return "&&";}
+    {return "||";}
 public:
     LogicalOrOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Logic(_left, _right)
@@ -183,6 +211,12 @@ public:
         dst<<Or1<<std::endl;
         dst<<"li $"<<DstReg<<",1"<<std::endl;
         dst<<Or0<<std::endl;
+    }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l||r;
     }
 };
 
@@ -205,6 +239,12 @@ public:
         dst<<"and $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
         data.registers.free_reg(idx);
     }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l&r;
+    }
 };
 
 class BitwiseOrOperator
@@ -226,6 +266,11 @@ public:
         dst<<"or $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
         data.registers.free_reg(idx);
     }
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l|r;
+    }
 };
 
 class BitwiseXorOperator
@@ -246,6 +291,12 @@ public:
         right->MipsCodeGen(dst,data, DstReg);
         dst<<"xor $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
         data.registers.free_reg(idx);
+    }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l^r;
     }
 };
 
@@ -269,6 +320,12 @@ public:
         dst<<"slt $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
         data.registers.free_reg(idx);
     }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l>r;
+    }
 };
 
 class LessThanOperator
@@ -290,6 +347,12 @@ public:
         right->MipsCodeGen(dst,data, DstReg);
         dst<<"slt $"<<DstReg<<","<<tmp_reg<<",$"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
+    }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l<r;
     }
 };
 
@@ -313,6 +376,12 @@ public:
         dst<<"xori $"<<DstReg<<",$"<<DstReg<<",1"<<std::endl;
         data.registers.free_reg(idx);
     }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l>=r;
+    }
 };
 
 class LessThanEqualOperator
@@ -335,6 +404,12 @@ public:
         dst<<"slt $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
         dst<<"xori $"<<DstReg<<",$"<<DstReg<<",1"<<std::endl;
         data.registers.free_reg(idx);
+    }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l<=r;
     }
 };
 

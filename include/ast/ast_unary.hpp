@@ -58,6 +58,11 @@ public:
         dst<<"sub $"<<DstReg<<",$0"<<",$"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
     }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int e = expr->evaluate;
+        return 0-e;
+    }
 };
 
 class BitNotOperator
@@ -79,6 +84,11 @@ public:
         expr->MipsCodeGen(dst,data, DstReg);
         dst<<"nor $"<<DstReg<<",$0"<<",$"<<DstReg<<std::endl;
     }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int e = expr->evaluate;
+        return ~e;
+    }
 };
 
 class LogicalNotOperator
@@ -99,6 +109,11 @@ public:
    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
         expr->MipsCodeGen(dst,data, DstReg);
         dst<<"slti $"<<DstReg<<",$"<<DstReg<<",1"<<std::endl;
+    }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int e = expr->evaluate;
+        return !e;
     }
 };
 

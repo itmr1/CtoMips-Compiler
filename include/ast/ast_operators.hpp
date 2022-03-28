@@ -72,6 +72,11 @@ public:
         dst<<"add $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
         data.registers.free_reg(idx);
     }
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l+r;
+    }
 };
 
 class SubOperator
@@ -93,6 +98,12 @@ public:
         left->MipsCodeGen(dst,data, DstReg);
         dst<<"sub $"<<DstReg<<","<<tmp_reg<<",$"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
+    }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l-r;
     }
 };
 
@@ -118,6 +129,12 @@ public:
         dst<<"mflo $"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
     }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l*r;
+    }
 };
 
 class DivOperator
@@ -141,6 +158,12 @@ public:
         dst<<"mfhi $"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
     }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l/r;
+    }
 };
 
 class ModOperator
@@ -162,6 +185,12 @@ public:
         dst<<"div "<<tmp_reg<<",$"<<DstReg<<std::endl;
         dst<<"mflo $"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
+    }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate;
+        int r = right->evaluate;
+        return l%r;
     }
 };
 
