@@ -190,6 +190,8 @@ public:
     dst<<"nop"<<std::endl;
     dst<<LoopEnd<<":"<<std::endl;
     data.registers.free_reg(idx);
+    data.Loopstarts.pop_back();
+    data.Loopends.pop_back();
    }
 };
 
@@ -333,7 +335,6 @@ public:
    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
         dst<<"b "<<data.Loopends.back()<<std::endl;
         dst<<"nop"<<std::endl;
-        data.Loopends.pop_back();
 
    }
 };
