@@ -227,7 +227,7 @@ public:
             for(int i = 0; i<(int)valslist.size(); i++){
             valslist[i]->MipsCodeGen(dst, data, DstReg);
             data.Stack.back().bindings[id] = {size,data.Stack.back().curroffset};
-            dst << "sw " << DstReg<<","<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
+            dst << "sw $" << DstReg<<","<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
             data.Stack.back().curroffset += size;
             data.registers.free_reg(DstReg);
             }
