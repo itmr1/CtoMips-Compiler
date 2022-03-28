@@ -176,15 +176,30 @@ public:
     }
 
     virtual void CountFrameSize(int &CurrSize) const override{
-        CurrSize+=1;
+        CurrSize+=right->evaluate();
     }
 
-    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
+    virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
         std::string id = right->getId();
+        int arrsize = right->evaluate();
         int size = sizeof(int);
-        data.Stack.back().frameSize += size; //increase frame size
-        //dst << "addiu $29 $29 -"<<size<<std::endl;
-        data.Stack.back().bindings[id] = {size, -data.Stack.back().frameSize};
+        data.Stack.back().curroffset += size; //increase frame size
+            for(int i = 0; i<arrsize; i++){
+            //valslist[i]->MipsCodeGen(dst, data, DstReg);
+            std::string id_arr = id + std::to_string(i);
+            data.Stack.back().bindings[id_arr] = {size,data.Stack.back().curroffset};
+            //dst << "sw $" << DstReg<<","<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
+            data.Stack.back().curroffset += size;
+            //data.registers.free_reg(DstReg);
+            }
+            /*if(arrsize>(int)valslist.size()){
+                for(int i = valslist.size(); i<arrsize; i++){
+                    std::string id_arr = id + std::to_string(i);
+                    data.Stack.back().bindings[id_arr] = {size,data.Stack.back().curroffset};
+                    dst << "sw $0,"<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
+                    data.Stack.back().curroffset += size;
+                }
+            }*/
     }
    
 };
@@ -226,20 +241,20 @@ public:
             val->GetArgs(valslist);
             for(int i = 0; i<(int)valslist.size(); i++){
             valslist[i]->MipsCodeGen(dst, data, DstReg);
-            data.Stack.back().bindings[id] = {size,data.Stack.back().curroffset};
+            std::string id_arr = id + std::to_string(i);
+            data.Stack.back().bindings[id_arr] = {size,data.Stack.back().curroffset};
             dst << "sw $" << DstReg<<","<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
             data.Stack.back().curroffset += size;
             data.registers.free_reg(DstReg);
             }
             if(arrsize>(int)valslist.size()){
                 for(int i = valslist.size(); i<arrsize; i++){
-                    data.Stack.back().bindings[id] = {size,data.Stack.back().curroffset};
+                    std::string id_arr = id + std::to_string(i);
+                    data.Stack.back().bindings[id_arr] = {size,data.Stack.back().curroffset};
                     dst << "sw $0,"<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
                     data.Stack.back().curroffset += size;
                 }
             }
-            
-    
     }        
 };
 
@@ -279,10 +294,68 @@ public:
             dst<<"[]";
         }
     }
-   /*virtual void CountFrameSize(int &CurrSize) const override
-   {
-       CurrSize+=size;
-   }*/
+    /*
+   virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
+        std::string id = right->getId();
+        int arrsize = right->evaluate();
+        int size = sizeof(int);
+        data.Stack.back().curroffset += size; //increase frame size
+        //dst << "addiu $29 $29 -"<<size<<std::endl;
+                for(int i = 0; i<arrsize; i++){
+                    std::string id_arr = id + std::to_string(i);
+                    data.Stack.back().bindings[id_arr] = {size,data.Stack.back().curroffset};
+                    dst << "sw $0,"<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
+                    data.Stack.back().curroffset += size;
+                }
+    }*/
+};
+
+class InitZeroArray
+    : public Expression
+{
+private:
+    std::string type;
+    ExpressionPtr right;
+public:
+    DeclareArray(const std::string &_type, ExpressionPtr _right)
+        : type(_type)
+        , right(_right)
+    {}
+
+    /*virtual std::string getId() const override
+     { return ; }
+    
+    virtual int evaluate() const override{
+        int left = size->evaluate();
+        return left;
+    }*/
+
+    virtual void print(std::ostream &dst) const override
+    {
+        if(size){
+            dst<<var;
+            dst<<"[";
+            size->print(dst);
+            dst<<"]";
+        }
+        else{
+            dst<<var;
+            dst<<"[]";
+        }
+    }
+   virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
+        std::string id = right->getId();
+        int arrsize = right->evaluate();
+        int size = sizeof(int);
+        data.Stack.back().curroffset += size; //increase frame size
+        //dst << "addiu $29 $29 -"<<size<<std::endl;
+                for(int i = 0; i<arrsize; i++){
+                    std::string id_arr = id + std::to_string(i);
+                    data.Stack.back().bindings[id_arr] = {size,data.Stack.back().curroffset};
+                    dst << "sw $0,"<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
+                    data.Stack.back().curroffset += size;
+                }
+    }
 };
 
 class FuncCall
@@ -319,6 +392,32 @@ public:
         }
         dst<<"jal "<<name<<std::endl;
         dst<<"nop"<<std::endl;
+    }
+
+};
+
+class ArrayCall
+    : public Expression
+{
+private:
+    std::string name;
+    ExpressionPtr index;
+public:
+    ArrayCall(const std::string &_name, ExpressionPtr _index)
+        : name(_name)
+        , index(_index)
+    {} 
+
+    virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
+        std::string arrid = name + "0";
+        index->MipsCodeGen(dst,data,DstReg);
+        dst<<"sll $"<<DstReg<<",2"<<std::endl;
+        int arroffset = data.stack.back().bindings[arrid].offset - 4;
+        int idx = data.register.allocate();
+        dst<<"addiu $"<<idx<<",$30,"<<arroffset<<std::endl;
+        dst<<"addu $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
+        dst<<"lw $"<<DstReg<<",4($29)"<<std::endl;
+        data.register.free_reg(idx);
     }
 
 };
