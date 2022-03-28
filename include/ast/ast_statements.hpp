@@ -16,6 +16,13 @@ protected:
     ExpressionPtr Cond;
     ExpressionPtr Statement;
     ExpressionPtr Statement2;
+    ExpressionPtr Statement3;
+    SetStatement(ExpressionPtr _Cond, ExpressionPtr _Statement, ExpressionPtr _Statement2, ExpressionPtr _Statement3)
+        : Cond(_Cond)
+        , Statement(_Statement)
+        , Statement2(_Statement2)
+        , Statement3(_Statement3)
+    {}
     SetStatement(ExpressionPtr _Cond, ExpressionPtr _Statement, ExpressionPtr _Statement2)
         : Cond(_Cond)
         , Statement(_Statement)
@@ -37,6 +44,7 @@ public:
         delete Cond;
         delete Statement;
         delete Statement2;
+        delete Statement3;
     }
    // virtual std::string MipsCodeGen(std::ostream &dst, std::string DestReg) const override{}
     virtual const char *getCondStmntTrue() const {return "";}
@@ -180,6 +188,40 @@ public:
     dst<<"nop"<<std::endl;
     dst<<LoopEnd<<":"<<std::endl;
     data.registers.free_reg(idx);
+   }
+};
+
+class ForStatement
+    : public SetStatement
+{
+public:
+    ForStatement(ExpressionPtr _Cond, ExpressionPtr _Cond2, ExpressionPtr _Cond3, ExpressionPtr _Statement)
+        : SetStatement(_Cond, _Cond2, _Cond3, _Statement)
+    {}
+    /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
+       //TODO
+    }*/
+    virtual const char *getCondStmntTrue() const override{
+        return "for";
+    }
+
+    virtual void print(std::ostream &dst){
+        dst<<getCondStmntTrue();
+        dst<<"(";
+        Cond->print(dst);
+        dst<<"){";
+        Statement->print(dst);
+        dst<<"}";
+    }
+
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+       // Cond->CountFrameSize(CurrSize);
+        Statement->CountFrameSize(CurrSize);
+   }
+
+   virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg) const override{
+    //TO DO ANDY!!!!
    }
 };
 
