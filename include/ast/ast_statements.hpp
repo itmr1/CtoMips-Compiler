@@ -190,7 +190,7 @@ public:
     data.registers.free_reg(idx);
    }
 };
-/*
+
 class ForStatement
     : public SetStatement
 {
@@ -198,9 +198,6 @@ public:
     ForStatement(ExpressionPtr _Cond, ExpressionPtr _Cond2, ExpressionPtr _Cond3, ExpressionPtr _Statement)
         : SetStatement(_Cond, _Cond2, _Cond3, _Statement)
     {}
-    /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
-       //TODO
-    }
     virtual const char *getCondStmntTrue() const override{
         return "for";
     }
@@ -216,15 +213,31 @@ public:
 
     virtual void CountFrameSize(int &CurrSize) const override
    {
-       // Cond->CountFrameSize(CurrSize);
+        Cond->CountFrameSize(CurrSize);
+        Cond2->CountFrameSize(CurrSize);
+        Cond3->CountFrameSize(CurrSize);
         Statement->CountFrameSize(CurrSize);
    }
 
    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg) const override{
-    //TO DO ANDY!!!!
+    tmp = data.registers.allocate();
+    Cond->MipsCodeGen(dst,data,tmp);
+    std::string StartOfLoop = data.MakeLabel("StartOfLoop");
+    std::string CondCheck = data.MakeLabel("CondCheck");
+    dst<<"b "<<CondCheck<<":"<<std::endl;
+    dst<<"nop"<<std::endl;
+    dst<<StartOfLoop<<":"std::endl;
+    Statement->MipsCodeGen(dst,data,DstReg);
+    tmp2 = data.registers.allocate();
+    Cond3->MipsCodeGen(dst,data,DstReg);
+    dst<<CondCheck<<":"<<std::endl;
+    Cond2->MipsCodeGen(dst,data,tmp);
+    dst<<"bne $"<<tmp<<",$0"<<","<<StartOfLoop;
+    data.registers.free_reg(tmp);
+    data.registers.free_reg(tmp2);
    }
 };
-*/
+
 class ReturnExprStatement
     : public SetStatement
 {

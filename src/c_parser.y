@@ -137,8 +137,8 @@ UNARY : FACTOR      { $$ = $1; }
       | TOK_MINUS UNARY   { $$ = new NegOperator($2);} 
       | TOK_LOGIC_NOT UNARY   { $$ = new LogicalNotOperator($2); }
       | TOK_BIT_NOT UNARY     { $$ = new BitNotOperator($2); }
-      /*| TOK_INCR UNARY        {$$ = new IncrBeforeOperator($2);}
-      | TOK_DECR UNARY        {$$ = new DecrBeforeOperator($2);}*/
+      | TOK_INCR UNARY        {$$ = new IncrBeforeOperator($2);}
+      | TOK_DECR UNARY        {$$ = new DecrBeforeOperator($2);}
       ;
 
 FACTOR : TOK_N     { $$ = new Number( $1 ); }
@@ -147,8 +147,8 @@ FACTOR : TOK_N     { $$ = new Number( $1 ); }
        | TOK_VAR TOK_LBRACKET TOK_RBRACKET {$$ = new FuncCall(*$1);}
        | TOK_VAR TOK_LBRACKET FUNC_CALL_ARGS TOK_RBRACKET {$$ = new FuncCall(*$1, $3);}
        | TOK_VAR TOK_LSQBRACKET ASSIGN_EXPR TOK_RSQBRACKET {$$ = new ArrayCall(*$1, $3);}
-       /*| TOK_VAR TOK_INCR {$$ = new IncrAfterOperator(*$1);}
-       | TOK_VAR TOK_DECR {$$ = new DecrAfterOperator(*$1);}*/
+       | TOK_VAR TOK_INCR {$$ = new IncrAfterOperator(*$1);}
+       | TOK_VAR TOK_DECR {$$ = new DecrAfterOperator(*$1);}
        ;
 
 REC_STATEMENT : STATEMENT {$$ = $1;}
@@ -177,7 +177,7 @@ SELECT_STATEMENT : TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT   {$$ =
                  ;
 
 ITER_STATEMENT : TOK_WHILE TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET STATEMENT {$$ = new WhileStatement($3, $5);} 
-              /* | TOK_FOR TOK_LBRACKET EXPR_STATEMENT EXPR_STATEMENT ASSIGN_EXPR TOK_RBRACKET STATEMENT {$$ = new ForStatement($3, $4, $5, $6);}*/
+               | TOK_FOR TOK_LBRACKET EXPR_STATEMENT EXPR_STATEMENT ASSIGN_EXPR TOK_RBRACKET STATEMENT {$$ = new ForStatement($3, $4, $5, $6);}
                ;
 
 JUMP_STATEMENT : TOK_BREAK TOK_SEMICOLON {$$ = new BreakStatement();}
