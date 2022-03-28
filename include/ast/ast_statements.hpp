@@ -178,7 +178,9 @@ public:
     int idx = data.registers.allocate();
     Cond->MipsCodeGen(dst, data, idx);
     std::string LoopStart = data.MakeLabel("LoopStart");
+    data.Loopstarts.push_back(LoopStart);
     std::string LoopEnd = data.MakeLabel("LoopEnd");
+    data.Loopends.push_back(LoopEnd);
     dst<<"beq $0,$"<<idx<<","<<LoopEnd<<std::endl;
     dst<<"nop"<<std::endl;
     dst<<LoopStart<<":"<<std::endl;
@@ -315,6 +317,12 @@ public:
    {
         CurrSize+=0;
    }
+   virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
+        dst<<"b "<<data.Loopends.back()<<std::endl;
+        dst<<"nop"<<std::endl;
+        data.Loopends.pop_back();
+
+   }
 };
 
 class ContinueStatement
@@ -340,6 +348,11 @@ public:
     virtual void CountFrameSize(int &CurrSize) const override
    {
         CurrSize+=0;
+   }
+   virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
+       dst<<"b "<<data.Loopstarts.back()<<std::endl;
+        dst<<"nop"<<std::endl;
+        data.Loopstarts.pop_back();
    }
 };
 

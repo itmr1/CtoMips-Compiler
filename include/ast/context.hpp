@@ -65,6 +65,8 @@ public:
     Registers registers;
     std::vector<stackframe> Stack;
     std::map<std::string, std::string> globaldec;
+    std::vector<std::string> Loopstarts;
+    std::vector<std::string> Loopends;
     std::string CurrLabel ="";
     std::string MakeLabel(std::string s){
         static int count = 0;
