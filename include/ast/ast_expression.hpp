@@ -61,7 +61,7 @@ public:
        left->MipsCodeGen(dst, data, DstReg);
        right->MipsCodeGen(dst, data, DstReg);
    }
-   virtual void GetArgs(std::vector<int> &arglist)const override{
+   virtual void GetArgs(std::vector<ExpressionPtr> &arglist)const override{
        arglist.push_back(left);
        arglist.push_back(right);
    }

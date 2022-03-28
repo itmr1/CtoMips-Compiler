@@ -9,10 +9,9 @@
 class Logic 
     : public Expression
 {
-private:
+protected:
     ExpressionPtr left;
     ExpressionPtr right;
-protected:
     Logic(ExpressionPtr _left, ExpressionPtr _right)
         :left(_left)
         , right(_right)
@@ -115,7 +114,7 @@ public:
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
         right->MipsCodeGen(dst,data, DstReg);
         dst<<"xor $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
-        dst<<"slti $"<<DstReg<<",$"<<DstReg<<"1"<<std::endl;
+        dst<<"sltiu $"<<DstReg<<",$"<<DstReg<<","<<"1"<<std::endl;
         data.registers.free_reg(idx);
     }
     virtual int evaluate(ExpressionPtr) const {
@@ -166,17 +165,17 @@ public:
         std::string And0 = data.MakeLabel("A");
         std::string And1 = data.MakeLabel("A");
         left->MipsCodeGen(dst,data, DstReg);
-        dst<<"beq $"<<DstReg<<",$0"<<And0<<std::endl;
+        dst<<"beq $"<<DstReg<<",$0,"<<And0<<std::endl;
         dst<<"nop"<<std::endl;
         right->MipsCodeGen(dst,data, DstReg);
-        dst<<"beq $"<<DstReg<<",$0"<<And0<<std::endl;
+        dst<<"beq $"<<DstReg<<",$0,"<<And0<<std::endl;
         dst<<"nop"<<std::endl;
         dst<<"li $"<<DstReg<<",1"<<std::endl;
         dst<<"b "<<And1<<std::endl;
         dst<<"nop"<<std::endl;
-        dst<<And0<<std::endl;
+        dst<<And0<<":"<<std::endl;
         dst<<"move $"<<DstReg<<",$0"<<std::endl;
-        dst<<And1<<std::endl
+        dst<<And1<<":"<<std::endl;
     }
 
     virtual int evaluate(ExpressionPtr) const {
@@ -200,17 +199,17 @@ public:
         std::string Or0 = data.MakeLabel("O");
         std::string Or1 = data.MakeLabel("O");
         left->MipsCodeGen(dst,data, DstReg);
-        dst<<"bne $"<<DstReg<<",$0"<<Or1<<std::endl;
+        dst<<"bne $"<<DstReg<<",$0,"<<Or1<<std::endl;
         dst<<"nop"<<std::endl;
         right->MipsCodeGen(dst,data, DstReg);
-        dst<<"bne $"<<DstReg<<",$0"<<Or1<<std::endl;
+        dst<<"bne $"<<DstReg<<",$0,"<<Or1<<std::endl;
         dst<<"nop"<<std::endl;
         dst<<"move $"<<DstReg<<",$0"<<std::endl;
         dst<<"b "<<Or0<<std::endl;
         dst<<"nop"<<std::endl;
-        dst<<Or1<<std::endl;
+        dst<<Or1<<":"<<std::endl;
         dst<<"li $"<<DstReg<<",1"<<std::endl;
-        dst<<Or0<<std::endl;
+        dst<<Or0<<":"<<std::endl;
     }
 
     virtual int evaluate(ExpressionPtr) const {
@@ -280,7 +279,7 @@ protected:
     virtual const char *getOpcode() const override
     {return "^";}
 public:
-    BitwiseXOrOperator(ExpressionPtr _left, ExpressionPtr _right)
+    BitwiseXorOperator(ExpressionPtr _left, ExpressionPtr _right)
         : Logic(_left, _right)
     {}
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{

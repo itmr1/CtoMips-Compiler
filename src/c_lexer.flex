@@ -59,11 +59,11 @@ extern "C" int fileno(FILE *stream);
 [&]               { return TOK_BIT_AND; }
 [|]               { return TOK_BIT_OR; }
 [~]               { return TOK_BIT_NOT; }
-[^]               { return TOK_BIT_XOR; }
+[\^]               { return TOK_BIT_XOR; }
 
 [!]               { return TOK_LOGIC_NOT; }
-[&&]              { return TOK_LOGIC_AND; }
-[||]              { return TOK_LOGIC_OR; }
+"&&"              { return TOK_LOGIC_AND; }
+"||"              { return TOK_LOGIC_OR; }
 
 [\[]              { return TOK_LSQBRACKET;}
 [\]]              { return TOK_RSQBRACKET;}

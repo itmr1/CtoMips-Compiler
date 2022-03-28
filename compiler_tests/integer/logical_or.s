@@ -5,10 +5,17 @@ move $30,$29
 sw $4,4($29)
 sw $5,8($29)
 lw $2,4($30)
-move $8,$2
+bne $2,$0,O2
+nop
 lw $2,8($30)
-mult $2,$8
-mflo $2
+bne $2,$0,O2
+nop
+move $2,$0
+b O1
+nop
+O2:
+li $2,1
+O1:
 b EoF0
 nop
 EoF0:

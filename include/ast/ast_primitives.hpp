@@ -20,7 +20,7 @@ public:
     virtual std::string getId() const override
      { return id; }
 
-    const int getSize(Data &data) const
+    int getSize(Data &data) const
     {
         if(data.Stack.back().bindings.find(id) == data.Stack.back().bindings.end()){ //if not in stack
             std::cerr << "L" << std::endl; //doesnt exist
@@ -305,7 +305,7 @@ public:
     virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
         if(args){
             int ArgSize = 0;
-            Args->CountFrameSize(ArgSize);
+            args->CountFrameSize(ArgSize);
             if (ArgSize == 1){
                 args->MipsCodeGen(dst, data, 4);
             }

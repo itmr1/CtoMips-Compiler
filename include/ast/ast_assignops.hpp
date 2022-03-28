@@ -8,12 +8,9 @@
 class AssignOps                           
     : public Expression
 {
-private:
-    //ExpressionPtr left;
-    //std::string type;
+protected:
     std::string id;
     ExpressionPtr right;
-protected:
     AssignOps(/*ExpressionPtr _left*/const std::string &_id, ExpressionPtr _right)
         :id(_id)
         , right(_right)
@@ -77,9 +74,9 @@ public:
         : AssignOps(_type,_id, _right)
     {}*/
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
-        std::string name = id->getId();
+        std::string name = id;
         right->MipsCodeGen(dst, data, DstReg);
-        int varoffset = data.stack.back().bindings[name].offset;
+        int varoffset = data.Stack.back().bindings[name].offset;
         dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
     }
 };
@@ -96,12 +93,12 @@ public:
     {}
 
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
-        std::string name = id->getId();
+        std::string name = id;
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst, data, idx);
         dst<<"add $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
         data.registers.free_reg(idx);
-        int varoffset = data.stack.back().bindings[name].offset;
+        int varoffset = data.Stack.back().bindings[name].offset;
         dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
     }
 };
@@ -117,12 +114,12 @@ public:
         : AssignOps(_id, _right)
     {}
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
-        std::string name = id->getId();
+        std::string name = id;
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst, data, idx);
         dst<<"sub $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
         data.registers.free_reg(idx);
-        int varoffset = data.stack.back().bindings[name].offset;
+        int varoffset = data.Stack.back().bindings[name].offset;
         dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
     }
 };
@@ -138,13 +135,13 @@ public:
         : AssignOps(_id, _right)
     {}
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
-        std::string name = id->getId();
+        std::string name = id;
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst, data, idx);
         dst<<"mul $"<<DstReg<<",$"<<idx<<std::endl;
         dst<<"mflo $"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
-        int varoffset = data.stack.back().bindings[name].offset;
+        int varoffset = data.Stack.back().bindings[name].offset;
         dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
     }
 };
@@ -160,13 +157,13 @@ public:
         : AssignOps(_id, _right)
     {}
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
-        std::string name = id->getId();
+        std::string name = id;
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst, data, idx);
         dst<<"div $"<<DstReg<<",$"<<idx<<std::endl;
         dst<<"mfhi $"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
-        int varoffset = data.stack.back().bindings[name].offset;
+        int varoffset = data.Stack.back().bindings[name].offset;
         dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
     }
 };
@@ -182,13 +179,13 @@ public:
         : AssignOps(_id, _right)
     {}
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
-        std::string name = id->getId();
+        std::string name = id;
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst, data, idx);
         dst<<"div $"<<DstReg<<",$"<<idx<<std::endl;
         dst<<"mflo $"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
-        int varoffset = data.stack.back().bindings[name].offset;
+        int varoffset = data.Stack.back().bindings[name].offset;
         dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
     }
 };

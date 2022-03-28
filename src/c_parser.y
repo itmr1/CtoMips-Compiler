@@ -20,7 +20,7 @@
   std::string *string;
 }
 
-%token TOK_BIT_AND TOK_BIT_OR TOK_EQ TOK_NEQ TOK_BIT_XOR TOK_LOGIC_AND TOK_LOGIC_OR TOK_LSHIFT TOK_RSHIFT
+%token TOK_BIT_AND TOK_BIT_OR TOK_EQ TOK_NEQ TOK_BIT_XOR TOK_LOGIC_AND TOK_LOGIC_OR TOK_LSHIFT TOK_RSHIFT TOK_LOGIC_NOT TOK_BIT_NOT
 %token TOK_GE TOK_LE TOK_G TOK_L
 %token TOK_IF TOK_WHILE TOK_ELSE
 %token TOK_RETURN TOK_BREAK TOK_CONT
@@ -51,6 +51,8 @@ EXPR  : FUNCTION { $$ = $1; }
 
 FUNCTION : VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET FUNC_STATEMENT {$$ = new FuncWithArgs("int",$2,$4,$6);}
          | VARTYPE_INT DECLARATOR TOK_LBRACKET TOK_RBRACKET FUNC_STATEMENT {$$ = new FuncNoArgs("int", $2,$5);}
+         | VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET TOK_SEMICOLON {$$ = new FuncInstance("int", $2, $4);}
+         | VARTYPE_INT DECLARATOR TOK_LBRACKET TOK_RBRACKET TOK_SEMICOLON {$$ = new FuncInstance("int", $2);}
          ;
 
 /*REC_FUNCTION : FUNCTION {$$=$1;}
@@ -89,8 +91,8 @@ ASSIGN_EXPR : LOGIC_EXPR {$$ = $1;}
             ;
 
 LOGIC_EXPR : BIT_EXPR {$$ = $1;}
-            | LOGIC_EXPR TOK_LOGIC_AND BIT_EXPR {$$ new LogicAndOperator($1, $3);}
-            | LOGIC_EXPR TOK_LOGIC_OR BIT_EXPR {$$ new LogicOrOperator($1, $3);}
+            | LOGIC_EXPR TOK_LOGIC_AND BIT_EXPR {$$ = new LogicalAndOperator($1, $3);}
+            | LOGIC_EXPR TOK_LOGIC_OR BIT_EXPR {$$ = new LogicalOrOperator($1, $3);}
             ;
 
 BIT_EXPR : EQ_EXPR {$$ = $1;}
@@ -128,8 +130,8 @@ MULT_EXPR : UNARY {$$ = $1;}
 
 UNARY : FACTOR      { $$ = $1; }
       | TOK_MINUS UNARY   { $$ = new NegOperator($2);} 
-      | TOK_LOGIC_NOT     { $$ = new LogicNotOperator($2); }
-      | TOK_BIT_NOT       { $$ = new BitNotOperator($2); }
+      | TOK_LOGIC_NOT UNARY   { $$ = new LogicalNotOperator($2); }
+      | TOK_BIT_NOT UNARY     { $$ = new BitNotOperator($2); }
       ;
 
 FACTOR : TOK_N     { $$ = new Number( $1 ); }
@@ -150,20 +152,21 @@ STATEMENT : EXPR_STATEMENT {$$=$1;}
           | FUNC_STATEMENT {$$=$1;}
           ;
 
-EXPR_STATEMENT : TOK_SEMICOLON 
-               | ASSIGN_EXPR TOK_SEMICOLON {$$=$1;}
+EXPR_STATEMENT : ASSIGN_EXPR TOK_SEMICOLON {$$=$1;} //TOK_SEMICOLON 
+              // | ASSIGN_EXPR TOK_SEMICOLON {$$=$1;}
                ;
 
-FUNC_STATEMENT : TOK_LCBRACKET TOK_RCBRACKET
+FUNC_STATEMENT : TOK_LCBRACKET TOK_RCBRACKET {$$ = new ContinueStatement();}
                    | TOK_LCBRACKET REC_STATEMENT TOK_RCBRACKET {$$ = $2;}
                    | TOK_LCBRACKET REC_DECLARATION TOK_RCBRACKET {$$ = $2;}
                    | TOK_LCBRACKET REC_DECLARATION REC_STATEMENT TOK_RCBRACKET {$$ = new RecExpr($2, $3);}
+                   ;
 
 SELECT_STATEMENT : TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT   {$$ = new IfStatement($3, $5);} 
                  | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT {$$ = new IfElseStatement($3, $5, $7);} 
                  ;
 
-ITER_STATEMENT : TOK_WHILE TOK_LBRACKET EXPR TOK_RBRACKET STATEMENT {$$ = new WhileStatement($3, $5);} 
+ITER_STATEMENT : TOK_WHILE TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET STATEMENT {$$ = new WhileStatement($3, $5);} 
                ;
 
 JUMP_STATEMENT : TOK_BREAK TOK_SEMICOLON {$$ = new BreakStatement();}

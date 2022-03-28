@@ -56,7 +56,7 @@ public:
    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
         expr->MipsCodeGen(dst,data, DstReg);
         dst<<"sub $"<<DstReg<<",$0"<<",$"<<DstReg<<std::endl;
-        data.registers.free_reg(idx);
+        //data.registers.free_reg(idx);
     }
 
     virtual int evaluate(ExpressionPtr) const {
