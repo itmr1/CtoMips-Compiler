@@ -79,7 +79,7 @@ FUNC_CALL_ARGS: ASSIGN_EXPR {$$=$1;}
 
 DECLARATOR : TOK_VAR { $$ = new Variable(*$1);}
            ;
-           
+          
 ARRAY_DECLARATOR : TOK_VAR TOK_LSQBRACKET LOGIC_EXPR TOK_RSQBRACKET {$$ = new Array(*$1, $3);} // int p[] = {}
            | TOK_VAR TOK_LSQBRACKET TOK_RSQBRACKET {$$ = new Array(*$1);}
            ;

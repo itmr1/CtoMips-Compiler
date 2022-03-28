@@ -317,7 +317,7 @@ private:
     std::string type;
     ExpressionPtr right;
 public:
-    DeclareArray(const std::string &_type, ExpressionPtr _right)
+    InitZeroArray(const std::string &_type, ExpressionPtr _right)
         : type(_type)
         , right(_right)
     {}
@@ -332,16 +332,7 @@ public:
 
     virtual void print(std::ostream &dst) const override
     {
-        if(size){
-            dst<<var;
-            dst<<"[";
-            size->print(dst);
-            dst<<"]";
-        }
-        else{
-            dst<<var;
-            dst<<"[]";
-        }
+        
     }
    virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
         std::string id = right->getId();
@@ -407,17 +398,18 @@ public:
         : name(_name)
         , index(_index)
     {} 
-
+    virtual void print(std::ostream &dst) const override
+    {}
     virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
         std::string arrid = name + "0";
         index->MipsCodeGen(dst,data,DstReg);
         dst<<"sll $"<<DstReg<<",2"<<std::endl;
-        int arroffset = data.stack.back().bindings[arrid].offset - 4;
-        int idx = data.register.allocate();
+        int arroffset = data.Stack.back().bindings[arrid].offset - 4;
+        int idx = data.registers.allocate();
         dst<<"addiu $"<<idx<<",$30,"<<arroffset<<std::endl;
         dst<<"addu $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
         dst<<"lw $"<<DstReg<<",4($29)"<<std::endl;
-        data.register.free_reg(idx);
+        data.registers.free_reg(idx);
     }
 
 };
