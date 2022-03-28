@@ -12,7 +12,7 @@ protected:
     ExpressionPtr id;
     ExpressionPtr right;
     
-    AssignOps(/*ExpressionPtr _left*/const ExpressionPtr_id, ExpressionPtr _right)
+    AssignOps(/*ExpressionPtr _left*/const ExpressionPtr _id, ExpressionPtr _right)
         :id(_id)
         , right(_right)
     {}
@@ -25,8 +25,8 @@ public:
     
     virtual const char *getOpcode() const =0;
 
-    const std::string getid() const
-    { return id; }
+    //const std::string getid() const
+    //{ return id; }
 
     ExpressionPtr getRight() const
     { return right; }
@@ -63,14 +63,14 @@ protected:
     virtual const char *getOpcode() const override
     {return "=";}
 public:
-    AssignOperator(const std::string &_id, ExpressionPtr _right)
+    AssignOperator( ExpressionPtr &_id, ExpressionPtr _right)
         : AssignOps(_id, _right)
     {}
 
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
-        std::string name = id->getid();
+        std::string name = id->getId();
         ExpressionPtr arridx = id->getindex();
-        if(!= NULL){
+        if(arridx!= NULL){
             std::string arrid = name + "0";
             arridx->MipsCodeGen(dst,data,DstReg);
             dst<<"sll $"<<DstReg<<",2"<<std::endl;
@@ -97,12 +97,27 @@ protected:
     virtual const char *getOpcode() const override
     {return "+=";}
 public:
-    AddAssignOperator(const std::string &_id, ExpressionPtr _right)
+    AddAssignOperator( ExpressionPtr &_id, ExpressionPtr _right)
         : AssignOps(_id, _right)
     {}
 
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
-        std::string name = id;
+        std::string name = id->getId();
+        ExpressionPtr arridx = id->getindex();
+        if(arridx!= NULL){
+            std::string arrid = name + "0";
+            arridx->MipsCodeGen(dst,data,DstReg);
+            dst<<"sll $"<<DstReg<<",2"<<std::endl;
+            int arroffset = data.Stack.back().bindings[arrid].offset - 4;
+            int idx = data.registers.allocate();
+            dst<<"addiu $"<<idx<<",$30,"<<arroffset<<std::endl;
+            dst<<"addu $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
+            right->MipsCodeGen(dst, data, idx);
+            dst<<"lw $"<<DstReg<<",4($29"<<std::endl;
+            dst<<"add $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
+            dst<<"sw $"<<DstReg<<",4($29)"<<std::endl;
+            data.registers.free_reg(idx);
+        }
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst, data, idx);
         dst<<"add $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
@@ -119,11 +134,26 @@ protected:
     virtual const char *getOpcode() const override
     {return "-=";}
 public:
-    SubAssignOperator(const std::string &_id, ExpressionPtr _right)
+    SubAssignOperator( ExpressionPtr &_id, ExpressionPtr _right)
         : AssignOps(_id, _right)
     {}
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
-        std::string name = id;
+        std::string name = id->getId();
+        ExpressionPtr arridx = id->getindex();
+        if(arridx!= NULL){
+            std::string arrid = name + "0";
+            arridx->MipsCodeGen(dst,data,DstReg);
+            dst<<"sll $"<<DstReg<<",2"<<std::endl;
+            int arroffset = data.Stack.back().bindings[arrid].offset - 4;
+            int idx = data.registers.allocate();
+            dst<<"addiu $"<<idx<<",$30,"<<arroffset<<std::endl;
+            dst<<"addu $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
+            right->MipsCodeGen(dst, data, idx);
+            dst<<"lw $"<<DstReg<<",4($29"<<std::endl;
+            dst<<"sub $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
+            dst<<"sw $"<<DstReg<<",4($29)"<<std::endl;
+            data.registers.free_reg(idx);
+        }
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst, data, idx);
         dst<<"sub $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
@@ -140,14 +170,30 @@ protected:
     virtual const char *getOpcode() const override
     {return "*=";}
 public:
-    MulAssignOperator(const std::string &_id, ExpressionPtr _right)
+    MulAssignOperator( ExpressionPtr &_id, ExpressionPtr _right)
         : AssignOps(_id, _right)
     {}
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
-        std::string name = id;
+        std::string name = id->getId();
+        ExpressionPtr arridx = id->getindex();
+        if(arridx!= NULL){
+            std::string arrid = name + "0";
+            arridx->MipsCodeGen(dst,data,DstReg);
+            dst<<"sll $"<<DstReg<<",2"<<std::endl;
+            int arroffset = data.Stack.back().bindings[arrid].offset - 4;
+            int idx = data.registers.allocate();
+            dst<<"addiu $"<<idx<<",$30,"<<arroffset<<std::endl;
+            dst<<"addu $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
+            right->MipsCodeGen(dst, data, idx);
+            dst<<"lw $"<<DstReg<<",4($29"<<std::endl;
+            dst<<"mult $"<<DstReg<<",$"<<idx<<std::endl;
+            dst<<"mflo $"<<DstReg<<std::endl;
+            dst<<"sw $"<<DstReg<<",4($29)"<<std::endl;
+            data.registers.free_reg(idx);
+        }
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst, data, idx);
-        dst<<"mul $"<<DstReg<<",$"<<idx<<std::endl;
+        dst<<"mult $"<<DstReg<<",$"<<idx<<std::endl;
         dst<<"mflo $"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
         int varoffset = data.Stack.back().bindings[name].offset;
@@ -162,11 +208,27 @@ protected:
     virtual const char *getOpcode() const override
     {return "/=";}
 public:
-    DivAssignOperator(const std::string &_id, ExpressionPtr _right)
+    DivAssignOperator( ExpressionPtr &_id, ExpressionPtr _right)
         : AssignOps(_id, _right)
     {}
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
-        std::string name = id;
+        std::string name = id->getId();
+        ExpressionPtr arridx = id->getindex();
+        if(arridx!= NULL){
+            std::string arrid = name + "0";
+            arridx->MipsCodeGen(dst,data,DstReg);
+            dst<<"sll $"<<DstReg<<",2"<<std::endl;
+            int arroffset = data.Stack.back().bindings[arrid].offset - 4;
+            int idx = data.registers.allocate();
+            dst<<"addiu $"<<idx<<",$30,"<<arroffset<<std::endl;
+            dst<<"addu $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
+            right->MipsCodeGen(dst, data, idx);
+            dst<<"lw $"<<DstReg<<",4($29"<<std::endl;
+            dst<<"div $"<<DstReg<<",$"<<idx<<std::endl;
+            dst<<"mfhi $"<<DstReg<<std::endl;
+            dst<<"sw $"<<DstReg<<",4($29)"<<std::endl;
+            data.registers.free_reg(idx);
+        }
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst, data, idx);
         dst<<"div $"<<DstReg<<",$"<<idx<<std::endl;
@@ -184,11 +246,27 @@ protected:
     virtual const char *getOpcode() const override
     {return "%=";}
 public:
-    ModAssignOperator(const std::string &_id, ExpressionPtr _right)
+    ModAssignOperator( ExpressionPtr &_id, ExpressionPtr _right)
         : AssignOps(_id, _right)
     {}
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
-        std::string name = id;
+        std::string name = id->getId();
+        ExpressionPtr arridx = id->getindex();
+        if(arridx!= NULL){
+            std::string arrid = name + "0";
+            arridx->MipsCodeGen(dst,data,DstReg);
+            dst<<"sll $"<<DstReg<<",2"<<std::endl;
+            int arroffset = data.Stack.back().bindings[arrid].offset - 4;
+            int idx = data.registers.allocate();
+            dst<<"addiu $"<<idx<<",$30,"<<arroffset<<std::endl;
+            dst<<"addu $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
+            right->MipsCodeGen(dst, data, idx);
+            dst<<"lw $"<<DstReg<<",4($29"<<std::endl;
+            dst<<"div $"<<DstReg<<",$"<<idx<<std::endl;
+            dst<<"mflo $"<<DstReg<<std::endl;
+            dst<<"sw $"<<DstReg<<",4($29)"<<std::endl;
+            data.registers.free_reg(idx);
+        }
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst, data, idx);
         dst<<"div $"<<DstReg<<",$"<<idx<<std::endl;

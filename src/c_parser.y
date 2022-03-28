@@ -87,12 +87,12 @@ ARRAY_DECLARATOR : TOK_VAR TOK_LSQBRACKET LOGIC_EXPR TOK_RSQBRACKET {$$ = new Ar
 ARG_SINGLE: ASSIGN_EXPR {$$ =new SingleExpr($1);}
           ;
 ASSIGN_EXPR : LOGIC_EXPR {$$ = $1;}
-            | FACTOR TOK_EQASSIGN ASSIGN_EXPR {$$ = new AssignOperator(*$1,$3);}
-            | FACTOR TOK_ADDASSIGN ASSIGN_EXPR {$$ = new AddAssignOperator(*$1,$3);}
-            | FACTOR TOK_SUBASSIGN ASSIGN_EXPR {$$ = new SubAssignOperator(*$1,$3);}
-            | FACTOR TOK_MULASSIGN ASSIGN_EXPR {$$ = new MulAssignOperator(*$1,$3);}
-            | FACTOR TOK_DIVASSIGN ASSIGN_EXPR {$$ = new DivAssignOperator(*$1,$3);}
-            | FACTOR TOK_MODASSIGN ASSIGN_EXPR {$$ = new ModAssignOperator(*$1,$3);}
+            | FACTOR TOK_EQASSIGN ASSIGN_EXPR {$$ = new AssignOperator($1,$3);}
+            | FACTOR TOK_ADDASSIGN ASSIGN_EXPR {$$ = new AddAssignOperator($1,$3);}
+            | FACTOR TOK_SUBASSIGN ASSIGN_EXPR {$$ = new SubAssignOperator($1,$3);}
+            | FACTOR TOK_MULASSIGN ASSIGN_EXPR {$$ = new MulAssignOperator($1,$3);}
+            | FACTOR TOK_DIVASSIGN ASSIGN_EXPR {$$ = new DivAssignOperator($1,$3);}
+            | FACTOR TOK_MODASSIGN ASSIGN_EXPR {$$ = new ModAssignOperator($1,$3);}
             ;
 
 LOGIC_EXPR : BIT_EXPR {$$ = $1;}

@@ -393,7 +393,7 @@ public:
         : name(_name)
         , index(_index)
     {} 
-    ExpressionPtr void getindex() const override{
+    virtual ExpressionPtr getindex() const override{
         return index;
     }
     virtual void print(std::ostream &dst) const override
