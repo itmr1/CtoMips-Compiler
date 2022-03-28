@@ -72,9 +72,9 @@ public:
         dst<<"add $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
         data.registers.free_reg(idx);
     }
-    virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+    virtual int evaluate() const override {
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l+r;
     }
 };
@@ -100,9 +100,9 @@ public:
         data.registers.free_reg(idx);
     }
 
-    virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+    virtual int evaluate() const override {
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l-r;
     }
 };
@@ -130,9 +130,9 @@ public:
         data.registers.free_reg(idx);
     }
 
-    virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+    virtual int evaluate() const override{
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l*r;
     }
 };
@@ -159,9 +159,9 @@ public:
         data.registers.free_reg(idx);
     }
 
-    virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+    virtual int evaluate() const override{
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l/r;
     }
 };
@@ -187,9 +187,9 @@ public:
         data.registers.free_reg(idx);
     }
 
-    virtual int evaluate(ExpressionPtr) const {
-        int l = left->evaluate;
-        int r = right->evaluate;
+    virtual int evaluate() const override {
+        int l = left->evaluate();
+        int r = right->evaluate();
         return l%r;
     }
 };

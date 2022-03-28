@@ -10,6 +10,7 @@ lw $2,8($30)
 div $8,$2
 mflo $2
 b EoF0
+nop
 EoF0:
 lw $30,12($29)
 addiu $29,$29,16
