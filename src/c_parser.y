@@ -142,7 +142,7 @@ FACTOR : TOK_N     { $$ = new Number( $1 ); }
        | TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET { $$ = $2; }
        | TOK_VAR TOK_LBRACKET TOK_RBRACKET {$$ = new FuncCall(*$1);}
        | TOK_VAR TOK_LBRACKET FUNC_CALL_ARGS TOK_RBRACKET {$$ = new FuncCall(*$1, $3);}
-       | TOK_VAR TOK_LSQBRACKET ASSIGN_EXPR TOK_RSQBRACKET {}
+       | TOK_VAR TOK_LSQBRACKET ASSIGN_EXPR TOK_RSQBRACKET {$$ = new ArrayCall(*$1, $3);}
        ;
 
 REC_STATEMENT : STATEMENT {$$ = $1;}
