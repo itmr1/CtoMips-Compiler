@@ -9,20 +9,14 @@ class AssignOps
     : public Expression
 {
 protected:
-    std::string id;
-    ExpressionPtr idx;
+    ExpressionPtr id;
     ExpressionPtr right;
     
-    AssignOps(/*ExpressionPtr _left*/const std::string &_id, ExpressionPtr _right)
+    AssignOps(/*ExpressionPtr _left*/const ExpressionPtr_id, ExpressionPtr _right)
         :id(_id)
         , right(_right)
     {}
 
-    AssignOps(const std::string &_type,ExpressionPtr _idx, ExpressionPtr _right)
-        : id(_id)
-        , idx(_idx)
-        , right(_right)
-    {}
 public:
     virtual ~AssignOps()
     {
@@ -69,17 +63,30 @@ protected:
     virtual const char *getOpcode() const override
     {return "=";}
 public:
-    AssignOperator(/*ExpressionPtr _left*/const std::string &_id, ExpressionPtr _right)
-        : AssignOps(/*_left*/_id, _right)
+    AssignOperator(const std::string &_id, ExpressionPtr _right)
+        : AssignOps(_id, _right)
     {}
-    /*AssignOperator(const std::string &_type,const std::string &_id, ExpressionPtr _right)
-        : AssignOps(_type,_id, _right)
-    {}*/
+
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
-        std::string name = id;
+        std::string name = id->getid();
+        ExpressionPtr arridx = id->getindex();
+        if(!= NULL){
+            std::string arrid = name + "0";
+            arridx->MipsCodeGen(dst,data,DstReg);
+            dst<<"sll $"<<DstReg<<",2"<<std::endl;
+            int arroffset = data.Stack.back().bindings[arrid].offset - 4;
+            int idx = data.registers.allocate();
+            dst<<"addiu $"<<idx<<",$30,"<<arroffset<<std::endl;
+            dst<<"addu $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
+            right->MipsCodeGen(dst, data, idx);
+            dst<<"sw $"<<idx<<",4($29)"<<std::endl;
+            data.registers.free_reg(idx);
+        }
+        else{
         right->MipsCodeGen(dst, data, DstReg);
         int varoffset = data.Stack.back().bindings[name].offset;
         dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
+        }
     }
 };
 

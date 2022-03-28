@@ -393,6 +393,9 @@ public:
         : name(_name)
         , index(_index)
     {} 
+    ExpressionPtr void getindex() const override{
+        return index;
+    }
     virtual void print(std::ostream &dst) const override
     {}
     virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
