@@ -27,6 +27,39 @@ public:
     virtual int evaluate() const {return 0;}
 };
 
+class SingleExpr
+    : public Expression
+{
+private:
+    ExpressionPtr expr;
+public:
+    SingleExpr(ExpressionPtr _expr)
+        : expr(_expr)       
+    {}
+    virtual ~SingleExpr()
+    {
+        delete expr;
+    }
+    virtual void print(std::ostream &dst) const override
+    {   
+
+        expr->print(dst);
+    }
+
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+       expr->CountFrameSize(CurrSize);
+   }
+
+   virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
+       expr->MipsCodeGen(dst, data, DstReg);
+   }
+   virtual void GetArgs(std::vector<ExpressionPtr> &arglist)const override{
+        //std::cout<<"hello";
+        arglist.push_back(expr);
+   }
+
+};
 class RecExpr
     : public Expression
 {
@@ -62,8 +95,9 @@ public:
        right->MipsCodeGen(dst, data, DstReg);
    }
    virtual void GetArgs(std::vector<ExpressionPtr> &arglist)const override{
-       arglist.push_back(left);
-       arglist.push_back(right);
+        left->GetArgs(arglist);
+        right->GetArgs(arglist);
+        
    }
 
 };

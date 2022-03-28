@@ -78,6 +78,7 @@ public:
         data.Stack.back().frameSize+=2;
         int frealsize = data.Stack.back().frameSize*4;
         dst<<"addiu"<<" $29,"<<"$29,"<<"-"<<frealsize<<std::endl;
+        dst<<"sw"<<" $31,"<<frealsize<<"($29)"<<std::endl;
         dst<<"sw"<<" $30,"<<frealsize - 4<<"($29)"<<std::endl;
         dst<<"move"<<" $30,$29"<<std::endl;
         if(Args){
@@ -91,6 +92,8 @@ public:
         data.CurrLabel = data.MakeLabel("EoF");
         Statement->MipsCodeGen(dst, data, DstReg);
         dst<<data.CurrLabel<<":"<<std::endl;
+        dst<<"move "<<"$29,$30"<<std::endl;
+        dst<<"lw"<<" $31,"<<frealsize<<"($29)"<<std::endl;
         dst<<"lw"<<" $30,"<<frealsize - 4<<"($29)"<<std::endl;
         dst<<"addiu"<<" $29,"<<"$29,"<<frealsize<<std::endl;
         dst<<"j $31"<<std::endl;

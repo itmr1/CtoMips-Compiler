@@ -1,5 +1,6 @@
 fib: 
 addiu $29,$29,-12
+sw $31,12($29)
 sw $30,8($29)
 move $30,$29
 sw $4,4($29)
@@ -25,15 +26,25 @@ li $2,1
 b EoF0
 nop
 EndIf2:
+lw $4,4($30)
+move $8,$4
+li $4,1
+sub $4,$8,$4
 jal fib
 nop
 move $8,$2
+lw $4,4($30)
+move $9,$4
+li $4,2
+sub $4,$9,$4
 jal fib
 nop
 add $2,$2,$8
 b EoF0
 nop
 EoF0:
+move $29,$30
+lw $31,12($29)
 lw $30,8($29)
 addiu $29,$29,12
 j $31
