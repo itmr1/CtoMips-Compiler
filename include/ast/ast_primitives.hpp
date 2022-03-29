@@ -372,6 +372,7 @@ public:
     {}
     virtual void print(std::ostream &dst) const override
     {}
+    virtual bool IsFuncCall() const override{ return true;}
     
     virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
         int ArgSize = 0;

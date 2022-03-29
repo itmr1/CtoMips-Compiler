@@ -15,14 +15,14 @@ li $2,0
 b EoF0
 nop
 EndIf1:
-lw $2,4($30)
-move $8,$2
-lw $4,4($30)
-move $9,$4
 li $4,1
-sub $4,$9,$4
+move $9,$4
+lw $4,4($30)
+sub $4,$4,$9
 jal f
 nop
+move $8,$2
+lw $2,4($30)
 add $2,$2,$8
 b EoF0
 nop

@@ -26,6 +26,7 @@ public:
     virtual void GetArgs(std::vector<ExpressionPtr> &arglist) const {return;}
     virtual ExpressionPtr getindex() const { return NULL;}
     virtual int evaluate() const {return 0;}
+    virtual bool IsFuncCall() const { return false;}
 };
 
 class SingleExpr
@@ -59,6 +60,7 @@ public:
         //std::cout<<"hello";
         arglist.push_back(expr);
    }
+   
 
 };
 class RecExpr

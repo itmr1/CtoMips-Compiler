@@ -64,15 +64,26 @@ public:
         : Operator(_left, _right)
     {}
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
-        left->MipsCodeGen(dst,data, DstReg);
+        if(left->IsFuncCall()){
+            int idx = data.registers.allocate();
+            left->MipsCodeGen(dst,data, DstReg);
+            std::string tmp_reg = data.registers.make_regname(idx);
+            dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+            data.registers.free_reg(idx);
+            right->MipsCodeGen(dst,data, DstReg);
+            dst<<"add $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        }
+        else{
         int idx = data.registers.allocate();
+        right->MipsCodeGen(dst,data, DstReg);
         std::string tmp_reg = data.registers.make_regname(idx);
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        right->MipsCodeGen(dst,data, DstReg);
-        dst<<"add $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
         data.registers.free_reg(idx);
+        left->MipsCodeGen(dst,data, DstReg);
+        dst<<"add $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        }
     }
-    virtual int evaluate() const override {
+        virtual int evaluate() const override {
         int l = left->evaluate();
         int r = right->evaluate();
         return l+r;
@@ -91,13 +102,24 @@ public:
     {}
 
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
-        left->MipsCodeGen(dst,data, DstReg);
+        if(left->IsFuncCall()){
+            int idx = data.registers.allocate();
+            left->MipsCodeGen(dst,data, DstReg);
+            std::string tmp_reg = data.registers.make_regname(idx);
+            dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+            data.registers.free_reg(idx);
+            right->MipsCodeGen(dst,data, DstReg);
+            dst<<"sub $"<<DstReg<<",$"<<tmp_reg<<","<<DstReg<<std::endl;
+        }
+        else{
         int idx = data.registers.allocate();
+        right->MipsCodeGen(dst,data, DstReg);
         std::string tmp_reg = data.registers.make_regname(idx);
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        right->MipsCodeGen(dst,data, DstReg);
-        dst<<"sub $"<<DstReg<<","<<tmp_reg<<",$"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
+        left->MipsCodeGen(dst,data, DstReg);
+        dst<<"sub $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        }
     }
 
     virtual int evaluate() const override {
@@ -119,15 +141,27 @@ public:
         : Operator(_left, _right)
     {}
 
-    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
-        left->MipsCodeGen(dst,data, DstReg);
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        if(left->IsFuncCall()){
+            int idx = data.registers.allocate();
+            left->MipsCodeGen(dst,data, DstReg);
+            std::string tmp_reg = data.registers.make_regname(idx);
+            dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+            data.registers.free_reg(idx);
+            right->MipsCodeGen(dst,data, DstReg);
+            dst<<"mult $"<<DstReg<<","<<tmp_reg<<std::endl;
+            dst<<"mflo $"<<DstReg<<std::endl;
+        }
+        else{
         int idx = data.registers.allocate();
+        right->MipsCodeGen(dst,data, DstReg);
         std::string tmp_reg = data.registers.make_regname(idx);
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        right->MipsCodeGen(dst,data, DstReg);
+        data.registers.free_reg(idx);
+        left->MipsCodeGen(dst,data, DstReg);
         dst<<"mult $"<<DstReg<<","<<tmp_reg<<std::endl;
         dst<<"mflo $"<<DstReg<<std::endl;
-        data.registers.free_reg(idx);
+        }
     }
 
     virtual int evaluate() const override{
@@ -148,17 +182,28 @@ public:
         : Operator(_left, _right)
     {}
 
-    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
-        left->MipsCodeGen(dst,data, DstReg);
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        if(left->IsFuncCall()){
+            int idx = data.registers.allocate();
+            left->MipsCodeGen(dst,data, DstReg);
+            std::string tmp_reg = data.registers.make_regname(idx);
+            dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+            data.registers.free_reg(idx);
+            right->MipsCodeGen(dst,data, DstReg);
+            dst<<"div $"<<tmp_reg<<","<<DstReg<<std::endl;
+            dst<<"mflo $"<<DstReg<<std::endl;
+        }
+        else{
         int idx = data.registers.allocate();
+        right->MipsCodeGen(dst,data, DstReg);
         std::string tmp_reg = data.registers.make_regname(idx);
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        right->MipsCodeGen(dst,data, DstReg);
-        dst<<"div "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        dst<<"mflo $"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
+        left->MipsCodeGen(dst,data, DstReg);
+        dst<<"div $"<<DstReg<<","<<tmp_reg<<std::endl;
+        dst<<"mflo $"<<DstReg<<std::endl;
+        }
     }
-
     virtual int evaluate() const override{
         int l = left->evaluate();
         int r = right->evaluate();
@@ -177,14 +222,26 @@ public:
         : Operator(_left, _right)
     {}
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
-        right->MipsCodeGen(dst,data, DstReg);
+        if(left->IsFuncCall()){
+            int idx = data.registers.allocate();
+            left->MipsCodeGen(dst,data, DstReg);
+            std::string tmp_reg = data.registers.make_regname(idx);
+            dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+            data.registers.free_reg(idx);
+            right->MipsCodeGen(dst,data, DstReg);
+            dst<<"div $"<<tmp_reg<<","<<DstReg<<std::endl;
+            dst<<"mfhi $"<<DstReg<<std::endl;
+        }
+        else{
         int idx = data.registers.allocate();
+        right->MipsCodeGen(dst,data, DstReg);
         std::string tmp_reg = data.registers.make_regname(idx);
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        left->MipsCodeGen(dst,data, DstReg);
-        dst<<"div "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        dst<<"mfhi $"<<DstReg<<std::endl;
         data.registers.free_reg(idx);
+        left->MipsCodeGen(dst,data, DstReg);
+        dst<<"div $"<<DstReg<<","<<tmp_reg<<std::endl;
+        dst<<"mfhi $"<<DstReg<<std::endl;
+        }
     }
 
     virtual int evaluate() const override {
