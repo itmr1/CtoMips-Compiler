@@ -8,9 +8,9 @@ sw $8,4($30)
 b CondCheck3
 nop
 StartOfLoop2:
-lw $2,4($30)
-move $10,$2
 li $2,1
+move $10,$2
+lw $2,4($30)
 add $2,$2,$10
 sw $2,4($30)
 CondCheck3:
@@ -20,9 +20,9 @@ li $8,1
 slt $8,$10,$8
 bne $8,$0,StartOfLoop2
 EndOfLoop1:
-lw $2,4($30)
-move $8,$2
 li $2,19937
+move $8,$2
+lw $2,4($30)
 add $2,$2,$8
 b EoF0
 nop

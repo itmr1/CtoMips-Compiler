@@ -11,6 +11,7 @@ class Unary
   //  ExpressionPtr expr;
 protected:
     ExpressionPtr expr;
+    ExpressionPtr *exprp;
     Unary(const ExpressionPtr _expr)
         : expr(_expr)
     {}
@@ -64,6 +65,7 @@ public:
         return 0-e;
     }
 };
+
 
 class BitNotOperator
     : public Unary

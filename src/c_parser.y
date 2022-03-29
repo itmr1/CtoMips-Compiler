@@ -22,7 +22,7 @@
 
 %token TOK_BIT_AND TOK_BIT_OR TOK_EQ TOK_NEQ TOK_BIT_XOR TOK_LOGIC_AND TOK_LOGIC_OR TOK_LSHIFT TOK_RSHIFT TOK_LOGIC_NOT TOK_BIT_NOT
 %token TOK_GE TOK_LE TOK_G TOK_L
-%token TOK_IF TOK_WHILE TOK_ELSE TOK_FOR
+%token TOK_IF TOK_WHILE TOK_ELSE TOK_FOR TOK_SWITCH TOK_CASE TOK_DEFAULT 
 %token TOK_RETURN TOK_BREAK TOK_CONT
 %token TOK_MUL TOK_DIVIDE TOK_PLUS TOK_MINUS TOK_MOD
 %token TOK_LBRACKET TOK_RBRACKET TOK_SEMICOLON TOK_LCBRACKET TOK_RCBRACKET TOK_LSQBRACKET TOK_RSQBRACKET TOK_COMMA TOK_QMARK TOK_COLON
@@ -30,7 +30,7 @@
 %token TOK_SUBASSIGN TOK_MULASSIGN TOK_DIVASSIGN TOK_ADDASSIGN TOK_EQASSIGN TOK_MODASSIGN TOK_ANDASSIGN TOK_ORASSIGN TOK_XORASSIGN TOK_INCR TOK_DECR
 
 
-%type <expr> ROOT ARG_SINGLE EXPR_SINGLE EXPR_TREE COND_EXPR ASSIGN_EXPR LOGIC_EXPR BIT_EXPR EQ_EXPR REL_EXPR SHIFT_EXPR ADD_EXPR MULT_EXPR UNARY FACTOR FUNCTION DECLARATION DECLARATOR ARRAY_DECLARATOR FUNC_ARGS FUNC_CALL_ARGS STATEMENT EXPR_STATEMENT FUNC_STATEMENT SELECT_STATEMENT ITER_STATEMENT JUMP_STATEMENT REC_STATEMENT REC_DECLARATION 
+%type <expr> ROOT ARG_SINGLE SINGLE_DECL POINTER_DECLARATOR EXPR_SINGLE EXPR_TREE COND_EXPR ASSIGN_EXPR LOGIC_EXPR SWITCH_STATEMENT BIT_EXPR EQ_EXPR REL_EXPR SHIFT_EXPR ADD_EXPR MULT_EXPR UNARY FACTOR FUNCTION DECLARATION DECLARATOR ARRAY_DECLARATOR FUNC_ARGS FUNC_CALL_ARGS STATEMENT EXPR_STATEMENT FUNC_STATEMENT SELECT_STATEMENT ITER_STATEMENT JUMP_STATEMENT REC_STATEMENT REC_DECLARATION 
 %type <number> TOK_N
 %type <string> TOK_VAR VARTYPE_INT
 
@@ -66,13 +66,16 @@ REC_DECLARATION : DECLARATION {$$=$1;}
 
 DECLARATION : VARTYPE_INT DECLARATOR TOK_SEMICOLON { $$ = new DeclareVar("int", $2); }
          | VARTYPE_INT ARRAY_DECLARATOR TOK_SEMICOLON { $$ = new DeclareArray("int", $2);}
+         | VARTYPE_INT POINTER_DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON {$$ = new InitMemory("int", $2, $4);}
          | VARTYPE_INT DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON {$$= new InitVar("int",$2,$4);}
          | VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET TOK_RCBRACKET TOK_SEMICOLON {$$ = new InitZeroArray("int",$2);}
          | VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON {$$ = new InitArray("int",$2,$5);}
          ;
+SINGLE_DECL : VARTYPE_INT DECLARATOR { $$ = new DeclareVar("int", $2); }
+            ;
 
-FUNC_ARGS: VARTYPE_INT DECLARATOR { $$ = new DeclareVar("int", $2); }
-         | FUNC_ARGS TOK_COMMA FUNC_ARGS {$$ = new RecExpr($1, $3);}
+FUNC_ARGS: ARG_SINGLE { $$ = $1; }
+         | FUNC_ARGS TOK_COMMA ARG_SINGLE {$$ = new RecExpr($1, $3);}
          ;
 
 FUNC_CALL_ARGS: ARG_SINGLE {$$=$1;}
@@ -81,26 +84,30 @@ FUNC_CALL_ARGS: ARG_SINGLE {$$=$1;}
 
 DECLARATOR : TOK_VAR { $$ = new Variable(*$1);}
            ;
+
+POINTER_DECLARATOR : TOK_MUL TOK_VAR  {$$ = new PointerVar(*$2);}
+                   ;
           
 ARRAY_DECLARATOR : TOK_VAR TOK_LSQBRACKET LOGIC_EXPR TOK_RSQBRACKET {$$ = new Array(*$1, $3);} // int p[] = {}
            | TOK_VAR TOK_LSQBRACKET TOK_RSQBRACKET {$$ = new Array(*$1);}
            ;
-ARG_SINGLE: ASSIGN_EXPR {$$ =new SingleExpr($1);}
+ARG_SINGLE: SINGLE_DECL {$$ = new SingleExpr($1);}
+          | ASSIGN_EXPR {$$ =new SingleExpr($1);}
           ;
 ASSIGN_EXPR : COND_EXPR {$$ = $1;}
-            | FACTOR TOK_EQASSIGN ASSIGN_EXPR {$$ = new AssignOperator($1,$3);}
-            | FACTOR TOK_ADDASSIGN ASSIGN_EXPR {$$ = new AddAssignOperator($1,$3);}
-            | FACTOR TOK_SUBASSIGN ASSIGN_EXPR {$$ = new SubAssignOperator($1,$3);}
-            | FACTOR TOK_MULASSIGN ASSIGN_EXPR {$$ = new MulAssignOperator($1,$3);}
-            | FACTOR TOK_DIVASSIGN ASSIGN_EXPR {$$ = new DivAssignOperator($1,$3);}
-            | FACTOR TOK_MODASSIGN ASSIGN_EXPR {$$ = new ModAssignOperator($1,$3);}
-            | FACTOR TOK_ANDASSIGN ASSIGN_EXPR {$$ = new AndAssignOperator($1,$3);}
-            | FACTOR TOK_ORASSIGN ASSIGN_EXPR {$$ = new OrAssignOperator($1,$3);}
-            | FACTOR TOK_XORASSIGN ASSIGN_EXPR {$$ = new XorAssignOperator($1,$3);}
+            | UNARY TOK_EQASSIGN ASSIGN_EXPR {$$ = new AssignOperator($1,$3);}
+            | UNARY TOK_ADDASSIGN ASSIGN_EXPR {$$ = new AddAssignOperator($1,$3);}
+            | UNARY TOK_SUBASSIGN ASSIGN_EXPR {$$ = new SubAssignOperator($1,$3);}
+            | UNARY TOK_MULASSIGN ASSIGN_EXPR {$$ = new MulAssignOperator($1,$3);}
+            | UNARY TOK_DIVASSIGN ASSIGN_EXPR {$$ = new DivAssignOperator($1,$3);}
+            | UNARY TOK_MODASSIGN ASSIGN_EXPR {$$ = new ModAssignOperator($1,$3);}
+            | UNARY TOK_ANDASSIGN ASSIGN_EXPR {$$ = new AndAssignOperator($1,$3);}
+            | UNARY TOK_ORASSIGN ASSIGN_EXPR {$$ = new OrAssignOperator($1,$3);}
+            | UNARY TOK_XORASSIGN ASSIGN_EXPR {$$ = new XorAssignOperator($1,$3);}
             ;
 
 COND_EXPR : LOGIC_EXPR {$$=$1;}
-          //| LOGIC_EXPR TOK_QMARK ASSIGN_EXPR TOK_COLON COND_EXPR {$$ = new MuxOperator($1,$3,$5);}
+          | LOGIC_EXPR TOK_QMARK ASSIGN_EXPR TOK_COLON COND_EXPR {$$ = new MuxOperator($1,$3,$5);}
           ;
 
 LOGIC_EXPR : BIT_EXPR {$$ = $1;}
@@ -149,6 +156,8 @@ UNARY : FACTOR      { $$ = $1; }
       | TOK_DECR UNARY        {$$ = new DecrBeforeOperator($2);}
       | UNARY TOK_INCR        {$$ = new IncrAfterOperator($1);}
       | UNARY TOK_DECR        {$$ = new DecrAfterOperator($1);}
+      | TOK_BIT_AND TOK_VAR    {$$ = new MemoryOperator(*$2);}
+      | TOK_MUL TOK_VAR  {$$ = new PointerVar(*$2);}
       ;
 
 FACTOR : TOK_N     { $$ = new Number( $1 ); }
@@ -168,7 +177,12 @@ STATEMENT : EXPR_STATEMENT {$$=$1;}
           | JUMP_STATEMENT {$$=$1;}
           | SELECT_STATEMENT {$$=$1;}
           | FUNC_STATEMENT {$$=$1;}
+          | SWITCH_STATEMENT {$$=$1;}
           ;
+
+SWITCH_STATEMENT : TOK_CASE COND_EXPR TOK_COLON STATEMENT {$$ = new CaseStatement($2, $4);}
+                 | TOK_DEFAULT TOK_COLON STATEMENT {$$ = new DefaultStatement($3);}
+                 ;
 
 EXPR_STATEMENT : ASSIGN_EXPR TOK_SEMICOLON {$$=$1;} //TOK_SEMICOLON 
               // | ASSIGN_EXPR TOK_SEMICOLON {$$=$1;}
@@ -182,6 +196,7 @@ FUNC_STATEMENT : TOK_LCBRACKET TOK_RCBRACKET {$$ = new EmptyStatement();}
 
 SELECT_STATEMENT : TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT   {$$ = new IfStatement($3, $5);} 
                  | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT {$$ = new IfElseStatement($3, $5, $7);} 
+                 | TOK_SWITCH TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT {$$ = new SwitchStatement($3, $5);}
                  ;
 
 ITER_STATEMENT : TOK_WHILE TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET STATEMENT {$$ = new WhileStatement($3, $5);} 
