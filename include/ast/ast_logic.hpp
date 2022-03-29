@@ -96,7 +96,6 @@ public:
 };
 
 
-
 class EqOperator
  : public Logic
 {
