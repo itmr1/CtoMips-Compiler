@@ -10,14 +10,14 @@ sw $8,4($30)
 b CondCheck3
 nop
 StartOfLoop2:
-lw $2,8($30)
+li $2,1
 move $9,$2
-li $2,1
-sub $2,$9,$2
+lw $2,8($30)
+sub $2,$2,$9
 sw $2,8($30)
-lw $2,4($30)
-move $10,$2
 li $2,1
+move $10,$2
+lw $2,4($30)
 add $2,$2,$10
 sw $2,4($30)
 CondCheck3:

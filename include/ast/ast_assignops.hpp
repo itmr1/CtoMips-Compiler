@@ -34,7 +34,7 @@ public:
     virtual void print(std::ostream &dst) const override
     {
         //if(type==""){
-            dst<<id;
+            id->print(dst);
             dst<<" ";
             dst<<getOpcode();
             dst<<" ";

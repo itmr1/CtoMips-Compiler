@@ -26,17 +26,17 @@ li $2,1
 b EoF0
 nop
 EndIf2:
-lw $4,4($30)
-move $8,$4
 li $4,1
-sub $4,$8,$4
+move $9,$4
+lw $4,4($30)
+sub $4,$4,$9
 jal fib
 nop
 move $8,$2
-lw $4,4($30)
-move $9,$4
 li $4,2
-sub $4,$9,$4
+move $9,$4
+lw $4,4($30)
+sub $4,$4,$9
 jal fib
 nop
 add $2,$2,$8

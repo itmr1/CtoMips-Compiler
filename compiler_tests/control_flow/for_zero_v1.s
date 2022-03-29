@@ -11,9 +11,9 @@ StartOfLoop2:
 li $2,1
 b EoF0
 nop
-lw $2,4($30)
-move $10,$2
 li $2,1
+move $10,$2
+lw $2,4($30)
 add $2,$2,$10
 sw $2,4($30)
 CondCheck3:
