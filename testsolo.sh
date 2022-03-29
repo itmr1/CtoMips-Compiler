@@ -6,7 +6,7 @@ mips-linux-gnu-gcc -mfp32 -static -o compiler_tests/${shortcut} compiler_tests/$
 qemu-mips compiler_tests/${shortcut}
 
 
-
+echo ["$?"]
 if [ "$?" -eq "0" ]
 then
 echo "PASS"

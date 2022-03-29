@@ -138,19 +138,18 @@ public:
             int arroffset = data.Stack.back().bindings[arrid].offset - 4;
             int idx = data.registers.allocate();
             dst<<"addiu $"<<idx<<",$30,"<<arroffset<<std::endl;
-            dst<<"addu $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
-            expr->MipsCodeGen(dst, data, idx);
-            dst<<"lw $"<<DstReg<<",4($29"<<std::endl;
+            dst<<"addu $"<<idx<<",$"<<idx<<",$"<<DstReg<<std::endl;
+            dst<<"lw $"<<DstReg<<",($"<<idx<<")"<<std::endl;
             dst<<"addi $"<<DstReg<<",$"<<DstReg<<",1"<<std::endl;
-            dst<<"sw $"<<DstReg<<",4($29)"<<std::endl;
+            dst<<"sw $"<<DstReg<<",($"<<idx<<")"<<std::endl;
             data.registers.free_reg(idx);
         }
         int idx = data.registers.allocate();
-        expr->MipsCodeGen(dst, data, idx);
+        expr->MipsCodeGen(dst,data,DstReg);
         dst<<"addi $"<<DstReg<<",$"<<DstReg<<",1"<<std::endl;
-        data.registers.free_reg(idx);
         int varoffset = data.Stack.back().bindings[name].offset;
         dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
+        data.registers.free_reg(idx);
     }
 };
 
@@ -175,19 +174,18 @@ public:
             int arroffset = data.Stack.back().bindings[arrid].offset - 4;
             int idx = data.registers.allocate();
             dst<<"addiu $"<<idx<<",$30,"<<arroffset<<std::endl;
-            dst<<"addu $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
-            expr->MipsCodeGen(dst, data, idx);
-            dst<<"lw $"<<DstReg<<",4($29"<<std::endl;
+            dst<<"addu $"<<idx<<",$"<<idx<<",$"<<DstReg<<std::endl;
+            dst<<"lw $"<<DstReg<<",($"<<idx<<")"<<std::endl;
             dst<<"addi $"<<DstReg<<",$"<<DstReg<<",1"<<std::endl;
-            dst<<"sw $"<<DstReg<<",4($29)"<<std::endl;
+            dst<<"sw $"<<DstReg<<",($"<<idx<<")"<<std::endl;
             data.registers.free_reg(idx);
         }
         int idx = data.registers.allocate();
-        expr->MipsCodeGen(dst, data, idx);
+        expr->MipsCodeGen(dst,data,DstReg);
         dst<<"addi $"<<DstReg<<",$"<<DstReg<<",1"<<std::endl;
-        data.registers.free_reg(idx);
         int varoffset = data.Stack.back().bindings[name].offset;
         dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
+        data.registers.free_reg(idx);
     }
 };
 
@@ -213,19 +211,18 @@ public:
             int arroffset = data.Stack.back().bindings[arrid].offset - 4;
             int idx = data.registers.allocate();
             dst<<"addiu $"<<idx<<",$30,"<<arroffset<<std::endl;
-            dst<<"addu $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
-            expr->MipsCodeGen(dst, data, idx);
-            dst<<"lw $"<<DstReg<<",4($29"<<std::endl;
+            dst<<"addu $"<<idx<<",$"<<idx<<",$"<<DstReg<<std::endl;
+            dst<<"lw $"<<DstReg<<",($"<<idx<<")"<<std::endl;
             dst<<"subi $"<<DstReg<<",$"<<DstReg<<",1"<<std::endl;
-            dst<<"sw $"<<DstReg<<",4($29)"<<std::endl;
+            dst<<"sw $"<<DstReg<<",($"<<idx<<")"<<std::endl;
             data.registers.free_reg(idx);
         }
         int idx = data.registers.allocate();
-        expr->MipsCodeGen(dst, data, idx);
+        expr->MipsCodeGen(dst,data,DstReg);
         dst<<"subi $"<<DstReg<<",$"<<DstReg<<",1"<<std::endl;
-        data.registers.free_reg(idx);
         int varoffset = data.Stack.back().bindings[name].offset;
         dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
+        data.registers.free_reg(idx);
     }
 };
 
@@ -250,19 +247,18 @@ public:
             int arroffset = data.Stack.back().bindings[arrid].offset - 4;
             int idx = data.registers.allocate();
             dst<<"addiu $"<<idx<<",$30,"<<arroffset<<std::endl;
-            dst<<"addu $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
-            expr->MipsCodeGen(dst, data, idx);
-            dst<<"lw $"<<DstReg<<",4($29"<<std::endl;
+            dst<<"addu $"<<idx<<",$"<<idx<<",$"<<DstReg<<std::endl;
+            dst<<"lw $"<<DstReg<<",($"<<idx<<")"<<std::endl;
             dst<<"subi $"<<DstReg<<",$"<<DstReg<<",1"<<std::endl;
-            dst<<"sw $"<<DstReg<<",4($29)"<<std::endl;
+            dst<<"sw $"<<DstReg<<",($"<<idx<<")"<<std::endl;
             data.registers.free_reg(idx);
         }
         int idx = data.registers.allocate();
-        expr->MipsCodeGen(dst, data, idx);
+        expr->MipsCodeGen(dst,data,DstReg);
         dst<<"subi $"<<DstReg<<",$"<<DstReg<<",1"<<std::endl;
-        data.registers.free_reg(idx);
         int varoffset = data.Stack.back().bindings[name].offset;
         dst<<"sw $"<<DstReg<<","<<varoffset<<"($30)"<<std::endl;
+        data.registers.free_reg(idx);
     }
 };
 

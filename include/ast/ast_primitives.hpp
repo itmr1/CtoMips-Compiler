@@ -111,6 +111,7 @@ public:
         data.Stack.back().curroffset += size; //increase frame size
         //dst << "addiu $29 $29 -"<<size<<std::endl;
         data.Stack.back().bindings[id] = {size, data.Stack.back().curroffset};
+        std::cout<<data.Stack.back().curroffset<<"\n";
     }
    
 };
@@ -183,13 +184,16 @@ public:
         std::string id = right->getId();
         int arrsize = right->evaluate();
         int size = sizeof(int);
-        data.Stack.back().curroffset += size; //increase frame size
+        
+         //increase frame size
             for(int i = 0; i<arrsize; i++){
+            data.Stack.back().curroffset += size;
+            //std::cout<<data.Stack.back().curroffset<<"\n";
             //valslist[i]->MipsCodeGen(dst, data, DstReg);
             std::string id_arr = id + std::to_string(i);
             data.Stack.back().bindings[id_arr] = {size,data.Stack.back().curroffset};
             //dst << "sw $" << DstReg<<","<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
-            data.Stack.back().curroffset += size;
+            //data.Stack.back().curroffset += size;
             //data.registers.free_reg(DstReg);
             }
             /*if(arrsize>(int)valslist.size()){
@@ -245,15 +249,16 @@ public:
             std::string id_arr = id + std::to_string(i);
             data.Stack.back().bindings[id_arr] = {size,data.Stack.back().curroffset};
             dst << "sw $" << DstReg<<","<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
-            data.Stack.back().curroffset += size;
+            //data.Stack.back().curroffset += size;
             data.registers.free_reg(DstReg);
             }
             if(arrsize>(int)valslist.size()){
                 for(int i = valslist.size(); i<arrsize; i++){
+                    data.Stack.back().curroffset += size;
                     std::string id_arr = id + std::to_string(i);
                     data.Stack.back().bindings[id_arr] = {size,data.Stack.back().curroffset};
                     dst << "sw $0,"<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
-                    data.Stack.back().curroffset += size;
+                    
                 }
             }
     }        
@@ -339,13 +344,14 @@ public:
         std::string id = right->getId();
         int arrsize = right->evaluate();
         int size = sizeof(int);
-        data.Stack.back().curroffset += size; //increase frame size
+        //data.Stack.back().curroffset += size; //increase frame size
         //dst << "addiu $29 $29 -"<<size<<std::endl;
                 for(int i = 0; i<arrsize; i++){
+                    data.Stack.back().curroffset += size;
                     std::string id_arr = id + std::to_string(i);
                     data.Stack.back().bindings[id_arr] = {size,data.Stack.back().curroffset};
                     dst << "sw $0,"<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
-                    data.Stack.back().curroffset += size;
+                    
                 }
     }
 };
@@ -393,6 +399,9 @@ public:
         : name(_name)
         , index(_index)
     {} 
+    virtual std::string getId() const override{
+        return name;
+    }
     virtual ExpressionPtr getindex() const override{
         return index;
     }
@@ -402,11 +411,11 @@ public:
         std::string arrid = name + "0";
         index->MipsCodeGen(dst,data,DstReg);
         dst<<"sll $"<<DstReg<<",2"<<std::endl;
-        int arroffset = data.Stack.back().bindings[arrid].offset - 4;
+        int arroffset = data.Stack.back().bindings[arrid].offset;
         int idx = data.registers.allocate();
         dst<<"addiu $"<<idx<<",$30,"<<arroffset<<std::endl;
-        dst<<"addu $"<<DstReg<<",$"<<DstReg<<",$"<<idx<<std::endl;
-        dst<<"lw $"<<DstReg<<",4($29)"<<std::endl;
+        dst<<"addu $"<<idx<<",$"<<idx<<",$"<<DstReg<<std::endl;
+        dst<<"lw $"<<DstReg<<",($"<<idx<<")"<<std::endl;
         data.registers.free_reg(idx);
     }
 
