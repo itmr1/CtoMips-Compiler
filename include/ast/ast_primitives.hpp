@@ -375,7 +375,7 @@ public:
     virtual bool IsFuncCall() const override{ return true;}
     
     virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
-        int ArgSize = 0;
+        
         std::vector<ExpressionPtr> arglist;
         if(args){
             args->GetArgs(arglist);
@@ -383,7 +383,8 @@ public:
                         arglist[i-4]->MipsCodeGen(dst, data, i);
                     }   
                 }
-        dst<<"jal "<<name<<std::endl;
+        std::string label = name;
+        dst<<"jal "<<label<<std::endl;
         dst<<"nop"<<std::endl;
     }
 

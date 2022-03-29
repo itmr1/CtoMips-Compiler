@@ -390,7 +390,7 @@ public:
     }*/
 
     virtual const char *getKeyWord() const override{
-        return " ";
+        return "";
     }
     
     virtual void print(std::ostream &dst){
@@ -405,5 +405,92 @@ public:
    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{}
 };
 
+class MuxOperator
+    :public SetStatement
+{
+public:
+    MuxOperator(ExpressionPtr _Cond, ExpressionPtr _Statement, ExpressionPtr _Statement2)
+        : SetStatement(_Cond, _Statement, _Statement2)
+    {}
+    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
+        Cond->MipsCodeGen(dst, data, DstReg);
+        std::string Else = data.MakeLabel("Else");
+        std::string EndIfElse = data.MakeLabel("EndIfElse");
+        dst<<"beq $0,$"<<DstReg<<","<<Else<<std::endl;
+        dst<<"nop"<<std::endl;
+        Statement->MipsCodeGen(dst, data, DstReg);
+        dst<<"b "<<EndIfElse<<std::endl;
+        dst<<"nop"<<std::endl;
+        dst<<Else<<":"<<std::endl;
+        Statement2->MipsCodeGen(dst, data, DstReg);
+        dst<<EndIfElse<<":"<<std::endl;
+    }
+};
+
+class SwitchStatement
+    :public SetStatement
+{
+public:
+    SwitchStatement(ExpressionPtr _Cond, ExpressionPtr _Statement)
+        : SetStatement(_Cond, _Statement)
+    {}
+    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
+        std::vector<ExpressionPtr> caseExpr;
+        std::string label = data.MakeLabel("EndSwitch");
+        data.Loopends.push_back(label);
+        Cond->MipsCodeGen(dst, data, DstReg);
+        Statement->GetArgs(caseExpr);
+        Statement->MipsCodeGen(dst,data,DstReg);
+        //std::cout<<data.caselabels.size()<<std::endl;
+        for(int i=0; i<(int)data.caselabels.size(); i++){
+            //caseExpr[i]->print(std::cout);
+            std::cout<<std::endl;
+            dst<<data.caselabels[i]<<": "<<std::endl;
+            caseExpr[i]->MipsCodeGen(dst,data,DstReg);
+        }
+        data.caselabels.clear();
+        dst<<label<<":"<<std::endl;
+        data.Loopends.pop_back();
+    }
+
+};
+
+class CaseStatement
+    :public SetStatement
+{
+public:
+    CaseStatement(ExpressionPtr _Cond, ExpressionPtr _Statement)
+        : SetStatement(_Cond, _Statement)
+    {}
+    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
+        int tmpreg = data.registers.allocate();
+        Cond->MipsCodeGen(dst,data,tmpreg);
+        std::string label = data.MakeLabel("case");
+        data.caselabels.push_back(label);
+        dst<<"beq $"<<tmpreg<<",$"<<DstReg<<","<<label<<std::endl;
+        dst<<"nop"<<std::endl;
+        data.registers.free_reg(tmpreg);
+    }
+    virtual void GetArgs(std::vector<ExpressionPtr> &expr) const override{
+        //Statement->print(std::cout);
+        expr.push_back(Statement);
+    }
+};
+
+class DefaultStatement
+    :public SetStatement
+{
+public:
+    DefaultStatement(ExpressionPtr _Statement)
+        : SetStatement(_Statement)
+    {}
+    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
+        std::string label = data.MakeLabel("case");
+        data.caselabels.push_back(label);
+    }
+    virtual void GetArgs(std::vector<ExpressionPtr> &expr) const override{
+        expr.push_back(Statement);
+    }
+};
 
 #endif
