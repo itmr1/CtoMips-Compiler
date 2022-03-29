@@ -376,5 +376,32 @@ public:
    }
 };
 
+class EmptyStatement
+    : public SetStatement
+{
+public:
+    EmptyStatement()
+        : SetStatement()
+    {}
+    /*virtual void MipsCodeGen(std::ostream &dst, std::string DstReg) const override{
+        //TODO
+    }*/
+
+    virtual const char *getKeyWord() const override{
+        return " ";
+    }
+    
+    virtual void print(std::ostream &dst){
+        dst<<getKeyWord();
+        dst<<";";
+    }
+
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+        CurrSize+=0;
+   }
+   virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override()}
+};
+
 
 #endif

@@ -173,7 +173,7 @@ EXPR_STATEMENT : ASSIGN_EXPR TOK_SEMICOLON {$$=$1;} //TOK_SEMICOLON
               // | ASSIGN_EXPR TOK_SEMICOLON {$$=$1;}
                ;
 
-FUNC_STATEMENT : TOK_LCBRACKET TOK_RCBRACKET {$$ = new ContinueStatement();}
+FUNC_STATEMENT : TOK_LCBRACKET TOK_RCBRACKET {$$ = new EmptyStatement();}
                    | TOK_LCBRACKET REC_STATEMENT TOK_RCBRACKET {$$ = $2;}
                    | TOK_LCBRACKET REC_DECLARATION TOK_RCBRACKET {$$ = $2;}
                    | TOK_LCBRACKET REC_DECLARATION REC_STATEMENT TOK_RCBRACKET {$$ = new RecExpr($2, $3);}
