@@ -226,7 +226,10 @@ public:
    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg) const override{
     tmp = data.registers.allocate();
     Cond->MipsCodeGen(dst,data,tmp);
+    std::string EndOfLoop = data.MakeLabel("EndOfLoop");
     std::string StartOfLoop = data.MakeLabel("StartOfLoop");
+    data.Loopstarts.push_back(StartOfLoop);
+    data.Loopends.push_back(EndOfLoop);
     std::string CondCheck = data.MakeLabel("CondCheck");
     dst<<"b "<<CondCheck<<":"<<std::endl;
     dst<<"nop"<<std::endl;
@@ -239,6 +242,9 @@ public:
     dst<<"bne $"<<tmp<<",$0"<<","<<StartOfLoop;
     data.registers.free_reg(tmp);
     data.registers.free_reg(tmp2);
+    dst<<EndOfLoop<<":"<<std::endl;
+    data.Loopstarts.pop_back();
+    data.Loopends.pop_back();
    }
 };
 
@@ -366,7 +372,7 @@ public:
    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
        dst<<"b "<<data.Loopstarts.back()<<std::endl;
         dst<<"nop"<<std::endl;
-        data.Loopstarts.pop_back();
+        
    }
 };
 
