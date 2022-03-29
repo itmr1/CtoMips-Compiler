@@ -43,7 +43,7 @@ public:
         delete Statement;
     }
 
-     const std::string getType() const
+     virtual std::string getType() const override
     { return type; }
 
     virtual void print(std::ostream &dst) const override

@@ -19,6 +19,7 @@ extern "C" int fileno(FILE *stream);
 
 
 %%
+
 "int"             {return VARTYPE_INT;}
 "while"           { return TOK_WHILE; }
 "for"             {return TOK_FOR; }

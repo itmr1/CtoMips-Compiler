@@ -747,7 +747,8 @@ YY_DECL
 	{
 #line 21 "src/c_lexer.flex"
 
-#line 751 "src/c_lexer.yy.cpp"
+
+#line 752 "src/c_lexer.yy.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -806,293 +807,293 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 22 "src/c_lexer.flex"
+#line 23 "src/c_lexer.flex"
 {return VARTYPE_INT;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 23 "src/c_lexer.flex"
+#line 24 "src/c_lexer.flex"
 { return TOK_WHILE; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 24 "src/c_lexer.flex"
+#line 25 "src/c_lexer.flex"
 {return TOK_FOR; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 25 "src/c_lexer.flex"
+#line 26 "src/c_lexer.flex"
 { return TOK_IF; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 26 "src/c_lexer.flex"
+#line 27 "src/c_lexer.flex"
 { return TOK_ELSE; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 27 "src/c_lexer.flex"
+#line 28 "src/c_lexer.flex"
 {return TOK_RETURN;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 28 "src/c_lexer.flex"
+#line 29 "src/c_lexer.flex"
 {return TOK_BREAK;} 
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 29 "src/c_lexer.flex"
+#line 30 "src/c_lexer.flex"
 {return TOK_CONT;}  
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 30 "src/c_lexer.flex"
+#line 31 "src/c_lexer.flex"
 {return TOK_CASE;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 31 "src/c_lexer.flex"
+#line 32 "src/c_lexer.flex"
 {return TOK_DEFAULT;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 32 "src/c_lexer.flex"
+#line 33 "src/c_lexer.flex"
 {return TOK_SWITCH;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 34 "src/c_lexer.flex"
+#line 35 "src/c_lexer.flex"
 {yylval.number = std::strtod(yytext,0);
                            return TOK_N;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 37 "src/c_lexer.flex"
+#line 38 "src/c_lexer.flex"
 {yylval.string = new std::string(yytext); 
                            return TOK_VAR;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 40 "src/c_lexer.flex"
+#line 41 "src/c_lexer.flex"
 { return TOK_MUL; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 41 "src/c_lexer.flex"
+#line 42 "src/c_lexer.flex"
 { return TOK_DIVIDE;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 42 "src/c_lexer.flex"
+#line 43 "src/c_lexer.flex"
 { return TOK_MOD; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 43 "src/c_lexer.flex"
+#line 44 "src/c_lexer.flex"
 { return TOK_PLUS; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 44 "src/c_lexer.flex"
+#line 45 "src/c_lexer.flex"
 { return TOK_MINUS; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 46 "src/c_lexer.flex"
+#line 47 "src/c_lexer.flex"
 {return TOK_MULASSIGN; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 47 "src/c_lexer.flex"
+#line 48 "src/c_lexer.flex"
 {return TOK_DIVASSIGN; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 48 "src/c_lexer.flex"
+#line 49 "src/c_lexer.flex"
 {return TOK_ADDASSIGN; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 49 "src/c_lexer.flex"
+#line 50 "src/c_lexer.flex"
 {return TOK_SUBASSIGN; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 50 "src/c_lexer.flex"
+#line 51 "src/c_lexer.flex"
 {return TOK_MODASSIGN; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 51 "src/c_lexer.flex"
+#line 52 "src/c_lexer.flex"
 {return TOK_EQASSIGN; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 52 "src/c_lexer.flex"
+#line 53 "src/c_lexer.flex"
 {return TOK_ANDASSIGN;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 53 "src/c_lexer.flex"
+#line 54 "src/c_lexer.flex"
 {return TOK_ORASSIGN;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 54 "src/c_lexer.flex"
+#line 55 "src/c_lexer.flex"
 {return TOK_XORASSIGN;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 56 "src/c_lexer.flex"
+#line 57 "src/c_lexer.flex"
 { return TOK_EQ; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 57 "src/c_lexer.flex"
+#line 58 "src/c_lexer.flex"
 { return TOK_NEQ; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 58 "src/c_lexer.flex"
+#line 59 "src/c_lexer.flex"
 { return TOK_LE; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 59 "src/c_lexer.flex"
+#line 60 "src/c_lexer.flex"
 { return TOK_GE; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 60 "src/c_lexer.flex"
+#line 61 "src/c_lexer.flex"
 { return TOK_G; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 61 "src/c_lexer.flex"
+#line 62 "src/c_lexer.flex"
 { return TOK_L; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 63 "src/c_lexer.flex"
+#line 64 "src/c_lexer.flex"
 { return TOK_LSHIFT; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 64 "src/c_lexer.flex"
+#line 65 "src/c_lexer.flex"
 { return TOK_RSHIFT;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 66 "src/c_lexer.flex"
+#line 67 "src/c_lexer.flex"
 { return TOK_BIT_AND; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 67 "src/c_lexer.flex"
+#line 68 "src/c_lexer.flex"
 { return TOK_BIT_OR; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 68 "src/c_lexer.flex"
+#line 69 "src/c_lexer.flex"
 { return TOK_BIT_NOT; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 69 "src/c_lexer.flex"
+#line 70 "src/c_lexer.flex"
 { return TOK_BIT_XOR; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 71 "src/c_lexer.flex"
+#line 72 "src/c_lexer.flex"
 { return TOK_LOGIC_NOT; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 72 "src/c_lexer.flex"
+#line 73 "src/c_lexer.flex"
 { return TOK_LOGIC_AND; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 73 "src/c_lexer.flex"
+#line 74 "src/c_lexer.flex"
 { return TOK_LOGIC_OR; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 74 "src/c_lexer.flex"
+#line 75 "src/c_lexer.flex"
 { return TOK_INCR; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 75 "src/c_lexer.flex"
+#line 76 "src/c_lexer.flex"
 { return TOK_DECR;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 78 "src/c_lexer.flex"
+#line 79 "src/c_lexer.flex"
 { return TOK_LSQBRACKET;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 79 "src/c_lexer.flex"
+#line 80 "src/c_lexer.flex"
 { return TOK_RSQBRACKET;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 80 "src/c_lexer.flex"
+#line 81 "src/c_lexer.flex"
 { return TOK_LBRACKET; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 81 "src/c_lexer.flex"
+#line 82 "src/c_lexer.flex"
 { return TOK_RBRACKET; }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 82 "src/c_lexer.flex"
+#line 83 "src/c_lexer.flex"
 { return TOK_LCBRACKET; }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 83 "src/c_lexer.flex"
+#line 84 "src/c_lexer.flex"
 { return TOK_RCBRACKET; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 84 "src/c_lexer.flex"
+#line 85 "src/c_lexer.flex"
 { return TOK_SEMICOLON; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 85 "src/c_lexer.flex"
+#line 86 "src/c_lexer.flex"
 { return TOK_COMMA;}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 86 "src/c_lexer.flex"
+#line 87 "src/c_lexer.flex"
 {return TOK_QMARK;}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 87 "src/c_lexer.flex"
+#line 88 "src/c_lexer.flex"
 {return TOK_COLON;}
 	YY_BREAK
 case 55:
 /* rule 55 can match eol */
 YY_RULE_SETUP
-#line 89 "src/c_lexer.flex"
+#line 90 "src/c_lexer.flex"
 {;}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 90 "src/c_lexer.flex"
+#line 91 "src/c_lexer.flex"
 {fprintf(stderr, "Invalid token\n");exit(1);}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 93 "src/c_lexer.flex"
+#line 94 "src/c_lexer.flex"
 ECHO;
 	YY_BREAK
-#line 1096 "src/c_lexer.yy.cpp"
+#line 1097 "src/c_lexer.yy.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2097,7 +2098,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 93 "src/c_lexer.flex"
+#line 94 "src/c_lexer.flex"
 
 
 /* Error handler. This will get called if none of the rules match. */

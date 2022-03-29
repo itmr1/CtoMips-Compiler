@@ -264,4 +264,46 @@ public:
     }
 };
 
+class MemoryOperator
+ : public Unary
+{
+protected:
+    virtual const char *getOpcode() const override
+    {return "&";}
+public:
+    MemoryOperator( ExpressionPtr _expr)
+        : Unary(_expr)
+    {}
+
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
+        std::string name = expr->getId();
+        int varoffset = data.Stack.back().bindings[name].offset;
+        dst<<"addiu $"<<DstReg<<",$30"<<","<<varoffset<<std::endl;
+    }
+};
+
+class DereferenceOperator
+ : public Unary
+{
+protected:
+    virtual const char *getOpcode() const override
+    {return "*";}
+public:
+    DereferenceOperator( ExpressionPtr _expr)
+        : Unary(_expr)
+    {}
+
+    virtual std::string getId()const {return expr->getId();}
+
+    virtual bool IsPointerCall() const { return true;}
+
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
+        std::string name = expr->getId();
+        expr->MipsCodeGen(dst,data,DstReg);
+        dst<<"lw $"<<DstReg<<",0"<<"($"<<DstReg<<")"<<std::endl;
+    }
+
+};
+
+
 #endif

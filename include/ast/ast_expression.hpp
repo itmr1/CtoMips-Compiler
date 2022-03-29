@@ -19,14 +19,16 @@ public:
     virtual ~Expression()
     {}
     //! Tell and expression to print itself to the given stream
-    virtual void print(std::ostream &dst) const =0;
+    virtual void print(std::ostream &dst) const {return;}
     virtual std::string getId()const {return "";}
     virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const {return;}
     virtual void CountFrameSize(int &CurrSize)const {return;}
     virtual void GetArgs(std::vector<ExpressionPtr> &arglist) const {return;}
     virtual ExpressionPtr getindex() const { return NULL;}
     virtual int evaluate() const {return 0;}
+    virtual std::string getType() const {return "int";}
     virtual bool IsFuncCall() const { return false;}
+    virtual bool IsPointerCall() const { return false;}
 };
 
 class SingleExpr

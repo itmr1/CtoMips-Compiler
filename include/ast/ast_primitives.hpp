@@ -72,75 +72,35 @@ public:
     }
 };
 
-class PointerVar
-    :public Expression
+
+class DeclareMemory
+    : public Expression
 {
 private:
-    std::string id;
+    std::string type;
+    ExpressionPtr decl;
 public:
-    PointerVar(const std::string &_id)
-        : id(_id)
+    DeclareMemory(const std::string &_type, ExpressionPtr _decl)
+        :type(_type)
+        ,decl(_decl)
     {}
+    virtual void CountFrameSize(int &CurrSize) const override{
+        CurrSize+=1;
+    }
 
-    virtual std::string getId() const override
-     { return id; }
-
-    int getSize(Data &data) const
-    {
+    virtual std::string getType() const {return type;}
     
-        return data.Stack.back().bindings.find(id)->second.size;
-    }
-
-    virtual void print(std::ostream &dst) const override
-    {
-        dst<<"*"<<id;
-    }
-
-    virtual void CountFrameSize(int &CurrSize) const override
-   {
-       CurrSize+=0;
-   }
-    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
-        /*variable curVar;
-        curVar = data.Stack.back().bindings.find(id)->second; //get variable struct
-        dst << "lw $"<<DstReg<<","<< curVar.offset<<"($30)" <<std::endl; //load into DstReg from (sp+offset) */
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg)const override{
+        std::string id = decl->getId();
+        int size = sizeof(int);
+        data.Stack.back().curroffset += size; //increase frame size
+        //dst << "addiu $29 $29 -"<<size<<std::endl;
+        data.Stack.back().bindings[id] = {size, data.Stack.back().curroffset};
+        //std::cout<<data.Stack.back().curroffset<<"\n";
     }
 };
 
-class MemoryOperator
-    :public Expression
-{
-private:
-    std::string id;
-public:
-    MemoryOperator(const std::string &_id)
-        : id(_id)
-    {}
 
-    virtual std::string getId() const override
-     { return id; }
-
-    int getSize(Data &data) const
-    {
-    
-        return data.Stack.back().bindings.find(id)->second.size;
-    }
-
-    virtual void print(std::ostream &dst) const override
-    {
-        dst<<"&"<<id;
-    }
-
-    virtual void CountFrameSize(int &CurrSize) const override
-   {
-       CurrSize+=0;
-   }
-    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
-        /*variable curVar;
-        curVar = data.Stack.back().bindings.find(id)->second; //get variable struct
-        dst << "lw $"<<DstReg<<","<< curVar.offset<<"($30)" <<std::endl; //load into DstReg from (sp+offset) */
-    }
-};
 
 class InitMemory
     : public Expression
@@ -164,11 +124,24 @@ public:
         val->print(dst);
     }
 
+    virtual std::string getType() const {return type;}
+
     virtual void CountFrameSize(int &CurrSize) const override{
         CurrSize+=1;
     }
     virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
-        
+        std::string id = decl->getId();
+        int size = sizeof(int);
+        //dst<<"size of int: "<<size<<std::endl;
+        data.Stack.back().curroffset += size; //increase frame size
+        //dst << "addiu $29 $29 -"<<size<<std::endl;
+        if(data.registers.regs[DstReg]){ //if reg is used
+            DstReg = data.registers.allocate(); //get a free register
+        }
+        val->MipsCodeGen(dst,data,DstReg); //store val in this register
+        data.Stack.back().bindings[id] = {size,data.Stack.back().curroffset};
+        dst << "sw $" << DstReg<<","<<data.Stack.back().curroffset<< "($29)"<<std::endl; //store val into sp
+        data.registers.free_reg(DstReg);
     }
 };
 

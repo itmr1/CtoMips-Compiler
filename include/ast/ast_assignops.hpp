@@ -82,6 +82,14 @@ public:
             dst<<"sw $"<<DstReg<<",($"<<idx<<")"<<std::endl;
             data.registers.free_reg(idx);
         }
+        else if((id->IsPointerCall())||(id->getType()!="int")){
+            int ptroffset = data.Stack.back().bindings[name].offset;
+            dst<<"lw $"<<DstReg<<","<<ptroffset<<"($30)"<<std::endl;
+            int idx = data.registers.allocate();
+            right->MipsCodeGen(dst,data,idx);
+            dst<<"sw $"<<idx<<",($"<<DstReg<<")"<<std::endl;
+            data.registers.free_reg(idx);
+        }
         else{
         right->MipsCodeGen(dst, data, DstReg);
         int varoffset = data.Stack.back().bindings[name].offset;
