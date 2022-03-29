@@ -23,7 +23,7 @@ for driver in compiler_tests/*/*_driver.c ; do
 
 done
 
- echo "SIUUUUUUUUUUUUUUUUUU: "${correct}
+ echo "Correct: "${correct}
  echo "Incorrect: "${wrong}
 
 
