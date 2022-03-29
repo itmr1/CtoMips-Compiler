@@ -5,8 +5,6 @@
 #include <iostream>
 #include <vector>
 
-//#include "context.hpp"
-
 class Variable
     : public Expression
 {
@@ -22,11 +20,8 @@ public:
 
     int getSize(Data &data) const
     {
-        if(data.Stack.back().bindings.find(id) == data.Stack.back().bindings.end()){ //if not in stack
-            std::cerr << "L" << std::endl; //doesnt exist
-            exit(1);
-        }
-        else{return data.Stack.back().bindings.find(id)->second.size;}
+    
+        return data.Stack.back().bindings.find(id)->second.size;
     }
 
     virtual void print(std::ostream &dst) const override
@@ -40,13 +35,7 @@ public:
    }
     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
         variable curVar;
-        if(data.Stack.back().bindings.find(id) == data.Stack.back().bindings.end()){ //if not in stack
-            std::cerr << "L" << std::endl; //doesnt exist
-            exit(1);
-        }
-        else{
-            curVar = data.Stack.back().bindings.find(id)->second; //get variable struct
-        }
+        curVar = data.Stack.back().bindings.find(id)->second; //get variable struct
         dst << "lw $"<<DstReg<<","<< curVar.offset<<"($30)" <<std::endl; //load into DstReg from (sp+offset) 
     }
 };
@@ -83,6 +72,107 @@ public:
     }
 };
 
+class PointerVar
+    :public Expression
+{
+private:
+    std::string id;
+public:
+    PointerVar(const std::string &_id)
+        : id(_id)
+    {}
+
+    virtual std::string getId() const override
+     { return id; }
+
+    int getSize(Data &data) const
+    {
+    
+        return data.Stack.back().bindings.find(id)->second.size;
+    }
+
+    virtual void print(std::ostream &dst) const override
+    {
+        dst<<"*"<<id;
+    }
+
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+       CurrSize+=0;
+   }
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        /*variable curVar;
+        curVar = data.Stack.back().bindings.find(id)->second; //get variable struct
+        dst << "lw $"<<DstReg<<","<< curVar.offset<<"($30)" <<std::endl; //load into DstReg from (sp+offset) */
+    }
+};
+
+class MemoryOperator
+    :public Expression
+{
+private:
+    std::string id;
+public:
+    MemoryOperator(const std::string &_id)
+        : id(_id)
+    {}
+
+    virtual std::string getId() const override
+     { return id; }
+
+    int getSize(Data &data) const
+    {
+    
+        return data.Stack.back().bindings.find(id)->second.size;
+    }
+
+    virtual void print(std::ostream &dst) const override
+    {
+        dst<<"&"<<id;
+    }
+
+    virtual void CountFrameSize(int &CurrSize) const override
+   {
+       CurrSize+=0;
+   }
+    virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        /*variable curVar;
+        curVar = data.Stack.back().bindings.find(id)->second; //get variable struct
+        dst << "lw $"<<DstReg<<","<< curVar.offset<<"($30)" <<std::endl; //load into DstReg from (sp+offset) */
+    }
+};
+
+class InitMemory
+    : public Expression
+{
+private:
+    std::string type;
+    ExpressionPtr decl;
+    ExpressionPtr val;
+public:
+    InitMemory(const std::string &_type, ExpressionPtr _decl, ExpressionPtr _val)
+        :type(_type)
+        ,decl(_decl)
+        ,val(_val)
+    {}
+    virtual void print(std::ostream &dst) const override
+    {
+        dst<<type;
+        dst<<" ";
+        decl->print(dst);
+        dst<<"=";
+        val->print(dst);
+    }
+
+    virtual void CountFrameSize(int &CurrSize) const override{
+        CurrSize+=1;
+    }
+    virtual void MipsCodeGen(std::ostream &dst,Data &data,int DstReg)const override{
+        
+    }
+};
+
+
 class DeclareVar
     : public Expression
 {
@@ -111,7 +201,7 @@ public:
         data.Stack.back().curroffset += size; //increase frame size
         //dst << "addiu $29 $29 -"<<size<<std::endl;
         data.Stack.back().bindings[id] = {size, data.Stack.back().curroffset};
-        std::cout<<data.Stack.back().curroffset<<"\n";
+        //std::cout<<data.Stack.back().curroffset<<"\n";
     }
    
 };

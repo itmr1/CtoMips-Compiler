@@ -17,17 +17,17 @@ nop
 b EndIfElse2
 nop
 Else1:
-lw $4,4($30)
-move $8,$4
 li $4,1
-sub $4,$8,$4
+move $9,$4
+lw $4,4($30)
+sub $4,$4,$9
 jal r2
 nop
 move $8,$2
-lw $4,4($30)
-move $9,$4
 li $4,1
-sub $4,$9,$4
+move $9,$4
+lw $4,4($30)
+sub $4,$4,$9
 jal r2
 nop
 add $2,$2,$8

@@ -1,16 +1,9 @@
-Terminals unused in grammar
-
-    TOK_QMARK
-    TOK_COLON
-
-
-State 44 conflicts: 2 shift/reduce
-State 45 conflicts: 2 shift/reduce
-State 46 conflicts: 2 shift/reduce
-State 50 conflicts: 2 shift/reduce
-State 51 conflicts: 2 shift/reduce
-State 136 conflicts: 1 shift/reduce
-State 179 conflicts: 1 shift/reduce
+State 55 conflicts: 2 shift/reduce
+State 56 conflicts: 2 shift/reduce
+State 58 conflicts: 2 shift/reduce
+State 62 conflicts: 2 shift/reduce
+State 63 conflicts: 2 shift/reduce
+State 207 conflicts: 1 shift/reduce
 
 
 Grammar
@@ -35,261 +28,287 @@ Grammar
 
    12 DECLARATION: VARTYPE_INT DECLARATOR TOK_SEMICOLON
    13            | VARTYPE_INT ARRAY_DECLARATOR TOK_SEMICOLON
-   14            | VARTYPE_INT DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON
-   15            | VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET TOK_RCBRACKET TOK_SEMICOLON
-   16            | VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON
+   14            | VARTYPE_INT POINTER_DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON
+   15            | VARTYPE_INT DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON
+   16            | VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET TOK_RCBRACKET TOK_SEMICOLON
+   17            | VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON
 
-   17 FUNC_ARGS: VARTYPE_INT DECLARATOR
-   18          | FUNC_ARGS TOK_COMMA FUNC_ARGS
+   18 SINGLE_DECL: VARTYPE_INT DECLARATOR
 
-   19 FUNC_CALL_ARGS: ARG_SINGLE
-   20               | FUNC_CALL_ARGS TOK_COMMA ARG_SINGLE
+   19 FUNC_ARGS: ARG_SINGLE
+   20          | FUNC_ARGS TOK_COMMA ARG_SINGLE
 
-   21 DECLARATOR: TOK_VAR
+   21 FUNC_CALL_ARGS: ARG_SINGLE
+   22               | FUNC_CALL_ARGS TOK_COMMA ARG_SINGLE
 
-   22 ARRAY_DECLARATOR: TOK_VAR TOK_LSQBRACKET LOGIC_EXPR TOK_RSQBRACKET
-   23                 | TOK_VAR TOK_LSQBRACKET TOK_RSQBRACKET
+   23 DECLARATOR: TOK_VAR
 
-   24 ARG_SINGLE: ASSIGN_EXPR
+   24 POINTER_DECLARATOR: TOK_MUL TOK_VAR
 
-   25 ASSIGN_EXPR: COND_EXPR
-   26            | FACTOR TOK_EQASSIGN ASSIGN_EXPR
-   27            | FACTOR TOK_ADDASSIGN ASSIGN_EXPR
-   28            | FACTOR TOK_SUBASSIGN ASSIGN_EXPR
-   29            | FACTOR TOK_MULASSIGN ASSIGN_EXPR
-   30            | FACTOR TOK_DIVASSIGN ASSIGN_EXPR
-   31            | FACTOR TOK_MODASSIGN ASSIGN_EXPR
-   32            | FACTOR TOK_ANDASSIGN ASSIGN_EXPR
-   33            | FACTOR TOK_ORASSIGN ASSIGN_EXPR
-   34            | FACTOR TOK_XORASSIGN ASSIGN_EXPR
+   25 ARRAY_DECLARATOR: TOK_VAR TOK_LSQBRACKET LOGIC_EXPR TOK_RSQBRACKET
+   26                 | TOK_VAR TOK_LSQBRACKET TOK_RSQBRACKET
 
-   35 COND_EXPR: LOGIC_EXPR
+   27 ARG_SINGLE: SINGLE_DECL
+   28           | ASSIGN_EXPR
 
-   36 LOGIC_EXPR: BIT_EXPR
-   37           | LOGIC_EXPR TOK_LOGIC_AND BIT_EXPR
-   38           | LOGIC_EXPR TOK_LOGIC_OR BIT_EXPR
+   29 ASSIGN_EXPR: COND_EXPR
+   30            | UNARY TOK_EQASSIGN ASSIGN_EXPR
+   31            | UNARY TOK_ADDASSIGN ASSIGN_EXPR
+   32            | UNARY TOK_SUBASSIGN ASSIGN_EXPR
+   33            | UNARY TOK_MULASSIGN ASSIGN_EXPR
+   34            | UNARY TOK_DIVASSIGN ASSIGN_EXPR
+   35            | UNARY TOK_MODASSIGN ASSIGN_EXPR
+   36            | UNARY TOK_ANDASSIGN ASSIGN_EXPR
+   37            | UNARY TOK_ORASSIGN ASSIGN_EXPR
+   38            | UNARY TOK_XORASSIGN ASSIGN_EXPR
 
-   39 BIT_EXPR: EQ_EXPR
-   40         | BIT_EXPR TOK_BIT_AND EQ_EXPR
-   41         | BIT_EXPR TOK_BIT_OR EQ_EXPR
-   42         | BIT_EXPR TOK_BIT_XOR EQ_EXPR
+   39 COND_EXPR: LOGIC_EXPR
+   40          | LOGIC_EXPR TOK_QMARK ASSIGN_EXPR TOK_COLON COND_EXPR
 
-   43 EQ_EXPR: REL_EXPR
-   44        | EQ_EXPR TOK_EQ REL_EXPR
-   45        | EQ_EXPR TOK_NEQ REL_EXPR
+   41 LOGIC_EXPR: BIT_EXPR
+   42           | LOGIC_EXPR TOK_LOGIC_AND BIT_EXPR
+   43           | LOGIC_EXPR TOK_LOGIC_OR BIT_EXPR
 
-   46 REL_EXPR: SHIFT_EXPR
-   47         | REL_EXPR TOK_LE SHIFT_EXPR
-   48         | REL_EXPR TOK_GE SHIFT_EXPR
-   49         | REL_EXPR TOK_G SHIFT_EXPR
-   50         | REL_EXPR TOK_L SHIFT_EXPR
+   44 BIT_EXPR: EQ_EXPR
+   45         | BIT_EXPR TOK_BIT_AND EQ_EXPR
+   46         | BIT_EXPR TOK_BIT_OR EQ_EXPR
+   47         | BIT_EXPR TOK_BIT_XOR EQ_EXPR
 
-   51 SHIFT_EXPR: ADD_EXPR
-   52           | SHIFT_EXPR TOK_LSHIFT ADD_EXPR
-   53           | SHIFT_EXPR TOK_RSHIFT ADD_EXPR
+   48 EQ_EXPR: REL_EXPR
+   49        | EQ_EXPR TOK_EQ REL_EXPR
+   50        | EQ_EXPR TOK_NEQ REL_EXPR
 
-   54 ADD_EXPR: MULT_EXPR
-   55         | ADD_EXPR TOK_PLUS MULT_EXPR
-   56         | ADD_EXPR TOK_MINUS MULT_EXPR
+   51 REL_EXPR: SHIFT_EXPR
+   52         | REL_EXPR TOK_LE SHIFT_EXPR
+   53         | REL_EXPR TOK_GE SHIFT_EXPR
+   54         | REL_EXPR TOK_G SHIFT_EXPR
+   55         | REL_EXPR TOK_L SHIFT_EXPR
 
-   57 MULT_EXPR: UNARY
-   58          | MULT_EXPR TOK_MUL UNARY
-   59          | MULT_EXPR TOK_DIVIDE UNARY
-   60          | MULT_EXPR TOK_MOD UNARY
+   56 SHIFT_EXPR: ADD_EXPR
+   57           | SHIFT_EXPR TOK_LSHIFT ADD_EXPR
+   58           | SHIFT_EXPR TOK_RSHIFT ADD_EXPR
 
-   61 UNARY: FACTOR
-   62      | TOK_MINUS UNARY
-   63      | TOK_LOGIC_NOT UNARY
-   64      | TOK_BIT_NOT UNARY
-   65      | TOK_INCR UNARY
-   66      | TOK_DECR UNARY
-   67      | UNARY TOK_INCR
-   68      | UNARY TOK_DECR
+   59 ADD_EXPR: MULT_EXPR
+   60         | ADD_EXPR TOK_PLUS MULT_EXPR
+   61         | ADD_EXPR TOK_MINUS MULT_EXPR
 
-   69 FACTOR: TOK_N
-   70       | TOK_VAR
-   71       | TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET
-   72       | TOK_VAR TOK_LBRACKET TOK_RBRACKET
-   73       | TOK_VAR TOK_LBRACKET FUNC_CALL_ARGS TOK_RBRACKET
-   74       | TOK_VAR TOK_LSQBRACKET ASSIGN_EXPR TOK_RSQBRACKET
+   62 MULT_EXPR: UNARY
+   63          | MULT_EXPR TOK_MUL UNARY
+   64          | MULT_EXPR TOK_DIVIDE UNARY
+   65          | MULT_EXPR TOK_MOD UNARY
 
-   75 REC_STATEMENT: STATEMENT
-   76              | REC_STATEMENT STATEMENT
+   66 UNARY: FACTOR
+   67      | TOK_MINUS UNARY
+   68      | TOK_LOGIC_NOT UNARY
+   69      | TOK_BIT_NOT UNARY
+   70      | TOK_INCR UNARY
+   71      | TOK_DECR UNARY
+   72      | UNARY TOK_INCR
+   73      | UNARY TOK_DECR
+   74      | TOK_BIT_AND TOK_VAR
+   75      | TOK_MUL TOK_VAR
 
-   77 STATEMENT: EXPR_STATEMENT
-   78          | ITER_STATEMENT
-   79          | JUMP_STATEMENT
-   80          | SELECT_STATEMENT
-   81          | FUNC_STATEMENT
+   76 FACTOR: TOK_N
+   77       | TOK_VAR
+   78       | TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET
+   79       | TOK_VAR TOK_LBRACKET TOK_RBRACKET
+   80       | TOK_VAR TOK_LBRACKET FUNC_CALL_ARGS TOK_RBRACKET
+   81       | TOK_VAR TOK_LSQBRACKET ASSIGN_EXPR TOK_RSQBRACKET
 
-   82 EXPR_STATEMENT: ASSIGN_EXPR TOK_SEMICOLON
+   82 REC_STATEMENT: STATEMENT
+   83              | REC_STATEMENT STATEMENT
 
-   83 FUNC_STATEMENT: TOK_LCBRACKET TOK_RCBRACKET
-   84               | TOK_LCBRACKET REC_STATEMENT TOK_RCBRACKET
-   85               | TOK_LCBRACKET REC_DECLARATION TOK_RCBRACKET
-   86               | TOK_LCBRACKET REC_DECLARATION REC_STATEMENT TOK_RCBRACKET
+   84 STATEMENT: EXPR_STATEMENT
+   85          | ITER_STATEMENT
+   86          | JUMP_STATEMENT
+   87          | SELECT_STATEMENT
+   88          | FUNC_STATEMENT
+   89          | SWITCH_STATEMENT
 
-   87 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT
-   88                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
+   90 SWITCH_STATEMENT: TOK_CASE COND_EXPR TOK_COLON STATEMENT
+   91                 | TOK_DEFAULT TOK_COLON STATEMENT
 
-   89 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET STATEMENT
-   90               | TOK_FOR TOK_LBRACKET EXPR_STATEMENT EXPR_STATEMENT ASSIGN_EXPR TOK_RBRACKET STATEMENT
+   92 EXPR_STATEMENT: ASSIGN_EXPR TOK_SEMICOLON
 
-   91 JUMP_STATEMENT: TOK_BREAK TOK_SEMICOLON
-   92               | TOK_CONT TOK_SEMICOLON
-   93               | TOK_RETURN TOK_SEMICOLON
-   94               | TOK_RETURN FUNCTION TOK_SEMICOLON
-   95               | TOK_RETURN LOGIC_EXPR TOK_SEMICOLON
+   93 FUNC_STATEMENT: TOK_LCBRACKET TOK_RCBRACKET
+   94               | TOK_LCBRACKET REC_STATEMENT TOK_RCBRACKET
+   95               | TOK_LCBRACKET REC_DECLARATION TOK_RCBRACKET
+   96               | TOK_LCBRACKET REC_DECLARATION REC_STATEMENT TOK_RCBRACKET
+
+   97 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT
+   98                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
+   99                 | TOK_SWITCH TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT
+
+  100 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET STATEMENT
+  101               | TOK_FOR TOK_LBRACKET EXPR_STATEMENT EXPR_STATEMENT ASSIGN_EXPR TOK_RBRACKET STATEMENT
+
+  102 JUMP_STATEMENT: TOK_BREAK TOK_SEMICOLON
+  103               | TOK_CONT TOK_SEMICOLON
+  104               | TOK_RETURN TOK_SEMICOLON
+  105               | TOK_RETURN FUNCTION TOK_SEMICOLON
+  106               | TOK_RETURN LOGIC_EXPR TOK_SEMICOLON
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
     error (256)
-    TOK_BIT_AND (258) 40
-    TOK_BIT_OR (259) 41
-    TOK_EQ (260) 44
-    TOK_NEQ (261) 45
-    TOK_BIT_XOR (262) 42
-    TOK_LOGIC_AND (263) 37
-    TOK_LOGIC_OR (264) 38
-    TOK_LSHIFT (265) 52
-    TOK_RSHIFT (266) 53
-    TOK_LOGIC_NOT (267) 63
-    TOK_BIT_NOT (268) 64
-    TOK_GE (269) 48
-    TOK_LE (270) 47
-    TOK_G (271) 49
-    TOK_L (272) 50
-    TOK_IF (273) 87 88
-    TOK_WHILE (274) 89
-    TOK_ELSE (275) 88
-    TOK_FOR (276) 90
-    TOK_RETURN (277) 93 94 95
-    TOK_BREAK (278) 91
-    TOK_CONT (279) 92
-    TOK_MUL (280) 58
-    TOK_DIVIDE (281) 59
-    TOK_PLUS (282) 55
-    TOK_MINUS (283) 56 62
-    TOK_MOD (284) 60
-    TOK_LBRACKET (285) 6 7 8 9 71 72 73 87 88 89 90
-    TOK_RBRACKET (286) 6 7 8 9 71 72 73 87 88 89 90
-    TOK_SEMICOLON (287) 8 9 12 13 14 15 16 82 91 92 93 94 95
-    TOK_LCBRACKET (288) 15 16 83 84 85 86
-    TOK_RCBRACKET (289) 15 16 83 84 85 86
-    TOK_LSQBRACKET (290) 22 23 74
-    TOK_RSQBRACKET (291) 22 23 74
-    TOK_COMMA (292) 18 20
-    TOK_QMARK (293)
-    TOK_COLON (294)
-    TOK_N <number> (295) 69
-    TOK_VAR <string> (296) 21 22 23 70 72 73 74
-    VARTYPE_INT <string> (297) 6 7 8 9 12 13 14 15 16 17
-    TOK_SUBASSIGN (298) 28
-    TOK_MULASSIGN (299) 29
-    TOK_DIVASSIGN (300) 30
-    TOK_ADDASSIGN (301) 27
-    TOK_EQASSIGN (302) 14 15 16 26
-    TOK_MODASSIGN (303) 31
-    TOK_ANDASSIGN (304) 32
-    TOK_ORASSIGN (305) 33
-    TOK_XORASSIGN (306) 34
-    TOK_INCR (307) 65 67
-    TOK_DECR (308) 66 68
+    TOK_BIT_AND (258) 45 74
+    TOK_BIT_OR (259) 46
+    TOK_EQ (260) 49
+    TOK_NEQ (261) 50
+    TOK_BIT_XOR (262) 47
+    TOK_LOGIC_AND (263) 42
+    TOK_LOGIC_OR (264) 43
+    TOK_LSHIFT (265) 57
+    TOK_RSHIFT (266) 58
+    TOK_LOGIC_NOT (267) 68
+    TOK_BIT_NOT (268) 69
+    TOK_GE (269) 53
+    TOK_LE (270) 52
+    TOK_G (271) 54
+    TOK_L (272) 55
+    TOK_IF (273) 97 98
+    TOK_WHILE (274) 100
+    TOK_ELSE (275) 98
+    TOK_FOR (276) 101
+    TOK_SWITCH (277) 99
+    TOK_CASE (278) 90
+    TOK_DEFAULT (279) 91
+    TOK_RETURN (280) 104 105 106
+    TOK_BREAK (281) 102
+    TOK_CONT (282) 103
+    TOK_MUL (283) 24 63 75
+    TOK_DIVIDE (284) 64
+    TOK_PLUS (285) 60
+    TOK_MINUS (286) 61 67
+    TOK_MOD (287) 65
+    TOK_LBRACKET (288) 6 7 8 9 78 79 80 97 98 99 100 101
+    TOK_RBRACKET (289) 6 7 8 9 78 79 80 97 98 99 100 101
+    TOK_SEMICOLON (290) 8 9 12 13 14 15 16 17 92 102 103 104 105 106
+    TOK_LCBRACKET (291) 16 17 93 94 95 96
+    TOK_RCBRACKET (292) 16 17 93 94 95 96
+    TOK_LSQBRACKET (293) 25 26 81
+    TOK_RSQBRACKET (294) 25 26 81
+    TOK_COMMA (295) 20 22
+    TOK_QMARK (296) 40
+    TOK_COLON (297) 40 90 91
+    TOK_N <number> (298) 76
+    TOK_VAR <string> (299) 23 24 25 26 74 75 77 79 80 81
+    VARTYPE_INT <string> (300) 6 7 8 9 12 13 14 15 16 17 18
+    TOK_SUBASSIGN (301) 32
+    TOK_MULASSIGN (302) 33
+    TOK_DIVASSIGN (303) 34
+    TOK_ADDASSIGN (304) 31
+    TOK_EQASSIGN (305) 14 15 16 17 30
+    TOK_MODASSIGN (306) 35
+    TOK_ANDASSIGN (307) 36
+    TOK_ORASSIGN (308) 37
+    TOK_XORASSIGN (309) 38
+    TOK_INCR (310) 70 72
+    TOK_DECR (311) 71 73
 
 
 Nonterminals, with rules where they appear
 
-    $accept (54)
+    $accept (57)
         on left: 0
-    ROOT <expr> (55)
+    ROOT <expr> (58)
         on left: 1
         on right: 0
-    EXPR_TREE <expr> (56)
+    EXPR_TREE <expr> (59)
         on left: 2 3
         on right: 1 3
-    EXPR_SINGLE <expr> (57)
+    EXPR_SINGLE <expr> (60)
         on left: 4 5
         on right: 2 3
-    FUNCTION <expr> (58)
+    FUNCTION <expr> (61)
         on left: 6 7 8 9
-        on right: 4 94
-    REC_DECLARATION <expr> (59)
+        on right: 4 105
+    REC_DECLARATION <expr> (62)
         on left: 10 11
-        on right: 11 85 86
-    DECLARATION <expr> (60)
-        on left: 12 13 14 15 16
+        on right: 11 95 96
+    DECLARATION <expr> (63)
+        on left: 12 13 14 15 16 17
         on right: 5 10 11
-    FUNC_ARGS <expr> (61)
-        on left: 17 18
-        on right: 6 8 18
-    FUNC_CALL_ARGS <expr> (62)
+    SINGLE_DECL <expr> (64)
+        on left: 18
+        on right: 27
+    FUNC_ARGS <expr> (65)
         on left: 19 20
-        on right: 16 20 73
-    DECLARATOR <expr> (63)
-        on left: 21
-        on right: 6 7 8 9 12 14 17
-    ARRAY_DECLARATOR <expr> (64)
-        on left: 22 23
-        on right: 13 15 16
-    ARG_SINGLE <expr> (65)
+        on right: 6 8 20
+    FUNC_CALL_ARGS <expr> (66)
+        on left: 21 22
+        on right: 17 22 80
+    DECLARATOR <expr> (67)
+        on left: 23
+        on right: 6 7 8 9 12 15 18
+    POINTER_DECLARATOR <expr> (68)
         on left: 24
-        on right: 19 20
-    ASSIGN_EXPR <expr> (66)
-        on left: 25 26 27 28 29 30 31 32 33 34
-        on right: 14 24 26 27 28 29 30 31 32 33 34 71 74 82 89 90
-    COND_EXPR <expr> (67)
-        on left: 35
-        on right: 25
-    LOGIC_EXPR <expr> (68)
-        on left: 36 37 38
-        on right: 22 35 37 38 87 88 95
-    BIT_EXPR <expr> (69)
-        on left: 39 40 41 42
-        on right: 36 37 38 40 41 42
-    EQ_EXPR <expr> (70)
-        on left: 43 44 45
-        on right: 39 40 41 42 44 45
-    REL_EXPR <expr> (71)
-        on left: 46 47 48 49 50
-        on right: 43 44 45 47 48 49 50
-    SHIFT_EXPR <expr> (72)
-        on left: 51 52 53
-        on right: 46 47 48 49 50 52 53
-    ADD_EXPR <expr> (73)
-        on left: 54 55 56
-        on right: 51 52 53 55 56
-    MULT_EXPR <expr> (74)
-        on left: 57 58 59 60
-        on right: 54 55 56 58 59 60
-    UNARY <expr> (75)
-        on left: 61 62 63 64 65 66 67 68
-        on right: 57 58 59 60 62 63 64 65 66 67 68
-    FACTOR <expr> (76)
-        on left: 69 70 71 72 73 74
-        on right: 26 27 28 29 30 31 32 33 34 61
-    REC_STATEMENT <expr> (77)
-        on left: 75 76
-        on right: 76 84 86
-    STATEMENT <expr> (78)
-        on left: 77 78 79 80 81
-        on right: 75 76 87 88 89 90
-    EXPR_STATEMENT <expr> (79)
-        on left: 82
-        on right: 77 90
-    FUNC_STATEMENT <expr> (80)
-        on left: 83 84 85 86
-        on right: 6 7 81
-    SELECT_STATEMENT <expr> (81)
-        on left: 87 88
-        on right: 80
-    ITER_STATEMENT <expr> (82)
-        on left: 89 90
-        on right: 78
-    JUMP_STATEMENT <expr> (83)
-        on left: 91 92 93 94 95
-        on right: 79
+        on right: 14
+    ARRAY_DECLARATOR <expr> (69)
+        on left: 25 26
+        on right: 13 16 17
+    ARG_SINGLE <expr> (70)
+        on left: 27 28
+        on right: 19 20 21 22
+    ASSIGN_EXPR <expr> (71)
+        on left: 29 30 31 32 33 34 35 36 37 38
+        on right: 14 15 28 30 31 32 33 34 35 36 37 38 40 78 81 92 100 101
+    COND_EXPR <expr> (72)
+        on left: 39 40
+        on right: 29 40 90
+    LOGIC_EXPR <expr> (73)
+        on left: 41 42 43
+        on right: 25 39 40 42 43 97 98 99 106
+    BIT_EXPR <expr> (74)
+        on left: 44 45 46 47
+        on right: 41 42 43 45 46 47
+    EQ_EXPR <expr> (75)
+        on left: 48 49 50
+        on right: 44 45 46 47 49 50
+    REL_EXPR <expr> (76)
+        on left: 51 52 53 54 55
+        on right: 48 49 50 52 53 54 55
+    SHIFT_EXPR <expr> (77)
+        on left: 56 57 58
+        on right: 51 52 53 54 55 57 58
+    ADD_EXPR <expr> (78)
+        on left: 59 60 61
+        on right: 56 57 58 60 61
+    MULT_EXPR <expr> (79)
+        on left: 62 63 64 65
+        on right: 59 60 61 63 64 65
+    UNARY <expr> (80)
+        on left: 66 67 68 69 70 71 72 73 74 75
+        on right: 30 31 32 33 34 35 36 37 38 62 63 64 65 67 68 69 70 71 72 73
+    FACTOR <expr> (81)
+        on left: 76 77 78 79 80 81
+        on right: 66
+    REC_STATEMENT <expr> (82)
+        on left: 82 83
+        on right: 83 94 96
+    STATEMENT <expr> (83)
+        on left: 84 85 86 87 88 89
+        on right: 82 83 90 91 97 98 99 100 101
+    SWITCH_STATEMENT <expr> (84)
+        on left: 90 91
+        on right: 89
+    EXPR_STATEMENT <expr> (85)
+        on left: 92
+        on right: 84 101
+    FUNC_STATEMENT <expr> (86)
+        on left: 93 94 95 96
+        on right: 6 7 88
+    SELECT_STATEMENT <expr> (87)
+        on left: 97 98 99
+        on right: 87
+    ITER_STATEMENT <expr> (88)
+        on left: 100 101
+        on right: 85
+    JUMP_STATEMENT <expr> (89)
+        on left: 102 103 104 105 106
+        on right: 86
 
 
 State 0
@@ -313,21 +332,24 @@ State 1
     9         | VARTYPE_INT . DECLARATOR TOK_LBRACKET TOK_RBRACKET TOK_SEMICOLON
    12 DECLARATION: VARTYPE_INT . DECLARATOR TOK_SEMICOLON
    13            | VARTYPE_INT . ARRAY_DECLARATOR TOK_SEMICOLON
-   14            | VARTYPE_INT . DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON
-   15            | VARTYPE_INT . ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET TOK_RCBRACKET TOK_SEMICOLON
-   16            | VARTYPE_INT . ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON
+   14            | VARTYPE_INT . POINTER_DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON
+   15            | VARTYPE_INT . DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON
+   16            | VARTYPE_INT . ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET TOK_RCBRACKET TOK_SEMICOLON
+   17            | VARTYPE_INT . ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON
 
-    TOK_VAR  shift, and go to state 7
+    TOK_MUL  shift, and go to state 7
+    TOK_VAR  shift, and go to state 8
 
-    DECLARATOR        go to state 8
-    ARRAY_DECLARATOR  go to state 9
+    DECLARATOR          go to state 9
+    POINTER_DECLARATOR  go to state 10
+    ARRAY_DECLARATOR    go to state 11
 
 
 State 2
 
     0 $accept: ROOT . $end
 
-    $end  shift, and go to state 10
+    $end  shift, and go to state 12
 
 
 State 3
@@ -339,7 +361,7 @@ State 3
 
     $default  reduce using rule 1 (ROOT)
 
-    EXPR_SINGLE  go to state 11
+    EXPR_SINGLE  go to state 13
     FUNCTION     go to state 5
     DECLARATION  go to state 6
 
@@ -367,2534 +389,3150 @@ State 6
 
 State 7
 
-   21 DECLARATOR: TOK_VAR .
-   22 ARRAY_DECLARATOR: TOK_VAR . TOK_LSQBRACKET LOGIC_EXPR TOK_RSQBRACKET
-   23                 | TOK_VAR . TOK_LSQBRACKET TOK_RSQBRACKET
+   24 POINTER_DECLARATOR: TOK_MUL . TOK_VAR
 
-    TOK_LSQBRACKET  shift, and go to state 12
-
-    $default  reduce using rule 21 (DECLARATOR)
+    TOK_VAR  shift, and go to state 14
 
 
 State 8
+
+   23 DECLARATOR: TOK_VAR .
+   25 ARRAY_DECLARATOR: TOK_VAR . TOK_LSQBRACKET LOGIC_EXPR TOK_RSQBRACKET
+   26                 | TOK_VAR . TOK_LSQBRACKET TOK_RSQBRACKET
+
+    TOK_LSQBRACKET  shift, and go to state 15
+
+    $default  reduce using rule 23 (DECLARATOR)
+
+
+State 9
 
     6 FUNCTION: VARTYPE_INT DECLARATOR . TOK_LBRACKET FUNC_ARGS TOK_RBRACKET FUNC_STATEMENT
     7         | VARTYPE_INT DECLARATOR . TOK_LBRACKET TOK_RBRACKET FUNC_STATEMENT
     8         | VARTYPE_INT DECLARATOR . TOK_LBRACKET FUNC_ARGS TOK_RBRACKET TOK_SEMICOLON
     9         | VARTYPE_INT DECLARATOR . TOK_LBRACKET TOK_RBRACKET TOK_SEMICOLON
    12 DECLARATION: VARTYPE_INT DECLARATOR . TOK_SEMICOLON
-   14            | VARTYPE_INT DECLARATOR . TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON
+   15            | VARTYPE_INT DECLARATOR . TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON
 
-    TOK_LBRACKET   shift, and go to state 13
-    TOK_SEMICOLON  shift, and go to state 14
-    TOK_EQASSIGN   shift, and go to state 15
-
-
-State 9
-
-   13 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR . TOK_SEMICOLON
-   15            | VARTYPE_INT ARRAY_DECLARATOR . TOK_EQASSIGN TOK_LCBRACKET TOK_RCBRACKET TOK_SEMICOLON
-   16            | VARTYPE_INT ARRAY_DECLARATOR . TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON
-
-    TOK_SEMICOLON  shift, and go to state 16
-    TOK_EQASSIGN   shift, and go to state 17
+    TOK_LBRACKET   shift, and go to state 16
+    TOK_SEMICOLON  shift, and go to state 17
+    TOK_EQASSIGN   shift, and go to state 18
 
 
 State 10
+
+   14 DECLARATION: VARTYPE_INT POINTER_DECLARATOR . TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON
+
+    TOK_EQASSIGN  shift, and go to state 19
+
+
+State 11
+
+   13 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR . TOK_SEMICOLON
+   16            | VARTYPE_INT ARRAY_DECLARATOR . TOK_EQASSIGN TOK_LCBRACKET TOK_RCBRACKET TOK_SEMICOLON
+   17            | VARTYPE_INT ARRAY_DECLARATOR . TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON
+
+    TOK_SEMICOLON  shift, and go to state 20
+    TOK_EQASSIGN   shift, and go to state 21
+
+
+State 12
 
     0 $accept: ROOT $end .
 
     $default  accept
 
 
-State 11
+State 13
 
     3 EXPR_TREE: EXPR_TREE EXPR_SINGLE .
 
     $default  reduce using rule 3 (EXPR_TREE)
 
 
-State 12
+State 14
 
-   22 ARRAY_DECLARATOR: TOK_VAR TOK_LSQBRACKET . LOGIC_EXPR TOK_RSQBRACKET
-   23                 | TOK_VAR TOK_LSQBRACKET . TOK_RSQBRACKET
+   24 POINTER_DECLARATOR: TOK_MUL TOK_VAR .
 
-    TOK_LOGIC_NOT   shift, and go to state 18
-    TOK_BIT_NOT     shift, and go to state 19
-    TOK_MINUS       shift, and go to state 20
-    TOK_LBRACKET    shift, and go to state 21
-    TOK_RSQBRACKET  shift, and go to state 22
-    TOK_N           shift, and go to state 23
-    TOK_VAR         shift, and go to state 24
-    TOK_INCR        shift, and go to state 25
-    TOK_DECR        shift, and go to state 26
-
-    LOGIC_EXPR  go to state 27
-    BIT_EXPR    go to state 28
-    EQ_EXPR     go to state 29
-    REL_EXPR    go to state 30
-    SHIFT_EXPR  go to state 31
-    ADD_EXPR    go to state 32
-    MULT_EXPR   go to state 33
-    UNARY       go to state 34
-    FACTOR      go to state 35
+    $default  reduce using rule 24 (POINTER_DECLARATOR)
 
 
-State 13
+State 15
+
+   25 ARRAY_DECLARATOR: TOK_VAR TOK_LSQBRACKET . LOGIC_EXPR TOK_RSQBRACKET
+   26                 | TOK_VAR TOK_LSQBRACKET . TOK_RSQBRACKET
+
+    TOK_BIT_AND     shift, and go to state 22
+    TOK_LOGIC_NOT   shift, and go to state 23
+    TOK_BIT_NOT     shift, and go to state 24
+    TOK_MUL         shift, and go to state 25
+    TOK_MINUS       shift, and go to state 26
+    TOK_LBRACKET    shift, and go to state 27
+    TOK_RSQBRACKET  shift, and go to state 28
+    TOK_N           shift, and go to state 29
+    TOK_VAR         shift, and go to state 30
+    TOK_INCR        shift, and go to state 31
+    TOK_DECR        shift, and go to state 32
+
+    LOGIC_EXPR  go to state 33
+    BIT_EXPR    go to state 34
+    EQ_EXPR     go to state 35
+    REL_EXPR    go to state 36
+    SHIFT_EXPR  go to state 37
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
+
+
+State 16
 
     6 FUNCTION: VARTYPE_INT DECLARATOR TOK_LBRACKET . FUNC_ARGS TOK_RBRACKET FUNC_STATEMENT
     7         | VARTYPE_INT DECLARATOR TOK_LBRACKET . TOK_RBRACKET FUNC_STATEMENT
     8         | VARTYPE_INT DECLARATOR TOK_LBRACKET . FUNC_ARGS TOK_RBRACKET TOK_SEMICOLON
     9         | VARTYPE_INT DECLARATOR TOK_LBRACKET . TOK_RBRACKET TOK_SEMICOLON
 
-    TOK_RBRACKET  shift, and go to state 36
-    VARTYPE_INT   shift, and go to state 37
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_RBRACKET   shift, and go to state 42
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    VARTYPE_INT    shift, and go to state 43
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    FUNC_ARGS  go to state 38
+    SINGLE_DECL  go to state 44
+    FUNC_ARGS    go to state 45
+    ARG_SINGLE   go to state 46
+    ASSIGN_EXPR  go to state 47
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
 
 
-State 14
+State 17
 
    12 DECLARATION: VARTYPE_INT DECLARATOR TOK_SEMICOLON .
 
     $default  reduce using rule 12 (DECLARATION)
 
 
-State 15
+State 18
 
-   14 DECLARATION: VARTYPE_INT DECLARATOR TOK_EQASSIGN . ASSIGN_EXPR TOK_SEMICOLON
+   15 DECLARATION: VARTYPE_INT DECLARATOR TOK_EQASSIGN . ASSIGN_EXPR TOK_SEMICOLON
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    ASSIGN_EXPR  go to state 39
-    COND_EXPR    go to state 40
-    LOGIC_EXPR   go to state 41
-    BIT_EXPR     go to state 28
-    EQ_EXPR      go to state 29
-    REL_EXPR     go to state 30
-    SHIFT_EXPR   go to state 31
-    ADD_EXPR     go to state 32
-    MULT_EXPR    go to state 33
-    UNARY        go to state 34
-    FACTOR       go to state 42
+    ASSIGN_EXPR  go to state 51
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
 
 
-State 16
+State 19
+
+   14 DECLARATION: VARTYPE_INT POINTER_DECLARATOR TOK_EQASSIGN . ASSIGN_EXPR TOK_SEMICOLON
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR  go to state 52
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
+
+
+State 20
 
    13 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR TOK_SEMICOLON .
 
     $default  reduce using rule 13 (DECLARATION)
 
 
-State 17
-
-   15 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN . TOK_LCBRACKET TOK_RCBRACKET TOK_SEMICOLON
-   16            | VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN . TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON
-
-    TOK_LCBRACKET  shift, and go to state 43
-
-
-State 18
-
-   63 UNARY: TOK_LOGIC_NOT . UNARY
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    UNARY   go to state 44
-    FACTOR  go to state 35
-
-
-State 19
-
-   64 UNARY: TOK_BIT_NOT . UNARY
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    UNARY   go to state 45
-    FACTOR  go to state 35
-
-
-State 20
-
-   62 UNARY: TOK_MINUS . UNARY
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    UNARY   go to state 46
-    FACTOR  go to state 35
-
-
 State 21
 
-   71 FACTOR: TOK_LBRACKET . ASSIGN_EXPR TOK_RBRACKET
+   16 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN . TOK_LCBRACKET TOK_RCBRACKET TOK_SEMICOLON
+   17            | VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN . TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR  go to state 47
-    COND_EXPR    go to state 40
-    LOGIC_EXPR   go to state 41
-    BIT_EXPR     go to state 28
-    EQ_EXPR      go to state 29
-    REL_EXPR     go to state 30
-    SHIFT_EXPR   go to state 31
-    ADD_EXPR     go to state 32
-    MULT_EXPR    go to state 33
-    UNARY        go to state 34
-    FACTOR       go to state 42
+    TOK_LCBRACKET  shift, and go to state 53
 
 
 State 22
 
-   23 ARRAY_DECLARATOR: TOK_VAR TOK_LSQBRACKET TOK_RSQBRACKET .
+   74 UNARY: TOK_BIT_AND . TOK_VAR
 
-    $default  reduce using rule 23 (ARRAY_DECLARATOR)
+    TOK_VAR  shift, and go to state 54
 
 
 State 23
 
-   69 FACTOR: TOK_N .
+   68 UNARY: TOK_LOGIC_NOT . UNARY
 
-    $default  reduce using rule 69 (FACTOR)
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    UNARY   go to state 55
+    FACTOR  go to state 41
 
 
 State 24
 
-   70 FACTOR: TOK_VAR .
-   72       | TOK_VAR . TOK_LBRACKET TOK_RBRACKET
-   73       | TOK_VAR . TOK_LBRACKET FUNC_CALL_ARGS TOK_RBRACKET
-   74       | TOK_VAR . TOK_LSQBRACKET ASSIGN_EXPR TOK_RSQBRACKET
+   69 UNARY: TOK_BIT_NOT . UNARY
 
-    TOK_LBRACKET    shift, and go to state 48
-    TOK_LSQBRACKET  shift, and go to state 49
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    $default  reduce using rule 70 (FACTOR)
+    UNARY   go to state 56
+    FACTOR  go to state 41
 
 
 State 25
 
-   65 UNARY: TOK_INCR . UNARY
+   75 UNARY: TOK_MUL . TOK_VAR
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    UNARY   go to state 50
-    FACTOR  go to state 35
+    TOK_VAR  shift, and go to state 57
 
 
 State 26
 
-   66 UNARY: TOK_DECR . UNARY
+   67 UNARY: TOK_MINUS . UNARY
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    UNARY   go to state 51
-    FACTOR  go to state 35
+    UNARY   go to state 58
+    FACTOR  go to state 41
 
 
 State 27
 
-   22 ARRAY_DECLARATOR: TOK_VAR TOK_LSQBRACKET LOGIC_EXPR . TOK_RSQBRACKET
-   37 LOGIC_EXPR: LOGIC_EXPR . TOK_LOGIC_AND BIT_EXPR
-   38           | LOGIC_EXPR . TOK_LOGIC_OR BIT_EXPR
+   78 FACTOR: TOK_LBRACKET . ASSIGN_EXPR TOK_RBRACKET
 
-    TOK_LOGIC_AND   shift, and go to state 52
-    TOK_LOGIC_OR    shift, and go to state 53
-    TOK_RSQBRACKET  shift, and go to state 54
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR  go to state 59
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
 
 
 State 28
 
-   36 LOGIC_EXPR: BIT_EXPR .
-   40 BIT_EXPR: BIT_EXPR . TOK_BIT_AND EQ_EXPR
-   41         | BIT_EXPR . TOK_BIT_OR EQ_EXPR
-   42         | BIT_EXPR . TOK_BIT_XOR EQ_EXPR
+   26 ARRAY_DECLARATOR: TOK_VAR TOK_LSQBRACKET TOK_RSQBRACKET .
 
-    TOK_BIT_AND  shift, and go to state 55
-    TOK_BIT_OR   shift, and go to state 56
-    TOK_BIT_XOR  shift, and go to state 57
-
-    $default  reduce using rule 36 (LOGIC_EXPR)
+    $default  reduce using rule 26 (ARRAY_DECLARATOR)
 
 
 State 29
 
-   39 BIT_EXPR: EQ_EXPR .
-   44 EQ_EXPR: EQ_EXPR . TOK_EQ REL_EXPR
-   45        | EQ_EXPR . TOK_NEQ REL_EXPR
+   76 FACTOR: TOK_N .
 
-    TOK_EQ   shift, and go to state 58
-    TOK_NEQ  shift, and go to state 59
-
-    $default  reduce using rule 39 (BIT_EXPR)
+    $default  reduce using rule 76 (FACTOR)
 
 
 State 30
 
-   43 EQ_EXPR: REL_EXPR .
-   47 REL_EXPR: REL_EXPR . TOK_LE SHIFT_EXPR
-   48         | REL_EXPR . TOK_GE SHIFT_EXPR
-   49         | REL_EXPR . TOK_G SHIFT_EXPR
-   50         | REL_EXPR . TOK_L SHIFT_EXPR
+   77 FACTOR: TOK_VAR .
+   79       | TOK_VAR . TOK_LBRACKET TOK_RBRACKET
+   80       | TOK_VAR . TOK_LBRACKET FUNC_CALL_ARGS TOK_RBRACKET
+   81       | TOK_VAR . TOK_LSQBRACKET ASSIGN_EXPR TOK_RSQBRACKET
 
-    TOK_GE  shift, and go to state 60
-    TOK_LE  shift, and go to state 61
-    TOK_G   shift, and go to state 62
-    TOK_L   shift, and go to state 63
+    TOK_LBRACKET    shift, and go to state 60
+    TOK_LSQBRACKET  shift, and go to state 61
 
-    $default  reduce using rule 43 (EQ_EXPR)
+    $default  reduce using rule 77 (FACTOR)
 
 
 State 31
 
-   46 REL_EXPR: SHIFT_EXPR .
-   52 SHIFT_EXPR: SHIFT_EXPR . TOK_LSHIFT ADD_EXPR
-   53           | SHIFT_EXPR . TOK_RSHIFT ADD_EXPR
+   70 UNARY: TOK_INCR . UNARY
 
-    TOK_LSHIFT  shift, and go to state 64
-    TOK_RSHIFT  shift, and go to state 65
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    $default  reduce using rule 46 (REL_EXPR)
+    UNARY   go to state 62
+    FACTOR  go to state 41
 
 
 State 32
 
-   51 SHIFT_EXPR: ADD_EXPR .
-   55 ADD_EXPR: ADD_EXPR . TOK_PLUS MULT_EXPR
-   56         | ADD_EXPR . TOK_MINUS MULT_EXPR
+   71 UNARY: TOK_DECR . UNARY
 
-    TOK_PLUS   shift, and go to state 66
-    TOK_MINUS  shift, and go to state 67
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    $default  reduce using rule 51 (SHIFT_EXPR)
+    UNARY   go to state 63
+    FACTOR  go to state 41
 
 
 State 33
 
-   54 ADD_EXPR: MULT_EXPR .
-   58 MULT_EXPR: MULT_EXPR . TOK_MUL UNARY
-   59          | MULT_EXPR . TOK_DIVIDE UNARY
-   60          | MULT_EXPR . TOK_MOD UNARY
+   25 ARRAY_DECLARATOR: TOK_VAR TOK_LSQBRACKET LOGIC_EXPR . TOK_RSQBRACKET
+   42 LOGIC_EXPR: LOGIC_EXPR . TOK_LOGIC_AND BIT_EXPR
+   43           | LOGIC_EXPR . TOK_LOGIC_OR BIT_EXPR
 
-    TOK_MUL     shift, and go to state 68
-    TOK_DIVIDE  shift, and go to state 69
-    TOK_MOD     shift, and go to state 70
-
-    $default  reduce using rule 54 (ADD_EXPR)
+    TOK_LOGIC_AND   shift, and go to state 64
+    TOK_LOGIC_OR    shift, and go to state 65
+    TOK_RSQBRACKET  shift, and go to state 66
 
 
 State 34
 
-   57 MULT_EXPR: UNARY .
-   67 UNARY: UNARY . TOK_INCR
-   68      | UNARY . TOK_DECR
+   41 LOGIC_EXPR: BIT_EXPR .
+   45 BIT_EXPR: BIT_EXPR . TOK_BIT_AND EQ_EXPR
+   46         | BIT_EXPR . TOK_BIT_OR EQ_EXPR
+   47         | BIT_EXPR . TOK_BIT_XOR EQ_EXPR
 
-    TOK_INCR  shift, and go to state 71
-    TOK_DECR  shift, and go to state 72
+    TOK_BIT_AND  shift, and go to state 67
+    TOK_BIT_OR   shift, and go to state 68
+    TOK_BIT_XOR  shift, and go to state 69
 
-    $default  reduce using rule 57 (MULT_EXPR)
+    $default  reduce using rule 41 (LOGIC_EXPR)
 
 
 State 35
 
-   61 UNARY: FACTOR .
+   44 BIT_EXPR: EQ_EXPR .
+   49 EQ_EXPR: EQ_EXPR . TOK_EQ REL_EXPR
+   50        | EQ_EXPR . TOK_NEQ REL_EXPR
 
-    $default  reduce using rule 61 (UNARY)
+    TOK_EQ   shift, and go to state 70
+    TOK_NEQ  shift, and go to state 71
+
+    $default  reduce using rule 44 (BIT_EXPR)
 
 
 State 36
 
-    7 FUNCTION: VARTYPE_INT DECLARATOR TOK_LBRACKET TOK_RBRACKET . FUNC_STATEMENT
-    9         | VARTYPE_INT DECLARATOR TOK_LBRACKET TOK_RBRACKET . TOK_SEMICOLON
+   48 EQ_EXPR: REL_EXPR .
+   52 REL_EXPR: REL_EXPR . TOK_LE SHIFT_EXPR
+   53         | REL_EXPR . TOK_GE SHIFT_EXPR
+   54         | REL_EXPR . TOK_G SHIFT_EXPR
+   55         | REL_EXPR . TOK_L SHIFT_EXPR
 
-    TOK_SEMICOLON  shift, and go to state 73
-    TOK_LCBRACKET  shift, and go to state 74
+    TOK_GE  shift, and go to state 72
+    TOK_LE  shift, and go to state 73
+    TOK_G   shift, and go to state 74
+    TOK_L   shift, and go to state 75
 
-    FUNC_STATEMENT  go to state 75
+    $default  reduce using rule 48 (EQ_EXPR)
 
 
 State 37
 
-   17 FUNC_ARGS: VARTYPE_INT . DECLARATOR
+   51 REL_EXPR: SHIFT_EXPR .
+   57 SHIFT_EXPR: SHIFT_EXPR . TOK_LSHIFT ADD_EXPR
+   58           | SHIFT_EXPR . TOK_RSHIFT ADD_EXPR
 
-    TOK_VAR  shift, and go to state 76
+    TOK_LSHIFT  shift, and go to state 76
+    TOK_RSHIFT  shift, and go to state 77
 
-    DECLARATOR  go to state 77
+    $default  reduce using rule 51 (REL_EXPR)
 
 
 State 38
 
-    6 FUNCTION: VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS . TOK_RBRACKET FUNC_STATEMENT
-    8         | VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS . TOK_RBRACKET TOK_SEMICOLON
-   18 FUNC_ARGS: FUNC_ARGS . TOK_COMMA FUNC_ARGS
+   56 SHIFT_EXPR: ADD_EXPR .
+   60 ADD_EXPR: ADD_EXPR . TOK_PLUS MULT_EXPR
+   61         | ADD_EXPR . TOK_MINUS MULT_EXPR
 
-    TOK_RBRACKET  shift, and go to state 78
-    TOK_COMMA     shift, and go to state 79
+    TOK_PLUS   shift, and go to state 78
+    TOK_MINUS  shift, and go to state 79
+
+    $default  reduce using rule 56 (SHIFT_EXPR)
 
 
 State 39
 
-   14 DECLARATION: VARTYPE_INT DECLARATOR TOK_EQASSIGN ASSIGN_EXPR . TOK_SEMICOLON
+   59 ADD_EXPR: MULT_EXPR .
+   63 MULT_EXPR: MULT_EXPR . TOK_MUL UNARY
+   64          | MULT_EXPR . TOK_DIVIDE UNARY
+   65          | MULT_EXPR . TOK_MOD UNARY
 
-    TOK_SEMICOLON  shift, and go to state 80
+    TOK_MUL     shift, and go to state 80
+    TOK_DIVIDE  shift, and go to state 81
+    TOK_MOD     shift, and go to state 82
+
+    $default  reduce using rule 59 (ADD_EXPR)
 
 
 State 40
 
-   25 ASSIGN_EXPR: COND_EXPR .
+   62 MULT_EXPR: UNARY .
+   72 UNARY: UNARY . TOK_INCR
+   73      | UNARY . TOK_DECR
 
-    $default  reduce using rule 25 (ASSIGN_EXPR)
+    TOK_INCR  shift, and go to state 83
+    TOK_DECR  shift, and go to state 84
+
+    $default  reduce using rule 62 (MULT_EXPR)
 
 
 State 41
 
-   35 COND_EXPR: LOGIC_EXPR .
-   37 LOGIC_EXPR: LOGIC_EXPR . TOK_LOGIC_AND BIT_EXPR
-   38           | LOGIC_EXPR . TOK_LOGIC_OR BIT_EXPR
+   66 UNARY: FACTOR .
 
-    TOK_LOGIC_AND  shift, and go to state 52
-    TOK_LOGIC_OR   shift, and go to state 53
-
-    $default  reduce using rule 35 (COND_EXPR)
+    $default  reduce using rule 66 (UNARY)
 
 
 State 42
 
-   26 ASSIGN_EXPR: FACTOR . TOK_EQASSIGN ASSIGN_EXPR
-   27            | FACTOR . TOK_ADDASSIGN ASSIGN_EXPR
-   28            | FACTOR . TOK_SUBASSIGN ASSIGN_EXPR
-   29            | FACTOR . TOK_MULASSIGN ASSIGN_EXPR
-   30            | FACTOR . TOK_DIVASSIGN ASSIGN_EXPR
-   31            | FACTOR . TOK_MODASSIGN ASSIGN_EXPR
-   32            | FACTOR . TOK_ANDASSIGN ASSIGN_EXPR
-   33            | FACTOR . TOK_ORASSIGN ASSIGN_EXPR
-   34            | FACTOR . TOK_XORASSIGN ASSIGN_EXPR
-   61 UNARY: FACTOR .
+    7 FUNCTION: VARTYPE_INT DECLARATOR TOK_LBRACKET TOK_RBRACKET . FUNC_STATEMENT
+    9         | VARTYPE_INT DECLARATOR TOK_LBRACKET TOK_RBRACKET . TOK_SEMICOLON
 
-    TOK_SUBASSIGN  shift, and go to state 81
-    TOK_MULASSIGN  shift, and go to state 82
-    TOK_DIVASSIGN  shift, and go to state 83
-    TOK_ADDASSIGN  shift, and go to state 84
-    TOK_EQASSIGN   shift, and go to state 85
-    TOK_MODASSIGN  shift, and go to state 86
-    TOK_ANDASSIGN  shift, and go to state 87
-    TOK_ORASSIGN   shift, and go to state 88
-    TOK_XORASSIGN  shift, and go to state 89
+    TOK_SEMICOLON  shift, and go to state 85
+    TOK_LCBRACKET  shift, and go to state 86
 
-    $default  reduce using rule 61 (UNARY)
+    FUNC_STATEMENT  go to state 87
 
 
 State 43
 
-   15 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET . TOK_RCBRACKET TOK_SEMICOLON
-   16            | VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET . FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON
+   18 SINGLE_DECL: VARTYPE_INT . DECLARATOR
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_RCBRACKET  shift, and go to state 90
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_VAR  shift, and go to state 88
 
-    FUNC_CALL_ARGS  go to state 91
-    ARG_SINGLE      go to state 92
-    ASSIGN_EXPR     go to state 93
-    COND_EXPR       go to state 40
-    LOGIC_EXPR      go to state 41
-    BIT_EXPR        go to state 28
-    EQ_EXPR         go to state 29
-    REL_EXPR        go to state 30
-    SHIFT_EXPR      go to state 31
-    ADD_EXPR        go to state 32
-    MULT_EXPR       go to state 33
-    UNARY           go to state 34
-    FACTOR          go to state 42
+    DECLARATOR  go to state 89
 
 
 State 44
 
-   63 UNARY: TOK_LOGIC_NOT UNARY .
-   67      | UNARY . TOK_INCR
-   68      | UNARY . TOK_DECR
+   27 ARG_SINGLE: SINGLE_DECL .
 
-    TOK_INCR  shift, and go to state 71
-    TOK_DECR  shift, and go to state 72
-
-    TOK_INCR  [reduce using rule 63 (UNARY)]
-    TOK_DECR  [reduce using rule 63 (UNARY)]
-    $default  reduce using rule 63 (UNARY)
+    $default  reduce using rule 27 (ARG_SINGLE)
 
 
 State 45
 
-   64 UNARY: TOK_BIT_NOT UNARY .
-   67      | UNARY . TOK_INCR
-   68      | UNARY . TOK_DECR
+    6 FUNCTION: VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS . TOK_RBRACKET FUNC_STATEMENT
+    8         | VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS . TOK_RBRACKET TOK_SEMICOLON
+   20 FUNC_ARGS: FUNC_ARGS . TOK_COMMA ARG_SINGLE
 
-    TOK_INCR  shift, and go to state 71
-    TOK_DECR  shift, and go to state 72
-
-    TOK_INCR  [reduce using rule 64 (UNARY)]
-    TOK_DECR  [reduce using rule 64 (UNARY)]
-    $default  reduce using rule 64 (UNARY)
+    TOK_RBRACKET  shift, and go to state 90
+    TOK_COMMA     shift, and go to state 91
 
 
 State 46
 
-   62 UNARY: TOK_MINUS UNARY .
-   67      | UNARY . TOK_INCR
-   68      | UNARY . TOK_DECR
+   19 FUNC_ARGS: ARG_SINGLE .
 
-    TOK_INCR  shift, and go to state 71
-    TOK_DECR  shift, and go to state 72
-
-    TOK_INCR  [reduce using rule 62 (UNARY)]
-    TOK_DECR  [reduce using rule 62 (UNARY)]
-    $default  reduce using rule 62 (UNARY)
+    $default  reduce using rule 19 (FUNC_ARGS)
 
 
 State 47
 
-   71 FACTOR: TOK_LBRACKET ASSIGN_EXPR . TOK_RBRACKET
+   28 ARG_SINGLE: ASSIGN_EXPR .
 
-    TOK_RBRACKET  shift, and go to state 94
+    $default  reduce using rule 28 (ARG_SINGLE)
 
 
 State 48
 
-   72 FACTOR: TOK_VAR TOK_LBRACKET . TOK_RBRACKET
-   73       | TOK_VAR TOK_LBRACKET . FUNC_CALL_ARGS TOK_RBRACKET
+   29 ASSIGN_EXPR: COND_EXPR .
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_RBRACKET   shift, and go to state 95
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    FUNC_CALL_ARGS  go to state 96
-    ARG_SINGLE      go to state 92
-    ASSIGN_EXPR     go to state 93
-    COND_EXPR       go to state 40
-    LOGIC_EXPR      go to state 41
-    BIT_EXPR        go to state 28
-    EQ_EXPR         go to state 29
-    REL_EXPR        go to state 30
-    SHIFT_EXPR      go to state 31
-    ADD_EXPR        go to state 32
-    MULT_EXPR       go to state 33
-    UNARY           go to state 34
-    FACTOR          go to state 42
+    $default  reduce using rule 29 (ASSIGN_EXPR)
 
 
 State 49
 
-   74 FACTOR: TOK_VAR TOK_LSQBRACKET . ASSIGN_EXPR TOK_RSQBRACKET
+   39 COND_EXPR: LOGIC_EXPR .
+   40          | LOGIC_EXPR . TOK_QMARK ASSIGN_EXPR TOK_COLON COND_EXPR
+   42 LOGIC_EXPR: LOGIC_EXPR . TOK_LOGIC_AND BIT_EXPR
+   43           | LOGIC_EXPR . TOK_LOGIC_OR BIT_EXPR
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_LOGIC_AND  shift, and go to state 64
+    TOK_LOGIC_OR   shift, and go to state 65
+    TOK_QMARK      shift, and go to state 92
 
-    ASSIGN_EXPR  go to state 97
-    COND_EXPR    go to state 40
-    LOGIC_EXPR   go to state 41
-    BIT_EXPR     go to state 28
-    EQ_EXPR      go to state 29
-    REL_EXPR     go to state 30
-    SHIFT_EXPR   go to state 31
-    ADD_EXPR     go to state 32
-    MULT_EXPR    go to state 33
-    UNARY        go to state 34
-    FACTOR       go to state 42
+    $default  reduce using rule 39 (COND_EXPR)
 
 
 State 50
 
-   65 UNARY: TOK_INCR UNARY .
-   67      | UNARY . TOK_INCR
-   68      | UNARY . TOK_DECR
+   30 ASSIGN_EXPR: UNARY . TOK_EQASSIGN ASSIGN_EXPR
+   31            | UNARY . TOK_ADDASSIGN ASSIGN_EXPR
+   32            | UNARY . TOK_SUBASSIGN ASSIGN_EXPR
+   33            | UNARY . TOK_MULASSIGN ASSIGN_EXPR
+   34            | UNARY . TOK_DIVASSIGN ASSIGN_EXPR
+   35            | UNARY . TOK_MODASSIGN ASSIGN_EXPR
+   36            | UNARY . TOK_ANDASSIGN ASSIGN_EXPR
+   37            | UNARY . TOK_ORASSIGN ASSIGN_EXPR
+   38            | UNARY . TOK_XORASSIGN ASSIGN_EXPR
+   62 MULT_EXPR: UNARY .
+   72 UNARY: UNARY . TOK_INCR
+   73      | UNARY . TOK_DECR
 
-    TOK_INCR  shift, and go to state 71
-    TOK_DECR  shift, and go to state 72
+    TOK_SUBASSIGN  shift, and go to state 93
+    TOK_MULASSIGN  shift, and go to state 94
+    TOK_DIVASSIGN  shift, and go to state 95
+    TOK_ADDASSIGN  shift, and go to state 96
+    TOK_EQASSIGN   shift, and go to state 97
+    TOK_MODASSIGN  shift, and go to state 98
+    TOK_ANDASSIGN  shift, and go to state 99
+    TOK_ORASSIGN   shift, and go to state 100
+    TOK_XORASSIGN  shift, and go to state 101
+    TOK_INCR       shift, and go to state 83
+    TOK_DECR       shift, and go to state 84
 
-    TOK_INCR  [reduce using rule 65 (UNARY)]
-    TOK_DECR  [reduce using rule 65 (UNARY)]
-    $default  reduce using rule 65 (UNARY)
+    $default  reduce using rule 62 (MULT_EXPR)
 
 
 State 51
 
-   66 UNARY: TOK_DECR UNARY .
-   67      | UNARY . TOK_INCR
-   68      | UNARY . TOK_DECR
+   15 DECLARATION: VARTYPE_INT DECLARATOR TOK_EQASSIGN ASSIGN_EXPR . TOK_SEMICOLON
 
-    TOK_INCR  shift, and go to state 71
-    TOK_DECR  shift, and go to state 72
-
-    TOK_INCR  [reduce using rule 66 (UNARY)]
-    TOK_DECR  [reduce using rule 66 (UNARY)]
-    $default  reduce using rule 66 (UNARY)
+    TOK_SEMICOLON  shift, and go to state 102
 
 
 State 52
 
-   37 LOGIC_EXPR: LOGIC_EXPR TOK_LOGIC_AND . BIT_EXPR
+   14 DECLARATION: VARTYPE_INT POINTER_DECLARATOR TOK_EQASSIGN ASSIGN_EXPR . TOK_SEMICOLON
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    BIT_EXPR    go to state 98
-    EQ_EXPR     go to state 29
-    REL_EXPR    go to state 30
-    SHIFT_EXPR  go to state 31
-    ADD_EXPR    go to state 32
-    MULT_EXPR   go to state 33
-    UNARY       go to state 34
-    FACTOR      go to state 35
+    TOK_SEMICOLON  shift, and go to state 103
 
 
 State 53
 
-   38 LOGIC_EXPR: LOGIC_EXPR TOK_LOGIC_OR . BIT_EXPR
+   16 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET . TOK_RCBRACKET TOK_SEMICOLON
+   17            | VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET . FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_RCBRACKET  shift, and go to state 104
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    VARTYPE_INT    shift, and go to state 43
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    BIT_EXPR    go to state 99
-    EQ_EXPR     go to state 29
-    REL_EXPR    go to state 30
-    SHIFT_EXPR  go to state 31
-    ADD_EXPR    go to state 32
-    MULT_EXPR   go to state 33
-    UNARY       go to state 34
-    FACTOR      go to state 35
+    SINGLE_DECL     go to state 44
+    FUNC_CALL_ARGS  go to state 105
+    ARG_SINGLE      go to state 106
+    ASSIGN_EXPR     go to state 47
+    COND_EXPR       go to state 48
+    LOGIC_EXPR      go to state 49
+    BIT_EXPR        go to state 34
+    EQ_EXPR         go to state 35
+    REL_EXPR        go to state 36
+    SHIFT_EXPR      go to state 37
+    ADD_EXPR        go to state 38
+    MULT_EXPR       go to state 39
+    UNARY           go to state 50
+    FACTOR          go to state 41
 
 
 State 54
 
-   22 ARRAY_DECLARATOR: TOK_VAR TOK_LSQBRACKET LOGIC_EXPR TOK_RSQBRACKET .
+   74 UNARY: TOK_BIT_AND TOK_VAR .
 
-    $default  reduce using rule 22 (ARRAY_DECLARATOR)
+    $default  reduce using rule 74 (UNARY)
 
 
 State 55
 
-   40 BIT_EXPR: BIT_EXPR TOK_BIT_AND . EQ_EXPR
+   68 UNARY: TOK_LOGIC_NOT UNARY .
+   72      | UNARY . TOK_INCR
+   73      | UNARY . TOK_DECR
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_INCR  shift, and go to state 83
+    TOK_DECR  shift, and go to state 84
 
-    EQ_EXPR     go to state 100
-    REL_EXPR    go to state 30
-    SHIFT_EXPR  go to state 31
-    ADD_EXPR    go to state 32
-    MULT_EXPR   go to state 33
-    UNARY       go to state 34
-    FACTOR      go to state 35
+    TOK_INCR  [reduce using rule 68 (UNARY)]
+    TOK_DECR  [reduce using rule 68 (UNARY)]
+    $default  reduce using rule 68 (UNARY)
 
 
 State 56
 
-   41 BIT_EXPR: BIT_EXPR TOK_BIT_OR . EQ_EXPR
+   69 UNARY: TOK_BIT_NOT UNARY .
+   72      | UNARY . TOK_INCR
+   73      | UNARY . TOK_DECR
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_INCR  shift, and go to state 83
+    TOK_DECR  shift, and go to state 84
 
-    EQ_EXPR     go to state 101
-    REL_EXPR    go to state 30
-    SHIFT_EXPR  go to state 31
-    ADD_EXPR    go to state 32
-    MULT_EXPR   go to state 33
-    UNARY       go to state 34
-    FACTOR      go to state 35
+    TOK_INCR  [reduce using rule 69 (UNARY)]
+    TOK_DECR  [reduce using rule 69 (UNARY)]
+    $default  reduce using rule 69 (UNARY)
 
 
 State 57
 
-   42 BIT_EXPR: BIT_EXPR TOK_BIT_XOR . EQ_EXPR
+   75 UNARY: TOK_MUL TOK_VAR .
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    EQ_EXPR     go to state 102
-    REL_EXPR    go to state 30
-    SHIFT_EXPR  go to state 31
-    ADD_EXPR    go to state 32
-    MULT_EXPR   go to state 33
-    UNARY       go to state 34
-    FACTOR      go to state 35
+    $default  reduce using rule 75 (UNARY)
 
 
 State 58
 
-   44 EQ_EXPR: EQ_EXPR TOK_EQ . REL_EXPR
+   67 UNARY: TOK_MINUS UNARY .
+   72      | UNARY . TOK_INCR
+   73      | UNARY . TOK_DECR
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_INCR  shift, and go to state 83
+    TOK_DECR  shift, and go to state 84
 
-    REL_EXPR    go to state 103
-    SHIFT_EXPR  go to state 31
-    ADD_EXPR    go to state 32
-    MULT_EXPR   go to state 33
-    UNARY       go to state 34
-    FACTOR      go to state 35
+    TOK_INCR  [reduce using rule 67 (UNARY)]
+    TOK_DECR  [reduce using rule 67 (UNARY)]
+    $default  reduce using rule 67 (UNARY)
 
 
 State 59
 
-   45 EQ_EXPR: EQ_EXPR TOK_NEQ . REL_EXPR
+   78 FACTOR: TOK_LBRACKET ASSIGN_EXPR . TOK_RBRACKET
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    REL_EXPR    go to state 104
-    SHIFT_EXPR  go to state 31
-    ADD_EXPR    go to state 32
-    MULT_EXPR   go to state 33
-    UNARY       go to state 34
-    FACTOR      go to state 35
+    TOK_RBRACKET  shift, and go to state 107
 
 
 State 60
 
-   48 REL_EXPR: REL_EXPR TOK_GE . SHIFT_EXPR
+   79 FACTOR: TOK_VAR TOK_LBRACKET . TOK_RBRACKET
+   80       | TOK_VAR TOK_LBRACKET . FUNC_CALL_ARGS TOK_RBRACKET
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_RBRACKET   shift, and go to state 108
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    VARTYPE_INT    shift, and go to state 43
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    SHIFT_EXPR  go to state 105
-    ADD_EXPR    go to state 32
-    MULT_EXPR   go to state 33
-    UNARY       go to state 34
-    FACTOR      go to state 35
+    SINGLE_DECL     go to state 44
+    FUNC_CALL_ARGS  go to state 109
+    ARG_SINGLE      go to state 106
+    ASSIGN_EXPR     go to state 47
+    COND_EXPR       go to state 48
+    LOGIC_EXPR      go to state 49
+    BIT_EXPR        go to state 34
+    EQ_EXPR         go to state 35
+    REL_EXPR        go to state 36
+    SHIFT_EXPR      go to state 37
+    ADD_EXPR        go to state 38
+    MULT_EXPR       go to state 39
+    UNARY           go to state 50
+    FACTOR          go to state 41
 
 
 State 61
 
-   47 REL_EXPR: REL_EXPR TOK_LE . SHIFT_EXPR
+   81 FACTOR: TOK_VAR TOK_LSQBRACKET . ASSIGN_EXPR TOK_RSQBRACKET
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    SHIFT_EXPR  go to state 106
-    ADD_EXPR    go to state 32
-    MULT_EXPR   go to state 33
-    UNARY       go to state 34
-    FACTOR      go to state 35
+    ASSIGN_EXPR  go to state 110
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
 
 
 State 62
 
-   49 REL_EXPR: REL_EXPR TOK_G . SHIFT_EXPR
+   70 UNARY: TOK_INCR UNARY .
+   72      | UNARY . TOK_INCR
+   73      | UNARY . TOK_DECR
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_INCR  shift, and go to state 83
+    TOK_DECR  shift, and go to state 84
 
-    SHIFT_EXPR  go to state 107
-    ADD_EXPR    go to state 32
-    MULT_EXPR   go to state 33
-    UNARY       go to state 34
-    FACTOR      go to state 35
+    TOK_INCR  [reduce using rule 70 (UNARY)]
+    TOK_DECR  [reduce using rule 70 (UNARY)]
+    $default  reduce using rule 70 (UNARY)
 
 
 State 63
 
-   50 REL_EXPR: REL_EXPR TOK_L . SHIFT_EXPR
+   71 UNARY: TOK_DECR UNARY .
+   72      | UNARY . TOK_INCR
+   73      | UNARY . TOK_DECR
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_INCR  shift, and go to state 83
+    TOK_DECR  shift, and go to state 84
 
-    SHIFT_EXPR  go to state 108
-    ADD_EXPR    go to state 32
-    MULT_EXPR   go to state 33
-    UNARY       go to state 34
-    FACTOR      go to state 35
+    TOK_INCR  [reduce using rule 71 (UNARY)]
+    TOK_DECR  [reduce using rule 71 (UNARY)]
+    $default  reduce using rule 71 (UNARY)
 
 
 State 64
 
-   52 SHIFT_EXPR: SHIFT_EXPR TOK_LSHIFT . ADD_EXPR
+   42 LOGIC_EXPR: LOGIC_EXPR TOK_LOGIC_AND . BIT_EXPR
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    ADD_EXPR   go to state 109
-    MULT_EXPR  go to state 33
-    UNARY      go to state 34
-    FACTOR     go to state 35
+    BIT_EXPR    go to state 111
+    EQ_EXPR     go to state 35
+    REL_EXPR    go to state 36
+    SHIFT_EXPR  go to state 37
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
 
 
 State 65
 
-   53 SHIFT_EXPR: SHIFT_EXPR TOK_RSHIFT . ADD_EXPR
+   43 LOGIC_EXPR: LOGIC_EXPR TOK_LOGIC_OR . BIT_EXPR
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    ADD_EXPR   go to state 110
-    MULT_EXPR  go to state 33
-    UNARY      go to state 34
-    FACTOR     go to state 35
+    BIT_EXPR    go to state 112
+    EQ_EXPR     go to state 35
+    REL_EXPR    go to state 36
+    SHIFT_EXPR  go to state 37
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
 
 
 State 66
 
-   55 ADD_EXPR: ADD_EXPR TOK_PLUS . MULT_EXPR
+   25 ARRAY_DECLARATOR: TOK_VAR TOK_LSQBRACKET LOGIC_EXPR TOK_RSQBRACKET .
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    MULT_EXPR  go to state 111
-    UNARY      go to state 34
-    FACTOR     go to state 35
+    $default  reduce using rule 25 (ARRAY_DECLARATOR)
 
 
 State 67
 
-   56 ADD_EXPR: ADD_EXPR TOK_MINUS . MULT_EXPR
+   45 BIT_EXPR: BIT_EXPR TOK_BIT_AND . EQ_EXPR
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    MULT_EXPR  go to state 112
-    UNARY      go to state 34
-    FACTOR     go to state 35
+    EQ_EXPR     go to state 113
+    REL_EXPR    go to state 36
+    SHIFT_EXPR  go to state 37
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
 
 
 State 68
 
-   58 MULT_EXPR: MULT_EXPR TOK_MUL . UNARY
+   46 BIT_EXPR: BIT_EXPR TOK_BIT_OR . EQ_EXPR
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    UNARY   go to state 113
-    FACTOR  go to state 35
+    EQ_EXPR     go to state 114
+    REL_EXPR    go to state 36
+    SHIFT_EXPR  go to state 37
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
 
 
 State 69
 
-   59 MULT_EXPR: MULT_EXPR TOK_DIVIDE . UNARY
+   47 BIT_EXPR: BIT_EXPR TOK_BIT_XOR . EQ_EXPR
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    UNARY   go to state 114
-    FACTOR  go to state 35
+    EQ_EXPR     go to state 115
+    REL_EXPR    go to state 36
+    SHIFT_EXPR  go to state 37
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
 
 
 State 70
 
-   60 MULT_EXPR: MULT_EXPR TOK_MOD . UNARY
+   49 EQ_EXPR: EQ_EXPR TOK_EQ . REL_EXPR
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    UNARY   go to state 115
-    FACTOR  go to state 35
+    REL_EXPR    go to state 116
+    SHIFT_EXPR  go to state 37
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
 
 
 State 71
 
-   67 UNARY: UNARY TOK_INCR .
+   50 EQ_EXPR: EQ_EXPR TOK_NEQ . REL_EXPR
 
-    $default  reduce using rule 67 (UNARY)
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    REL_EXPR    go to state 117
+    SHIFT_EXPR  go to state 37
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
 
 
 State 72
 
-   68 UNARY: UNARY TOK_DECR .
+   53 REL_EXPR: REL_EXPR TOK_GE . SHIFT_EXPR
 
-    $default  reduce using rule 68 (UNARY)
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    SHIFT_EXPR  go to state 118
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
 
 
 State 73
+
+   52 REL_EXPR: REL_EXPR TOK_LE . SHIFT_EXPR
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    SHIFT_EXPR  go to state 119
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
+
+
+State 74
+
+   54 REL_EXPR: REL_EXPR TOK_G . SHIFT_EXPR
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    SHIFT_EXPR  go to state 120
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
+
+
+State 75
+
+   55 REL_EXPR: REL_EXPR TOK_L . SHIFT_EXPR
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    SHIFT_EXPR  go to state 121
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
+
+
+State 76
+
+   57 SHIFT_EXPR: SHIFT_EXPR TOK_LSHIFT . ADD_EXPR
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ADD_EXPR   go to state 122
+    MULT_EXPR  go to state 39
+    UNARY      go to state 40
+    FACTOR     go to state 41
+
+
+State 77
+
+   58 SHIFT_EXPR: SHIFT_EXPR TOK_RSHIFT . ADD_EXPR
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ADD_EXPR   go to state 123
+    MULT_EXPR  go to state 39
+    UNARY      go to state 40
+    FACTOR     go to state 41
+
+
+State 78
+
+   60 ADD_EXPR: ADD_EXPR TOK_PLUS . MULT_EXPR
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    MULT_EXPR  go to state 124
+    UNARY      go to state 40
+    FACTOR     go to state 41
+
+
+State 79
+
+   61 ADD_EXPR: ADD_EXPR TOK_MINUS . MULT_EXPR
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    MULT_EXPR  go to state 125
+    UNARY      go to state 40
+    FACTOR     go to state 41
+
+
+State 80
+
+   63 MULT_EXPR: MULT_EXPR TOK_MUL . UNARY
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    UNARY   go to state 126
+    FACTOR  go to state 41
+
+
+State 81
+
+   64 MULT_EXPR: MULT_EXPR TOK_DIVIDE . UNARY
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    UNARY   go to state 127
+    FACTOR  go to state 41
+
+
+State 82
+
+   65 MULT_EXPR: MULT_EXPR TOK_MOD . UNARY
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    UNARY   go to state 128
+    FACTOR  go to state 41
+
+
+State 83
+
+   72 UNARY: UNARY TOK_INCR .
+
+    $default  reduce using rule 72 (UNARY)
+
+
+State 84
+
+   73 UNARY: UNARY TOK_DECR .
+
+    $default  reduce using rule 73 (UNARY)
+
+
+State 85
 
     9 FUNCTION: VARTYPE_INT DECLARATOR TOK_LBRACKET TOK_RBRACKET TOK_SEMICOLON .
 
     $default  reduce using rule 9 (FUNCTION)
 
 
-State 74
+State 86
 
-   83 FUNC_STATEMENT: TOK_LCBRACKET . TOK_RCBRACKET
-   84               | TOK_LCBRACKET . REC_STATEMENT TOK_RCBRACKET
-   85               | TOK_LCBRACKET . REC_DECLARATION TOK_RCBRACKET
-   86               | TOK_LCBRACKET . REC_DECLARATION REC_STATEMENT TOK_RCBRACKET
+   93 FUNC_STATEMENT: TOK_LCBRACKET . TOK_RCBRACKET
+   94               | TOK_LCBRACKET . REC_STATEMENT TOK_RCBRACKET
+   95               | TOK_LCBRACKET . REC_DECLARATION TOK_RCBRACKET
+   96               | TOK_LCBRACKET . REC_DECLARATION REC_STATEMENT TOK_RCBRACKET
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_IF         shift, and go to state 116
-    TOK_WHILE      shift, and go to state 117
-    TOK_FOR        shift, and go to state 118
-    TOK_RETURN     shift, and go to state 119
-    TOK_BREAK      shift, and go to state 120
-    TOK_CONT       shift, and go to state 121
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_LCBRACKET  shift, and go to state 74
-    TOK_RCBRACKET  shift, and go to state 122
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    VARTYPE_INT    shift, and go to state 123
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_IF         shift, and go to state 129
+    TOK_WHILE      shift, and go to state 130
+    TOK_FOR        shift, and go to state 131
+    TOK_SWITCH     shift, and go to state 132
+    TOK_CASE       shift, and go to state 133
+    TOK_DEFAULT    shift, and go to state 134
+    TOK_RETURN     shift, and go to state 135
+    TOK_BREAK      shift, and go to state 136
+    TOK_CONT       shift, and go to state 137
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_LCBRACKET  shift, and go to state 86
+    TOK_RCBRACKET  shift, and go to state 138
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    VARTYPE_INT    shift, and go to state 139
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    REC_DECLARATION   go to state 124
-    DECLARATION       go to state 125
-    ASSIGN_EXPR       go to state 126
-    COND_EXPR         go to state 40
-    LOGIC_EXPR        go to state 41
-    BIT_EXPR          go to state 28
-    EQ_EXPR           go to state 29
-    REL_EXPR          go to state 30
-    SHIFT_EXPR        go to state 31
-    ADD_EXPR          go to state 32
-    MULT_EXPR         go to state 33
-    UNARY             go to state 34
-    FACTOR            go to state 42
-    REC_STATEMENT     go to state 127
-    STATEMENT         go to state 128
-    EXPR_STATEMENT    go to state 129
-    FUNC_STATEMENT    go to state 130
-    SELECT_STATEMENT  go to state 131
-    ITER_STATEMENT    go to state 132
-    JUMP_STATEMENT    go to state 133
+    REC_DECLARATION   go to state 140
+    DECLARATION       go to state 141
+    ASSIGN_EXPR       go to state 142
+    COND_EXPR         go to state 48
+    LOGIC_EXPR        go to state 49
+    BIT_EXPR          go to state 34
+    EQ_EXPR           go to state 35
+    REL_EXPR          go to state 36
+    SHIFT_EXPR        go to state 37
+    ADD_EXPR          go to state 38
+    MULT_EXPR         go to state 39
+    UNARY             go to state 50
+    FACTOR            go to state 41
+    REC_STATEMENT     go to state 143
+    STATEMENT         go to state 144
+    SWITCH_STATEMENT  go to state 145
+    EXPR_STATEMENT    go to state 146
+    FUNC_STATEMENT    go to state 147
+    SELECT_STATEMENT  go to state 148
+    ITER_STATEMENT    go to state 149
+    JUMP_STATEMENT    go to state 150
 
 
-State 75
+State 87
 
     7 FUNCTION: VARTYPE_INT DECLARATOR TOK_LBRACKET TOK_RBRACKET FUNC_STATEMENT .
 
     $default  reduce using rule 7 (FUNCTION)
 
 
-State 76
-
-   21 DECLARATOR: TOK_VAR .
-
-    $default  reduce using rule 21 (DECLARATOR)
-
-
-State 77
-
-   17 FUNC_ARGS: VARTYPE_INT DECLARATOR .
-
-    $default  reduce using rule 17 (FUNC_ARGS)
-
-
-State 78
-
-    6 FUNCTION: VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET . FUNC_STATEMENT
-    8         | VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET . TOK_SEMICOLON
-
-    TOK_SEMICOLON  shift, and go to state 134
-    TOK_LCBRACKET  shift, and go to state 74
-
-    FUNC_STATEMENT  go to state 135
-
-
-State 79
-
-   18 FUNC_ARGS: FUNC_ARGS TOK_COMMA . FUNC_ARGS
-
-    VARTYPE_INT  shift, and go to state 37
-
-    FUNC_ARGS  go to state 136
-
-
-State 80
-
-   14 DECLARATION: VARTYPE_INT DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON .
-
-    $default  reduce using rule 14 (DECLARATION)
-
-
-State 81
-
-   28 ASSIGN_EXPR: FACTOR TOK_SUBASSIGN . ASSIGN_EXPR
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR  go to state 137
-    COND_EXPR    go to state 40
-    LOGIC_EXPR   go to state 41
-    BIT_EXPR     go to state 28
-    EQ_EXPR      go to state 29
-    REL_EXPR     go to state 30
-    SHIFT_EXPR   go to state 31
-    ADD_EXPR     go to state 32
-    MULT_EXPR    go to state 33
-    UNARY        go to state 34
-    FACTOR       go to state 42
-
-
-State 82
-
-   29 ASSIGN_EXPR: FACTOR TOK_MULASSIGN . ASSIGN_EXPR
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR  go to state 138
-    COND_EXPR    go to state 40
-    LOGIC_EXPR   go to state 41
-    BIT_EXPR     go to state 28
-    EQ_EXPR      go to state 29
-    REL_EXPR     go to state 30
-    SHIFT_EXPR   go to state 31
-    ADD_EXPR     go to state 32
-    MULT_EXPR    go to state 33
-    UNARY        go to state 34
-    FACTOR       go to state 42
-
-
-State 83
-
-   30 ASSIGN_EXPR: FACTOR TOK_DIVASSIGN . ASSIGN_EXPR
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR  go to state 139
-    COND_EXPR    go to state 40
-    LOGIC_EXPR   go to state 41
-    BIT_EXPR     go to state 28
-    EQ_EXPR      go to state 29
-    REL_EXPR     go to state 30
-    SHIFT_EXPR   go to state 31
-    ADD_EXPR     go to state 32
-    MULT_EXPR    go to state 33
-    UNARY        go to state 34
-    FACTOR       go to state 42
-
-
-State 84
-
-   27 ASSIGN_EXPR: FACTOR TOK_ADDASSIGN . ASSIGN_EXPR
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR  go to state 140
-    COND_EXPR    go to state 40
-    LOGIC_EXPR   go to state 41
-    BIT_EXPR     go to state 28
-    EQ_EXPR      go to state 29
-    REL_EXPR     go to state 30
-    SHIFT_EXPR   go to state 31
-    ADD_EXPR     go to state 32
-    MULT_EXPR    go to state 33
-    UNARY        go to state 34
-    FACTOR       go to state 42
-
-
-State 85
-
-   26 ASSIGN_EXPR: FACTOR TOK_EQASSIGN . ASSIGN_EXPR
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR  go to state 141
-    COND_EXPR    go to state 40
-    LOGIC_EXPR   go to state 41
-    BIT_EXPR     go to state 28
-    EQ_EXPR      go to state 29
-    REL_EXPR     go to state 30
-    SHIFT_EXPR   go to state 31
-    ADD_EXPR     go to state 32
-    MULT_EXPR    go to state 33
-    UNARY        go to state 34
-    FACTOR       go to state 42
-
-
-State 86
-
-   31 ASSIGN_EXPR: FACTOR TOK_MODASSIGN . ASSIGN_EXPR
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR  go to state 142
-    COND_EXPR    go to state 40
-    LOGIC_EXPR   go to state 41
-    BIT_EXPR     go to state 28
-    EQ_EXPR      go to state 29
-    REL_EXPR     go to state 30
-    SHIFT_EXPR   go to state 31
-    ADD_EXPR     go to state 32
-    MULT_EXPR    go to state 33
-    UNARY        go to state 34
-    FACTOR       go to state 42
-
-
-State 87
-
-   32 ASSIGN_EXPR: FACTOR TOK_ANDASSIGN . ASSIGN_EXPR
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR  go to state 143
-    COND_EXPR    go to state 40
-    LOGIC_EXPR   go to state 41
-    BIT_EXPR     go to state 28
-    EQ_EXPR      go to state 29
-    REL_EXPR     go to state 30
-    SHIFT_EXPR   go to state 31
-    ADD_EXPR     go to state 32
-    MULT_EXPR    go to state 33
-    UNARY        go to state 34
-    FACTOR       go to state 42
-
-
 State 88
 
-   33 ASSIGN_EXPR: FACTOR TOK_ORASSIGN . ASSIGN_EXPR
+   23 DECLARATOR: TOK_VAR .
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR  go to state 144
-    COND_EXPR    go to state 40
-    LOGIC_EXPR   go to state 41
-    BIT_EXPR     go to state 28
-    EQ_EXPR      go to state 29
-    REL_EXPR     go to state 30
-    SHIFT_EXPR   go to state 31
-    ADD_EXPR     go to state 32
-    MULT_EXPR    go to state 33
-    UNARY        go to state 34
-    FACTOR       go to state 42
+    $default  reduce using rule 23 (DECLARATOR)
 
 
 State 89
 
-   34 ASSIGN_EXPR: FACTOR TOK_XORASSIGN . ASSIGN_EXPR
+   18 SINGLE_DECL: VARTYPE_INT DECLARATOR .
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR  go to state 145
-    COND_EXPR    go to state 40
-    LOGIC_EXPR   go to state 41
-    BIT_EXPR     go to state 28
-    EQ_EXPR      go to state 29
-    REL_EXPR     go to state 30
-    SHIFT_EXPR   go to state 31
-    ADD_EXPR     go to state 32
-    MULT_EXPR    go to state 33
-    UNARY        go to state 34
-    FACTOR       go to state 42
+    $default  reduce using rule 18 (SINGLE_DECL)
 
 
 State 90
 
-   15 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET TOK_RCBRACKET . TOK_SEMICOLON
+    6 FUNCTION: VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET . FUNC_STATEMENT
+    8         | VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET . TOK_SEMICOLON
 
-    TOK_SEMICOLON  shift, and go to state 146
+    TOK_SEMICOLON  shift, and go to state 151
+    TOK_LCBRACKET  shift, and go to state 86
+
+    FUNC_STATEMENT  go to state 152
 
 
 State 91
 
-   16 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS . TOK_RCBRACKET TOK_SEMICOLON
-   20 FUNC_CALL_ARGS: FUNC_CALL_ARGS . TOK_COMMA ARG_SINGLE
+   20 FUNC_ARGS: FUNC_ARGS TOK_COMMA . ARG_SINGLE
 
-    TOK_RCBRACKET  shift, and go to state 147
-    TOK_COMMA      shift, and go to state 148
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    VARTYPE_INT    shift, and go to state 43
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    SINGLE_DECL  go to state 44
+    ARG_SINGLE   go to state 153
+    ASSIGN_EXPR  go to state 47
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
 
 
 State 92
 
-   19 FUNC_CALL_ARGS: ARG_SINGLE .
+   40 COND_EXPR: LOGIC_EXPR TOK_QMARK . ASSIGN_EXPR TOK_COLON COND_EXPR
 
-    $default  reduce using rule 19 (FUNC_CALL_ARGS)
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR  go to state 154
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
 
 
 State 93
 
-   24 ARG_SINGLE: ASSIGN_EXPR .
+   32 ASSIGN_EXPR: UNARY TOK_SUBASSIGN . ASSIGN_EXPR
 
-    $default  reduce using rule 24 (ARG_SINGLE)
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR  go to state 155
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
 
 
 State 94
 
-   71 FACTOR: TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET .
+   33 ASSIGN_EXPR: UNARY TOK_MULASSIGN . ASSIGN_EXPR
 
-    $default  reduce using rule 71 (FACTOR)
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR  go to state 156
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
 
 
 State 95
 
-   72 FACTOR: TOK_VAR TOK_LBRACKET TOK_RBRACKET .
+   34 ASSIGN_EXPR: UNARY TOK_DIVASSIGN . ASSIGN_EXPR
 
-    $default  reduce using rule 72 (FACTOR)
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR  go to state 157
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
 
 
 State 96
 
-   20 FUNC_CALL_ARGS: FUNC_CALL_ARGS . TOK_COMMA ARG_SINGLE
-   73 FACTOR: TOK_VAR TOK_LBRACKET FUNC_CALL_ARGS . TOK_RBRACKET
+   31 ASSIGN_EXPR: UNARY TOK_ADDASSIGN . ASSIGN_EXPR
 
-    TOK_RBRACKET  shift, and go to state 149
-    TOK_COMMA     shift, and go to state 148
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR  go to state 158
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
 
 
 State 97
 
-   74 FACTOR: TOK_VAR TOK_LSQBRACKET ASSIGN_EXPR . TOK_RSQBRACKET
+   30 ASSIGN_EXPR: UNARY TOK_EQASSIGN . ASSIGN_EXPR
 
-    TOK_RSQBRACKET  shift, and go to state 150
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR  go to state 159
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
 
 
 State 98
 
-   37 LOGIC_EXPR: LOGIC_EXPR TOK_LOGIC_AND BIT_EXPR .
-   40 BIT_EXPR: BIT_EXPR . TOK_BIT_AND EQ_EXPR
-   41         | BIT_EXPR . TOK_BIT_OR EQ_EXPR
-   42         | BIT_EXPR . TOK_BIT_XOR EQ_EXPR
+   35 ASSIGN_EXPR: UNARY TOK_MODASSIGN . ASSIGN_EXPR
 
-    TOK_BIT_AND  shift, and go to state 55
-    TOK_BIT_OR   shift, and go to state 56
-    TOK_BIT_XOR  shift, and go to state 57
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    $default  reduce using rule 37 (LOGIC_EXPR)
+    ASSIGN_EXPR  go to state 160
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
 
 
 State 99
 
-   38 LOGIC_EXPR: LOGIC_EXPR TOK_LOGIC_OR BIT_EXPR .
-   40 BIT_EXPR: BIT_EXPR . TOK_BIT_AND EQ_EXPR
-   41         | BIT_EXPR . TOK_BIT_OR EQ_EXPR
-   42         | BIT_EXPR . TOK_BIT_XOR EQ_EXPR
+   36 ASSIGN_EXPR: UNARY TOK_ANDASSIGN . ASSIGN_EXPR
 
-    TOK_BIT_AND  shift, and go to state 55
-    TOK_BIT_OR   shift, and go to state 56
-    TOK_BIT_XOR  shift, and go to state 57
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    $default  reduce using rule 38 (LOGIC_EXPR)
+    ASSIGN_EXPR  go to state 161
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
 
 
 State 100
 
-   40 BIT_EXPR: BIT_EXPR TOK_BIT_AND EQ_EXPR .
-   44 EQ_EXPR: EQ_EXPR . TOK_EQ REL_EXPR
-   45        | EQ_EXPR . TOK_NEQ REL_EXPR
+   37 ASSIGN_EXPR: UNARY TOK_ORASSIGN . ASSIGN_EXPR
 
-    TOK_EQ   shift, and go to state 58
-    TOK_NEQ  shift, and go to state 59
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    $default  reduce using rule 40 (BIT_EXPR)
+    ASSIGN_EXPR  go to state 162
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
 
 
 State 101
 
-   41 BIT_EXPR: BIT_EXPR TOK_BIT_OR EQ_EXPR .
-   44 EQ_EXPR: EQ_EXPR . TOK_EQ REL_EXPR
-   45        | EQ_EXPR . TOK_NEQ REL_EXPR
+   38 ASSIGN_EXPR: UNARY TOK_XORASSIGN . ASSIGN_EXPR
 
-    TOK_EQ   shift, and go to state 58
-    TOK_NEQ  shift, and go to state 59
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    $default  reduce using rule 41 (BIT_EXPR)
+    ASSIGN_EXPR  go to state 163
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
 
 
 State 102
 
-   42 BIT_EXPR: BIT_EXPR TOK_BIT_XOR EQ_EXPR .
-   44 EQ_EXPR: EQ_EXPR . TOK_EQ REL_EXPR
-   45        | EQ_EXPR . TOK_NEQ REL_EXPR
+   15 DECLARATION: VARTYPE_INT DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON .
 
-    TOK_EQ   shift, and go to state 58
-    TOK_NEQ  shift, and go to state 59
-
-    $default  reduce using rule 42 (BIT_EXPR)
+    $default  reduce using rule 15 (DECLARATION)
 
 
 State 103
 
-   44 EQ_EXPR: EQ_EXPR TOK_EQ REL_EXPR .
-   47 REL_EXPR: REL_EXPR . TOK_LE SHIFT_EXPR
-   48         | REL_EXPR . TOK_GE SHIFT_EXPR
-   49         | REL_EXPR . TOK_G SHIFT_EXPR
-   50         | REL_EXPR . TOK_L SHIFT_EXPR
+   14 DECLARATION: VARTYPE_INT POINTER_DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON .
 
-    TOK_GE  shift, and go to state 60
-    TOK_LE  shift, and go to state 61
-    TOK_G   shift, and go to state 62
-    TOK_L   shift, and go to state 63
-
-    $default  reduce using rule 44 (EQ_EXPR)
+    $default  reduce using rule 14 (DECLARATION)
 
 
 State 104
 
-   45 EQ_EXPR: EQ_EXPR TOK_NEQ REL_EXPR .
-   47 REL_EXPR: REL_EXPR . TOK_LE SHIFT_EXPR
-   48         | REL_EXPR . TOK_GE SHIFT_EXPR
-   49         | REL_EXPR . TOK_G SHIFT_EXPR
-   50         | REL_EXPR . TOK_L SHIFT_EXPR
+   16 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET TOK_RCBRACKET . TOK_SEMICOLON
 
-    TOK_GE  shift, and go to state 60
-    TOK_LE  shift, and go to state 61
-    TOK_G   shift, and go to state 62
-    TOK_L   shift, and go to state 63
-
-    $default  reduce using rule 45 (EQ_EXPR)
+    TOK_SEMICOLON  shift, and go to state 164
 
 
 State 105
 
-   48 REL_EXPR: REL_EXPR TOK_GE SHIFT_EXPR .
-   52 SHIFT_EXPR: SHIFT_EXPR . TOK_LSHIFT ADD_EXPR
-   53           | SHIFT_EXPR . TOK_RSHIFT ADD_EXPR
+   17 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS . TOK_RCBRACKET TOK_SEMICOLON
+   22 FUNC_CALL_ARGS: FUNC_CALL_ARGS . TOK_COMMA ARG_SINGLE
 
-    TOK_LSHIFT  shift, and go to state 64
-    TOK_RSHIFT  shift, and go to state 65
-
-    $default  reduce using rule 48 (REL_EXPR)
+    TOK_RCBRACKET  shift, and go to state 165
+    TOK_COMMA      shift, and go to state 166
 
 
 State 106
 
-   47 REL_EXPR: REL_EXPR TOK_LE SHIFT_EXPR .
-   52 SHIFT_EXPR: SHIFT_EXPR . TOK_LSHIFT ADD_EXPR
-   53           | SHIFT_EXPR . TOK_RSHIFT ADD_EXPR
+   21 FUNC_CALL_ARGS: ARG_SINGLE .
 
-    TOK_LSHIFT  shift, and go to state 64
-    TOK_RSHIFT  shift, and go to state 65
-
-    $default  reduce using rule 47 (REL_EXPR)
+    $default  reduce using rule 21 (FUNC_CALL_ARGS)
 
 
 State 107
 
-   49 REL_EXPR: REL_EXPR TOK_G SHIFT_EXPR .
-   52 SHIFT_EXPR: SHIFT_EXPR . TOK_LSHIFT ADD_EXPR
-   53           | SHIFT_EXPR . TOK_RSHIFT ADD_EXPR
+   78 FACTOR: TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET .
 
-    TOK_LSHIFT  shift, and go to state 64
-    TOK_RSHIFT  shift, and go to state 65
-
-    $default  reduce using rule 49 (REL_EXPR)
+    $default  reduce using rule 78 (FACTOR)
 
 
 State 108
 
-   50 REL_EXPR: REL_EXPR TOK_L SHIFT_EXPR .
-   52 SHIFT_EXPR: SHIFT_EXPR . TOK_LSHIFT ADD_EXPR
-   53           | SHIFT_EXPR . TOK_RSHIFT ADD_EXPR
+   79 FACTOR: TOK_VAR TOK_LBRACKET TOK_RBRACKET .
 
-    TOK_LSHIFT  shift, and go to state 64
-    TOK_RSHIFT  shift, and go to state 65
-
-    $default  reduce using rule 50 (REL_EXPR)
+    $default  reduce using rule 79 (FACTOR)
 
 
 State 109
 
-   52 SHIFT_EXPR: SHIFT_EXPR TOK_LSHIFT ADD_EXPR .
-   55 ADD_EXPR: ADD_EXPR . TOK_PLUS MULT_EXPR
-   56         | ADD_EXPR . TOK_MINUS MULT_EXPR
+   22 FUNC_CALL_ARGS: FUNC_CALL_ARGS . TOK_COMMA ARG_SINGLE
+   80 FACTOR: TOK_VAR TOK_LBRACKET FUNC_CALL_ARGS . TOK_RBRACKET
 
-    TOK_PLUS   shift, and go to state 66
-    TOK_MINUS  shift, and go to state 67
-
-    $default  reduce using rule 52 (SHIFT_EXPR)
+    TOK_RBRACKET  shift, and go to state 167
+    TOK_COMMA     shift, and go to state 166
 
 
 State 110
 
-   53 SHIFT_EXPR: SHIFT_EXPR TOK_RSHIFT ADD_EXPR .
-   55 ADD_EXPR: ADD_EXPR . TOK_PLUS MULT_EXPR
-   56         | ADD_EXPR . TOK_MINUS MULT_EXPR
+   81 FACTOR: TOK_VAR TOK_LSQBRACKET ASSIGN_EXPR . TOK_RSQBRACKET
 
-    TOK_PLUS   shift, and go to state 66
-    TOK_MINUS  shift, and go to state 67
-
-    $default  reduce using rule 53 (SHIFT_EXPR)
+    TOK_RSQBRACKET  shift, and go to state 168
 
 
 State 111
 
-   55 ADD_EXPR: ADD_EXPR TOK_PLUS MULT_EXPR .
-   58 MULT_EXPR: MULT_EXPR . TOK_MUL UNARY
-   59          | MULT_EXPR . TOK_DIVIDE UNARY
-   60          | MULT_EXPR . TOK_MOD UNARY
+   42 LOGIC_EXPR: LOGIC_EXPR TOK_LOGIC_AND BIT_EXPR .
+   45 BIT_EXPR: BIT_EXPR . TOK_BIT_AND EQ_EXPR
+   46         | BIT_EXPR . TOK_BIT_OR EQ_EXPR
+   47         | BIT_EXPR . TOK_BIT_XOR EQ_EXPR
 
-    TOK_MUL     shift, and go to state 68
-    TOK_DIVIDE  shift, and go to state 69
-    TOK_MOD     shift, and go to state 70
+    TOK_BIT_AND  shift, and go to state 67
+    TOK_BIT_OR   shift, and go to state 68
+    TOK_BIT_XOR  shift, and go to state 69
 
-    $default  reduce using rule 55 (ADD_EXPR)
+    $default  reduce using rule 42 (LOGIC_EXPR)
 
 
 State 112
 
-   56 ADD_EXPR: ADD_EXPR TOK_MINUS MULT_EXPR .
-   58 MULT_EXPR: MULT_EXPR . TOK_MUL UNARY
-   59          | MULT_EXPR . TOK_DIVIDE UNARY
-   60          | MULT_EXPR . TOK_MOD UNARY
+   43 LOGIC_EXPR: LOGIC_EXPR TOK_LOGIC_OR BIT_EXPR .
+   45 BIT_EXPR: BIT_EXPR . TOK_BIT_AND EQ_EXPR
+   46         | BIT_EXPR . TOK_BIT_OR EQ_EXPR
+   47         | BIT_EXPR . TOK_BIT_XOR EQ_EXPR
 
-    TOK_MUL     shift, and go to state 68
-    TOK_DIVIDE  shift, and go to state 69
-    TOK_MOD     shift, and go to state 70
+    TOK_BIT_AND  shift, and go to state 67
+    TOK_BIT_OR   shift, and go to state 68
+    TOK_BIT_XOR  shift, and go to state 69
 
-    $default  reduce using rule 56 (ADD_EXPR)
+    $default  reduce using rule 43 (LOGIC_EXPR)
 
 
 State 113
 
-   58 MULT_EXPR: MULT_EXPR TOK_MUL UNARY .
-   67 UNARY: UNARY . TOK_INCR
-   68      | UNARY . TOK_DECR
+   45 BIT_EXPR: BIT_EXPR TOK_BIT_AND EQ_EXPR .
+   49 EQ_EXPR: EQ_EXPR . TOK_EQ REL_EXPR
+   50        | EQ_EXPR . TOK_NEQ REL_EXPR
 
-    TOK_INCR  shift, and go to state 71
-    TOK_DECR  shift, and go to state 72
+    TOK_EQ   shift, and go to state 70
+    TOK_NEQ  shift, and go to state 71
 
-    $default  reduce using rule 58 (MULT_EXPR)
+    $default  reduce using rule 45 (BIT_EXPR)
 
 
 State 114
 
-   59 MULT_EXPR: MULT_EXPR TOK_DIVIDE UNARY .
-   67 UNARY: UNARY . TOK_INCR
-   68      | UNARY . TOK_DECR
+   46 BIT_EXPR: BIT_EXPR TOK_BIT_OR EQ_EXPR .
+   49 EQ_EXPR: EQ_EXPR . TOK_EQ REL_EXPR
+   50        | EQ_EXPR . TOK_NEQ REL_EXPR
 
-    TOK_INCR  shift, and go to state 71
-    TOK_DECR  shift, and go to state 72
+    TOK_EQ   shift, and go to state 70
+    TOK_NEQ  shift, and go to state 71
 
-    $default  reduce using rule 59 (MULT_EXPR)
+    $default  reduce using rule 46 (BIT_EXPR)
 
 
 State 115
 
-   60 MULT_EXPR: MULT_EXPR TOK_MOD UNARY .
-   67 UNARY: UNARY . TOK_INCR
-   68      | UNARY . TOK_DECR
+   47 BIT_EXPR: BIT_EXPR TOK_BIT_XOR EQ_EXPR .
+   49 EQ_EXPR: EQ_EXPR . TOK_EQ REL_EXPR
+   50        | EQ_EXPR . TOK_NEQ REL_EXPR
 
-    TOK_INCR  shift, and go to state 71
-    TOK_DECR  shift, and go to state 72
+    TOK_EQ   shift, and go to state 70
+    TOK_NEQ  shift, and go to state 71
 
-    $default  reduce using rule 60 (MULT_EXPR)
+    $default  reduce using rule 47 (BIT_EXPR)
 
 
 State 116
 
-   87 SELECT_STATEMENT: TOK_IF . TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT
-   88                 | TOK_IF . TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
+   49 EQ_EXPR: EQ_EXPR TOK_EQ REL_EXPR .
+   52 REL_EXPR: REL_EXPR . TOK_LE SHIFT_EXPR
+   53         | REL_EXPR . TOK_GE SHIFT_EXPR
+   54         | REL_EXPR . TOK_G SHIFT_EXPR
+   55         | REL_EXPR . TOK_L SHIFT_EXPR
 
-    TOK_LBRACKET  shift, and go to state 151
+    TOK_GE  shift, and go to state 72
+    TOK_LE  shift, and go to state 73
+    TOK_G   shift, and go to state 74
+    TOK_L   shift, and go to state 75
+
+    $default  reduce using rule 49 (EQ_EXPR)
 
 
 State 117
 
-   89 ITER_STATEMENT: TOK_WHILE . TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET STATEMENT
+   50 EQ_EXPR: EQ_EXPR TOK_NEQ REL_EXPR .
+   52 REL_EXPR: REL_EXPR . TOK_LE SHIFT_EXPR
+   53         | REL_EXPR . TOK_GE SHIFT_EXPR
+   54         | REL_EXPR . TOK_G SHIFT_EXPR
+   55         | REL_EXPR . TOK_L SHIFT_EXPR
 
-    TOK_LBRACKET  shift, and go to state 152
+    TOK_GE  shift, and go to state 72
+    TOK_LE  shift, and go to state 73
+    TOK_G   shift, and go to state 74
+    TOK_L   shift, and go to state 75
+
+    $default  reduce using rule 50 (EQ_EXPR)
 
 
 State 118
 
-   90 ITER_STATEMENT: TOK_FOR . TOK_LBRACKET EXPR_STATEMENT EXPR_STATEMENT ASSIGN_EXPR TOK_RBRACKET STATEMENT
+   53 REL_EXPR: REL_EXPR TOK_GE SHIFT_EXPR .
+   57 SHIFT_EXPR: SHIFT_EXPR . TOK_LSHIFT ADD_EXPR
+   58           | SHIFT_EXPR . TOK_RSHIFT ADD_EXPR
 
-    TOK_LBRACKET  shift, and go to state 153
+    TOK_LSHIFT  shift, and go to state 76
+    TOK_RSHIFT  shift, and go to state 77
+
+    $default  reduce using rule 53 (REL_EXPR)
 
 
 State 119
 
-   93 JUMP_STATEMENT: TOK_RETURN . TOK_SEMICOLON
-   94               | TOK_RETURN . FUNCTION TOK_SEMICOLON
-   95               | TOK_RETURN . LOGIC_EXPR TOK_SEMICOLON
+   52 REL_EXPR: REL_EXPR TOK_LE SHIFT_EXPR .
+   57 SHIFT_EXPR: SHIFT_EXPR . TOK_LSHIFT ADD_EXPR
+   58           | SHIFT_EXPR . TOK_RSHIFT ADD_EXPR
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_SEMICOLON  shift, and go to state 154
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    VARTYPE_INT    shift, and go to state 155
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_LSHIFT  shift, and go to state 76
+    TOK_RSHIFT  shift, and go to state 77
 
-    FUNCTION    go to state 156
-    LOGIC_EXPR  go to state 157
-    BIT_EXPR    go to state 28
-    EQ_EXPR     go to state 29
-    REL_EXPR    go to state 30
-    SHIFT_EXPR  go to state 31
-    ADD_EXPR    go to state 32
-    MULT_EXPR   go to state 33
-    UNARY       go to state 34
-    FACTOR      go to state 35
+    $default  reduce using rule 52 (REL_EXPR)
 
 
 State 120
 
-   91 JUMP_STATEMENT: TOK_BREAK . TOK_SEMICOLON
+   54 REL_EXPR: REL_EXPR TOK_G SHIFT_EXPR .
+   57 SHIFT_EXPR: SHIFT_EXPR . TOK_LSHIFT ADD_EXPR
+   58           | SHIFT_EXPR . TOK_RSHIFT ADD_EXPR
 
-    TOK_SEMICOLON  shift, and go to state 158
+    TOK_LSHIFT  shift, and go to state 76
+    TOK_RSHIFT  shift, and go to state 77
+
+    $default  reduce using rule 54 (REL_EXPR)
 
 
 State 121
 
-   92 JUMP_STATEMENT: TOK_CONT . TOK_SEMICOLON
+   55 REL_EXPR: REL_EXPR TOK_L SHIFT_EXPR .
+   57 SHIFT_EXPR: SHIFT_EXPR . TOK_LSHIFT ADD_EXPR
+   58           | SHIFT_EXPR . TOK_RSHIFT ADD_EXPR
 
-    TOK_SEMICOLON  shift, and go to state 159
+    TOK_LSHIFT  shift, and go to state 76
+    TOK_RSHIFT  shift, and go to state 77
+
+    $default  reduce using rule 55 (REL_EXPR)
 
 
 State 122
 
-   83 FUNC_STATEMENT: TOK_LCBRACKET TOK_RCBRACKET .
+   57 SHIFT_EXPR: SHIFT_EXPR TOK_LSHIFT ADD_EXPR .
+   60 ADD_EXPR: ADD_EXPR . TOK_PLUS MULT_EXPR
+   61         | ADD_EXPR . TOK_MINUS MULT_EXPR
 
-    $default  reduce using rule 83 (FUNC_STATEMENT)
+    TOK_PLUS   shift, and go to state 78
+    TOK_MINUS  shift, and go to state 79
+
+    $default  reduce using rule 57 (SHIFT_EXPR)
 
 
 State 123
 
-   12 DECLARATION: VARTYPE_INT . DECLARATOR TOK_SEMICOLON
-   13            | VARTYPE_INT . ARRAY_DECLARATOR TOK_SEMICOLON
-   14            | VARTYPE_INT . DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON
-   15            | VARTYPE_INT . ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET TOK_RCBRACKET TOK_SEMICOLON
-   16            | VARTYPE_INT . ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON
+   58 SHIFT_EXPR: SHIFT_EXPR TOK_RSHIFT ADD_EXPR .
+   60 ADD_EXPR: ADD_EXPR . TOK_PLUS MULT_EXPR
+   61         | ADD_EXPR . TOK_MINUS MULT_EXPR
 
-    TOK_VAR  shift, and go to state 7
+    TOK_PLUS   shift, and go to state 78
+    TOK_MINUS  shift, and go to state 79
 
-    DECLARATOR        go to state 160
-    ARRAY_DECLARATOR  go to state 9
+    $default  reduce using rule 58 (SHIFT_EXPR)
 
 
 State 124
 
-   11 REC_DECLARATION: REC_DECLARATION . DECLARATION
-   85 FUNC_STATEMENT: TOK_LCBRACKET REC_DECLARATION . TOK_RCBRACKET
-   86               | TOK_LCBRACKET REC_DECLARATION . REC_STATEMENT TOK_RCBRACKET
+   60 ADD_EXPR: ADD_EXPR TOK_PLUS MULT_EXPR .
+   63 MULT_EXPR: MULT_EXPR . TOK_MUL UNARY
+   64          | MULT_EXPR . TOK_DIVIDE UNARY
+   65          | MULT_EXPR . TOK_MOD UNARY
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_IF         shift, and go to state 116
-    TOK_WHILE      shift, and go to state 117
-    TOK_FOR        shift, and go to state 118
-    TOK_RETURN     shift, and go to state 119
-    TOK_BREAK      shift, and go to state 120
-    TOK_CONT       shift, and go to state 121
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_LCBRACKET  shift, and go to state 74
-    TOK_RCBRACKET  shift, and go to state 161
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    VARTYPE_INT    shift, and go to state 123
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_MUL     shift, and go to state 80
+    TOK_DIVIDE  shift, and go to state 81
+    TOK_MOD     shift, and go to state 82
 
-    DECLARATION       go to state 162
-    ASSIGN_EXPR       go to state 126
-    COND_EXPR         go to state 40
-    LOGIC_EXPR        go to state 41
-    BIT_EXPR          go to state 28
-    EQ_EXPR           go to state 29
-    REL_EXPR          go to state 30
-    SHIFT_EXPR        go to state 31
-    ADD_EXPR          go to state 32
-    MULT_EXPR         go to state 33
-    UNARY             go to state 34
-    FACTOR            go to state 42
-    REC_STATEMENT     go to state 163
-    STATEMENT         go to state 128
-    EXPR_STATEMENT    go to state 129
-    FUNC_STATEMENT    go to state 130
-    SELECT_STATEMENT  go to state 131
-    ITER_STATEMENT    go to state 132
-    JUMP_STATEMENT    go to state 133
+    $default  reduce using rule 60 (ADD_EXPR)
 
 
 State 125
+
+   61 ADD_EXPR: ADD_EXPR TOK_MINUS MULT_EXPR .
+   63 MULT_EXPR: MULT_EXPR . TOK_MUL UNARY
+   64          | MULT_EXPR . TOK_DIVIDE UNARY
+   65          | MULT_EXPR . TOK_MOD UNARY
+
+    TOK_MUL     shift, and go to state 80
+    TOK_DIVIDE  shift, and go to state 81
+    TOK_MOD     shift, and go to state 82
+
+    $default  reduce using rule 61 (ADD_EXPR)
+
+
+State 126
+
+   63 MULT_EXPR: MULT_EXPR TOK_MUL UNARY .
+   72 UNARY: UNARY . TOK_INCR
+   73      | UNARY . TOK_DECR
+
+    TOK_INCR  shift, and go to state 83
+    TOK_DECR  shift, and go to state 84
+
+    $default  reduce using rule 63 (MULT_EXPR)
+
+
+State 127
+
+   64 MULT_EXPR: MULT_EXPR TOK_DIVIDE UNARY .
+   72 UNARY: UNARY . TOK_INCR
+   73      | UNARY . TOK_DECR
+
+    TOK_INCR  shift, and go to state 83
+    TOK_DECR  shift, and go to state 84
+
+    $default  reduce using rule 64 (MULT_EXPR)
+
+
+State 128
+
+   65 MULT_EXPR: MULT_EXPR TOK_MOD UNARY .
+   72 UNARY: UNARY . TOK_INCR
+   73      | UNARY . TOK_DECR
+
+    TOK_INCR  shift, and go to state 83
+    TOK_DECR  shift, and go to state 84
+
+    $default  reduce using rule 65 (MULT_EXPR)
+
+
+State 129
+
+   97 SELECT_STATEMENT: TOK_IF . TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT
+   98                 | TOK_IF . TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
+
+    TOK_LBRACKET  shift, and go to state 169
+
+
+State 130
+
+  100 ITER_STATEMENT: TOK_WHILE . TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET STATEMENT
+
+    TOK_LBRACKET  shift, and go to state 170
+
+
+State 131
+
+  101 ITER_STATEMENT: TOK_FOR . TOK_LBRACKET EXPR_STATEMENT EXPR_STATEMENT ASSIGN_EXPR TOK_RBRACKET STATEMENT
+
+    TOK_LBRACKET  shift, and go to state 171
+
+
+State 132
+
+   99 SELECT_STATEMENT: TOK_SWITCH . TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT
+
+    TOK_LBRACKET  shift, and go to state 172
+
+
+State 133
+
+   90 SWITCH_STATEMENT: TOK_CASE . COND_EXPR TOK_COLON STATEMENT
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    COND_EXPR   go to state 173
+    LOGIC_EXPR  go to state 49
+    BIT_EXPR    go to state 34
+    EQ_EXPR     go to state 35
+    REL_EXPR    go to state 36
+    SHIFT_EXPR  go to state 37
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
+
+
+State 134
+
+   91 SWITCH_STATEMENT: TOK_DEFAULT . TOK_COLON STATEMENT
+
+    TOK_COLON  shift, and go to state 174
+
+
+State 135
+
+  104 JUMP_STATEMENT: TOK_RETURN . TOK_SEMICOLON
+  105               | TOK_RETURN . FUNCTION TOK_SEMICOLON
+  106               | TOK_RETURN . LOGIC_EXPR TOK_SEMICOLON
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_SEMICOLON  shift, and go to state 175
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    VARTYPE_INT    shift, and go to state 176
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    FUNCTION    go to state 177
+    LOGIC_EXPR  go to state 178
+    BIT_EXPR    go to state 34
+    EQ_EXPR     go to state 35
+    REL_EXPR    go to state 36
+    SHIFT_EXPR  go to state 37
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
+
+
+State 136
+
+  102 JUMP_STATEMENT: TOK_BREAK . TOK_SEMICOLON
+
+    TOK_SEMICOLON  shift, and go to state 179
+
+
+State 137
+
+  103 JUMP_STATEMENT: TOK_CONT . TOK_SEMICOLON
+
+    TOK_SEMICOLON  shift, and go to state 180
+
+
+State 138
+
+   93 FUNC_STATEMENT: TOK_LCBRACKET TOK_RCBRACKET .
+
+    $default  reduce using rule 93 (FUNC_STATEMENT)
+
+
+State 139
+
+   12 DECLARATION: VARTYPE_INT . DECLARATOR TOK_SEMICOLON
+   13            | VARTYPE_INT . ARRAY_DECLARATOR TOK_SEMICOLON
+   14            | VARTYPE_INT . POINTER_DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON
+   15            | VARTYPE_INT . DECLARATOR TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON
+   16            | VARTYPE_INT . ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET TOK_RCBRACKET TOK_SEMICOLON
+   17            | VARTYPE_INT . ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON
+
+    TOK_MUL  shift, and go to state 7
+    TOK_VAR  shift, and go to state 8
+
+    DECLARATOR          go to state 181
+    POINTER_DECLARATOR  go to state 10
+    ARRAY_DECLARATOR    go to state 11
+
+
+State 140
+
+   11 REC_DECLARATION: REC_DECLARATION . DECLARATION
+   95 FUNC_STATEMENT: TOK_LCBRACKET REC_DECLARATION . TOK_RCBRACKET
+   96               | TOK_LCBRACKET REC_DECLARATION . REC_STATEMENT TOK_RCBRACKET
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_IF         shift, and go to state 129
+    TOK_WHILE      shift, and go to state 130
+    TOK_FOR        shift, and go to state 131
+    TOK_SWITCH     shift, and go to state 132
+    TOK_CASE       shift, and go to state 133
+    TOK_DEFAULT    shift, and go to state 134
+    TOK_RETURN     shift, and go to state 135
+    TOK_BREAK      shift, and go to state 136
+    TOK_CONT       shift, and go to state 137
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_LCBRACKET  shift, and go to state 86
+    TOK_RCBRACKET  shift, and go to state 182
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    VARTYPE_INT    shift, and go to state 139
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    DECLARATION       go to state 183
+    ASSIGN_EXPR       go to state 142
+    COND_EXPR         go to state 48
+    LOGIC_EXPR        go to state 49
+    BIT_EXPR          go to state 34
+    EQ_EXPR           go to state 35
+    REL_EXPR          go to state 36
+    SHIFT_EXPR        go to state 37
+    ADD_EXPR          go to state 38
+    MULT_EXPR         go to state 39
+    UNARY             go to state 50
+    FACTOR            go to state 41
+    REC_STATEMENT     go to state 184
+    STATEMENT         go to state 144
+    SWITCH_STATEMENT  go to state 145
+    EXPR_STATEMENT    go to state 146
+    FUNC_STATEMENT    go to state 147
+    SELECT_STATEMENT  go to state 148
+    ITER_STATEMENT    go to state 149
+    JUMP_STATEMENT    go to state 150
+
+
+State 141
 
    10 REC_DECLARATION: DECLARATION .
 
     $default  reduce using rule 10 (REC_DECLARATION)
 
 
-State 126
+State 142
 
-   82 EXPR_STATEMENT: ASSIGN_EXPR . TOK_SEMICOLON
+   92 EXPR_STATEMENT: ASSIGN_EXPR . TOK_SEMICOLON
 
-    TOK_SEMICOLON  shift, and go to state 164
-
-
-State 127
-
-   76 REC_STATEMENT: REC_STATEMENT . STATEMENT
-   84 FUNC_STATEMENT: TOK_LCBRACKET REC_STATEMENT . TOK_RCBRACKET
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_IF         shift, and go to state 116
-    TOK_WHILE      shift, and go to state 117
-    TOK_FOR        shift, and go to state 118
-    TOK_RETURN     shift, and go to state 119
-    TOK_BREAK      shift, and go to state 120
-    TOK_CONT       shift, and go to state 121
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_LCBRACKET  shift, and go to state 74
-    TOK_RCBRACKET  shift, and go to state 165
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR       go to state 126
-    COND_EXPR         go to state 40
-    LOGIC_EXPR        go to state 41
-    BIT_EXPR          go to state 28
-    EQ_EXPR           go to state 29
-    REL_EXPR          go to state 30
-    SHIFT_EXPR        go to state 31
-    ADD_EXPR          go to state 32
-    MULT_EXPR         go to state 33
-    UNARY             go to state 34
-    FACTOR            go to state 42
-    STATEMENT         go to state 166
-    EXPR_STATEMENT    go to state 129
-    FUNC_STATEMENT    go to state 130
-    SELECT_STATEMENT  go to state 131
-    ITER_STATEMENT    go to state 132
-    JUMP_STATEMENT    go to state 133
+    TOK_SEMICOLON  shift, and go to state 185
 
 
-State 128
+State 143
 
-   75 REC_STATEMENT: STATEMENT .
+   83 REC_STATEMENT: REC_STATEMENT . STATEMENT
+   94 FUNC_STATEMENT: TOK_LCBRACKET REC_STATEMENT . TOK_RCBRACKET
 
-    $default  reduce using rule 75 (REC_STATEMENT)
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_IF         shift, and go to state 129
+    TOK_WHILE      shift, and go to state 130
+    TOK_FOR        shift, and go to state 131
+    TOK_SWITCH     shift, and go to state 132
+    TOK_CASE       shift, and go to state 133
+    TOK_DEFAULT    shift, and go to state 134
+    TOK_RETURN     shift, and go to state 135
+    TOK_BREAK      shift, and go to state 136
+    TOK_CONT       shift, and go to state 137
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_LCBRACKET  shift, and go to state 86
+    TOK_RCBRACKET  shift, and go to state 186
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR       go to state 142
+    COND_EXPR         go to state 48
+    LOGIC_EXPR        go to state 49
+    BIT_EXPR          go to state 34
+    EQ_EXPR           go to state 35
+    REL_EXPR          go to state 36
+    SHIFT_EXPR        go to state 37
+    ADD_EXPR          go to state 38
+    MULT_EXPR         go to state 39
+    UNARY             go to state 50
+    FACTOR            go to state 41
+    STATEMENT         go to state 187
+    SWITCH_STATEMENT  go to state 145
+    EXPR_STATEMENT    go to state 146
+    FUNC_STATEMENT    go to state 147
+    SELECT_STATEMENT  go to state 148
+    ITER_STATEMENT    go to state 149
+    JUMP_STATEMENT    go to state 150
 
 
-State 129
+State 144
 
-   77 STATEMENT: EXPR_STATEMENT .
+   82 REC_STATEMENT: STATEMENT .
 
-    $default  reduce using rule 77 (STATEMENT)
-
-
-State 130
-
-   81 STATEMENT: FUNC_STATEMENT .
-
-    $default  reduce using rule 81 (STATEMENT)
+    $default  reduce using rule 82 (REC_STATEMENT)
 
 
-State 131
+State 145
 
-   80 STATEMENT: SELECT_STATEMENT .
+   89 STATEMENT: SWITCH_STATEMENT .
 
-    $default  reduce using rule 80 (STATEMENT)
-
-
-State 132
-
-   78 STATEMENT: ITER_STATEMENT .
-
-    $default  reduce using rule 78 (STATEMENT)
+    $default  reduce using rule 89 (STATEMENT)
 
 
-State 133
+State 146
 
-   79 STATEMENT: JUMP_STATEMENT .
+   84 STATEMENT: EXPR_STATEMENT .
 
-    $default  reduce using rule 79 (STATEMENT)
+    $default  reduce using rule 84 (STATEMENT)
 
 
-State 134
+State 147
+
+   88 STATEMENT: FUNC_STATEMENT .
+
+    $default  reduce using rule 88 (STATEMENT)
+
+
+State 148
+
+   87 STATEMENT: SELECT_STATEMENT .
+
+    $default  reduce using rule 87 (STATEMENT)
+
+
+State 149
+
+   85 STATEMENT: ITER_STATEMENT .
+
+    $default  reduce using rule 85 (STATEMENT)
+
+
+State 150
+
+   86 STATEMENT: JUMP_STATEMENT .
+
+    $default  reduce using rule 86 (STATEMENT)
+
+
+State 151
 
     8 FUNCTION: VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET TOK_SEMICOLON .
 
     $default  reduce using rule 8 (FUNCTION)
 
 
-State 135
+State 152
 
     6 FUNCTION: VARTYPE_INT DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET FUNC_STATEMENT .
 
     $default  reduce using rule 6 (FUNCTION)
 
 
-State 136
-
-   18 FUNC_ARGS: FUNC_ARGS . TOK_COMMA FUNC_ARGS
-   18          | FUNC_ARGS TOK_COMMA FUNC_ARGS .
-
-    TOK_COMMA  shift, and go to state 79
-
-    TOK_COMMA  [reduce using rule 18 (FUNC_ARGS)]
-    $default   reduce using rule 18 (FUNC_ARGS)
-
-
-State 137
-
-   28 ASSIGN_EXPR: FACTOR TOK_SUBASSIGN ASSIGN_EXPR .
-
-    $default  reduce using rule 28 (ASSIGN_EXPR)
-
-
-State 138
-
-   29 ASSIGN_EXPR: FACTOR TOK_MULASSIGN ASSIGN_EXPR .
-
-    $default  reduce using rule 29 (ASSIGN_EXPR)
-
-
-State 139
-
-   30 ASSIGN_EXPR: FACTOR TOK_DIVASSIGN ASSIGN_EXPR .
-
-    $default  reduce using rule 30 (ASSIGN_EXPR)
-
-
-State 140
-
-   27 ASSIGN_EXPR: FACTOR TOK_ADDASSIGN ASSIGN_EXPR .
-
-    $default  reduce using rule 27 (ASSIGN_EXPR)
-
-
-State 141
-
-   26 ASSIGN_EXPR: FACTOR TOK_EQASSIGN ASSIGN_EXPR .
-
-    $default  reduce using rule 26 (ASSIGN_EXPR)
-
-
-State 142
-
-   31 ASSIGN_EXPR: FACTOR TOK_MODASSIGN ASSIGN_EXPR .
-
-    $default  reduce using rule 31 (ASSIGN_EXPR)
-
-
-State 143
-
-   32 ASSIGN_EXPR: FACTOR TOK_ANDASSIGN ASSIGN_EXPR .
-
-    $default  reduce using rule 32 (ASSIGN_EXPR)
-
-
-State 144
-
-   33 ASSIGN_EXPR: FACTOR TOK_ORASSIGN ASSIGN_EXPR .
-
-    $default  reduce using rule 33 (ASSIGN_EXPR)
-
-
-State 145
-
-   34 ASSIGN_EXPR: FACTOR TOK_XORASSIGN ASSIGN_EXPR .
-
-    $default  reduce using rule 34 (ASSIGN_EXPR)
-
-
-State 146
-
-   15 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET TOK_RCBRACKET TOK_SEMICOLON .
-
-    $default  reduce using rule 15 (DECLARATION)
-
-
-State 147
-
-   16 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET . TOK_SEMICOLON
-
-    TOK_SEMICOLON  shift, and go to state 167
-
-
-State 148
-
-   20 FUNC_CALL_ARGS: FUNC_CALL_ARGS TOK_COMMA . ARG_SINGLE
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ARG_SINGLE   go to state 168
-    ASSIGN_EXPR  go to state 93
-    COND_EXPR    go to state 40
-    LOGIC_EXPR   go to state 41
-    BIT_EXPR     go to state 28
-    EQ_EXPR      go to state 29
-    REL_EXPR     go to state 30
-    SHIFT_EXPR   go to state 31
-    ADD_EXPR     go to state 32
-    MULT_EXPR    go to state 33
-    UNARY        go to state 34
-    FACTOR       go to state 42
-
-
-State 149
-
-   73 FACTOR: TOK_VAR TOK_LBRACKET FUNC_CALL_ARGS TOK_RBRACKET .
-
-    $default  reduce using rule 73 (FACTOR)
-
-
-State 150
-
-   74 FACTOR: TOK_VAR TOK_LSQBRACKET ASSIGN_EXPR TOK_RSQBRACKET .
-
-    $default  reduce using rule 74 (FACTOR)
-
-
-State 151
-
-   87 SELECT_STATEMENT: TOK_IF TOK_LBRACKET . LOGIC_EXPR TOK_RBRACKET STATEMENT
-   88                 | TOK_IF TOK_LBRACKET . LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    LOGIC_EXPR  go to state 169
-    BIT_EXPR    go to state 28
-    EQ_EXPR     go to state 29
-    REL_EXPR    go to state 30
-    SHIFT_EXPR  go to state 31
-    ADD_EXPR    go to state 32
-    MULT_EXPR   go to state 33
-    UNARY       go to state 34
-    FACTOR      go to state 35
-
-
-State 152
-
-   89 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET . ASSIGN_EXPR TOK_RBRACKET STATEMENT
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR  go to state 170
-    COND_EXPR    go to state 40
-    LOGIC_EXPR   go to state 41
-    BIT_EXPR     go to state 28
-    EQ_EXPR      go to state 29
-    REL_EXPR     go to state 30
-    SHIFT_EXPR   go to state 31
-    ADD_EXPR     go to state 32
-    MULT_EXPR    go to state 33
-    UNARY        go to state 34
-    FACTOR       go to state 42
-
-
 State 153
 
-   90 ITER_STATEMENT: TOK_FOR TOK_LBRACKET . EXPR_STATEMENT EXPR_STATEMENT ASSIGN_EXPR TOK_RBRACKET STATEMENT
+   20 FUNC_ARGS: FUNC_ARGS TOK_COMMA ARG_SINGLE .
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR     go to state 126
-    COND_EXPR       go to state 40
-    LOGIC_EXPR      go to state 41
-    BIT_EXPR        go to state 28
-    EQ_EXPR         go to state 29
-    REL_EXPR        go to state 30
-    SHIFT_EXPR      go to state 31
-    ADD_EXPR        go to state 32
-    MULT_EXPR       go to state 33
-    UNARY           go to state 34
-    FACTOR          go to state 42
-    EXPR_STATEMENT  go to state 171
+    $default  reduce using rule 20 (FUNC_ARGS)
 
 
 State 154
 
-   93 JUMP_STATEMENT: TOK_RETURN TOK_SEMICOLON .
+   40 COND_EXPR: LOGIC_EXPR TOK_QMARK ASSIGN_EXPR . TOK_COLON COND_EXPR
 
-    $default  reduce using rule 93 (JUMP_STATEMENT)
+    TOK_COLON  shift, and go to state 188
 
 
 State 155
+
+   32 ASSIGN_EXPR: UNARY TOK_SUBASSIGN ASSIGN_EXPR .
+
+    $default  reduce using rule 32 (ASSIGN_EXPR)
+
+
+State 156
+
+   33 ASSIGN_EXPR: UNARY TOK_MULASSIGN ASSIGN_EXPR .
+
+    $default  reduce using rule 33 (ASSIGN_EXPR)
+
+
+State 157
+
+   34 ASSIGN_EXPR: UNARY TOK_DIVASSIGN ASSIGN_EXPR .
+
+    $default  reduce using rule 34 (ASSIGN_EXPR)
+
+
+State 158
+
+   31 ASSIGN_EXPR: UNARY TOK_ADDASSIGN ASSIGN_EXPR .
+
+    $default  reduce using rule 31 (ASSIGN_EXPR)
+
+
+State 159
+
+   30 ASSIGN_EXPR: UNARY TOK_EQASSIGN ASSIGN_EXPR .
+
+    $default  reduce using rule 30 (ASSIGN_EXPR)
+
+
+State 160
+
+   35 ASSIGN_EXPR: UNARY TOK_MODASSIGN ASSIGN_EXPR .
+
+    $default  reduce using rule 35 (ASSIGN_EXPR)
+
+
+State 161
+
+   36 ASSIGN_EXPR: UNARY TOK_ANDASSIGN ASSIGN_EXPR .
+
+    $default  reduce using rule 36 (ASSIGN_EXPR)
+
+
+State 162
+
+   37 ASSIGN_EXPR: UNARY TOK_ORASSIGN ASSIGN_EXPR .
+
+    $default  reduce using rule 37 (ASSIGN_EXPR)
+
+
+State 163
+
+   38 ASSIGN_EXPR: UNARY TOK_XORASSIGN ASSIGN_EXPR .
+
+    $default  reduce using rule 38 (ASSIGN_EXPR)
+
+
+State 164
+
+   16 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET TOK_RCBRACKET TOK_SEMICOLON .
+
+    $default  reduce using rule 16 (DECLARATION)
+
+
+State 165
+
+   17 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET . TOK_SEMICOLON
+
+    TOK_SEMICOLON  shift, and go to state 189
+
+
+State 166
+
+   22 FUNC_CALL_ARGS: FUNC_CALL_ARGS TOK_COMMA . ARG_SINGLE
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    VARTYPE_INT    shift, and go to state 43
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    SINGLE_DECL  go to state 44
+    ARG_SINGLE   go to state 190
+    ASSIGN_EXPR  go to state 47
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
+
+
+State 167
+
+   80 FACTOR: TOK_VAR TOK_LBRACKET FUNC_CALL_ARGS TOK_RBRACKET .
+
+    $default  reduce using rule 80 (FACTOR)
+
+
+State 168
+
+   81 FACTOR: TOK_VAR TOK_LSQBRACKET ASSIGN_EXPR TOK_RSQBRACKET .
+
+    $default  reduce using rule 81 (FACTOR)
+
+
+State 169
+
+   97 SELECT_STATEMENT: TOK_IF TOK_LBRACKET . LOGIC_EXPR TOK_RBRACKET STATEMENT
+   98                 | TOK_IF TOK_LBRACKET . LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    LOGIC_EXPR  go to state 191
+    BIT_EXPR    go to state 34
+    EQ_EXPR     go to state 35
+    REL_EXPR    go to state 36
+    SHIFT_EXPR  go to state 37
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
+
+
+State 170
+
+  100 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET . ASSIGN_EXPR TOK_RBRACKET STATEMENT
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR  go to state 192
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
+
+
+State 171
+
+  101 ITER_STATEMENT: TOK_FOR TOK_LBRACKET . EXPR_STATEMENT EXPR_STATEMENT ASSIGN_EXPR TOK_RBRACKET STATEMENT
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR     go to state 142
+    COND_EXPR       go to state 48
+    LOGIC_EXPR      go to state 49
+    BIT_EXPR        go to state 34
+    EQ_EXPR         go to state 35
+    REL_EXPR        go to state 36
+    SHIFT_EXPR      go to state 37
+    ADD_EXPR        go to state 38
+    MULT_EXPR       go to state 39
+    UNARY           go to state 50
+    FACTOR          go to state 41
+    EXPR_STATEMENT  go to state 193
+
+
+State 172
+
+   99 SELECT_STATEMENT: TOK_SWITCH TOK_LBRACKET . LOGIC_EXPR TOK_RBRACKET STATEMENT
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    LOGIC_EXPR  go to state 194
+    BIT_EXPR    go to state 34
+    EQ_EXPR     go to state 35
+    REL_EXPR    go to state 36
+    SHIFT_EXPR  go to state 37
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
+
+
+State 173
+
+   90 SWITCH_STATEMENT: TOK_CASE COND_EXPR . TOK_COLON STATEMENT
+
+    TOK_COLON  shift, and go to state 195
+
+
+State 174
+
+   91 SWITCH_STATEMENT: TOK_DEFAULT TOK_COLON . STATEMENT
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_IF         shift, and go to state 129
+    TOK_WHILE      shift, and go to state 130
+    TOK_FOR        shift, and go to state 131
+    TOK_SWITCH     shift, and go to state 132
+    TOK_CASE       shift, and go to state 133
+    TOK_DEFAULT    shift, and go to state 134
+    TOK_RETURN     shift, and go to state 135
+    TOK_BREAK      shift, and go to state 136
+    TOK_CONT       shift, and go to state 137
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_LCBRACKET  shift, and go to state 86
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR       go to state 142
+    COND_EXPR         go to state 48
+    LOGIC_EXPR        go to state 49
+    BIT_EXPR          go to state 34
+    EQ_EXPR           go to state 35
+    REL_EXPR          go to state 36
+    SHIFT_EXPR        go to state 37
+    ADD_EXPR          go to state 38
+    MULT_EXPR         go to state 39
+    UNARY             go to state 50
+    FACTOR            go to state 41
+    STATEMENT         go to state 196
+    SWITCH_STATEMENT  go to state 145
+    EXPR_STATEMENT    go to state 146
+    FUNC_STATEMENT    go to state 147
+    SELECT_STATEMENT  go to state 148
+    ITER_STATEMENT    go to state 149
+    JUMP_STATEMENT    go to state 150
+
+
+State 175
+
+  104 JUMP_STATEMENT: TOK_RETURN TOK_SEMICOLON .
+
+    $default  reduce using rule 104 (JUMP_STATEMENT)
+
+
+State 176
 
     6 FUNCTION: VARTYPE_INT . DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET FUNC_STATEMENT
     7         | VARTYPE_INT . DECLARATOR TOK_LBRACKET TOK_RBRACKET FUNC_STATEMENT
     8         | VARTYPE_INT . DECLARATOR TOK_LBRACKET FUNC_ARGS TOK_RBRACKET TOK_SEMICOLON
     9         | VARTYPE_INT . DECLARATOR TOK_LBRACKET TOK_RBRACKET TOK_SEMICOLON
 
-    TOK_VAR  shift, and go to state 76
+    TOK_VAR  shift, and go to state 88
 
-    DECLARATOR  go to state 172
-
-
-State 156
-
-   94 JUMP_STATEMENT: TOK_RETURN FUNCTION . TOK_SEMICOLON
-
-    TOK_SEMICOLON  shift, and go to state 173
+    DECLARATOR  go to state 197
 
 
-State 157
+State 177
 
-   37 LOGIC_EXPR: LOGIC_EXPR . TOK_LOGIC_AND BIT_EXPR
-   38           | LOGIC_EXPR . TOK_LOGIC_OR BIT_EXPR
-   95 JUMP_STATEMENT: TOK_RETURN LOGIC_EXPR . TOK_SEMICOLON
+  105 JUMP_STATEMENT: TOK_RETURN FUNCTION . TOK_SEMICOLON
 
-    TOK_LOGIC_AND  shift, and go to state 52
-    TOK_LOGIC_OR   shift, and go to state 53
-    TOK_SEMICOLON  shift, and go to state 174
+    TOK_SEMICOLON  shift, and go to state 198
 
 
-State 158
+State 178
 
-   91 JUMP_STATEMENT: TOK_BREAK TOK_SEMICOLON .
+   42 LOGIC_EXPR: LOGIC_EXPR . TOK_LOGIC_AND BIT_EXPR
+   43           | LOGIC_EXPR . TOK_LOGIC_OR BIT_EXPR
+  106 JUMP_STATEMENT: TOK_RETURN LOGIC_EXPR . TOK_SEMICOLON
 
-    $default  reduce using rule 91 (JUMP_STATEMENT)
-
-
-State 159
-
-   92 JUMP_STATEMENT: TOK_CONT TOK_SEMICOLON .
-
-    $default  reduce using rule 92 (JUMP_STATEMENT)
+    TOK_LOGIC_AND  shift, and go to state 64
+    TOK_LOGIC_OR   shift, and go to state 65
+    TOK_SEMICOLON  shift, and go to state 199
 
 
-State 160
+State 179
+
+  102 JUMP_STATEMENT: TOK_BREAK TOK_SEMICOLON .
+
+    $default  reduce using rule 102 (JUMP_STATEMENT)
+
+
+State 180
+
+  103 JUMP_STATEMENT: TOK_CONT TOK_SEMICOLON .
+
+    $default  reduce using rule 103 (JUMP_STATEMENT)
+
+
+State 181
 
    12 DECLARATION: VARTYPE_INT DECLARATOR . TOK_SEMICOLON
-   14            | VARTYPE_INT DECLARATOR . TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON
+   15            | VARTYPE_INT DECLARATOR . TOK_EQASSIGN ASSIGN_EXPR TOK_SEMICOLON
 
-    TOK_SEMICOLON  shift, and go to state 14
-    TOK_EQASSIGN   shift, and go to state 15
-
-
-State 161
-
-   85 FUNC_STATEMENT: TOK_LCBRACKET REC_DECLARATION TOK_RCBRACKET .
-
-    $default  reduce using rule 85 (FUNC_STATEMENT)
+    TOK_SEMICOLON  shift, and go to state 17
+    TOK_EQASSIGN   shift, and go to state 18
 
 
-State 162
+State 182
+
+   95 FUNC_STATEMENT: TOK_LCBRACKET REC_DECLARATION TOK_RCBRACKET .
+
+    $default  reduce using rule 95 (FUNC_STATEMENT)
+
+
+State 183
 
    11 REC_DECLARATION: REC_DECLARATION DECLARATION .
 
     $default  reduce using rule 11 (REC_DECLARATION)
 
 
-State 163
+State 184
 
-   76 REC_STATEMENT: REC_STATEMENT . STATEMENT
-   86 FUNC_STATEMENT: TOK_LCBRACKET REC_DECLARATION REC_STATEMENT . TOK_RCBRACKET
+   83 REC_STATEMENT: REC_STATEMENT . STATEMENT
+   96 FUNC_STATEMENT: TOK_LCBRACKET REC_DECLARATION REC_STATEMENT . TOK_RCBRACKET
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_IF         shift, and go to state 116
-    TOK_WHILE      shift, and go to state 117
-    TOK_FOR        shift, and go to state 118
-    TOK_RETURN     shift, and go to state 119
-    TOK_BREAK      shift, and go to state 120
-    TOK_CONT       shift, and go to state 121
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_LCBRACKET  shift, and go to state 74
-    TOK_RCBRACKET  shift, and go to state 175
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_IF         shift, and go to state 129
+    TOK_WHILE      shift, and go to state 130
+    TOK_FOR        shift, and go to state 131
+    TOK_SWITCH     shift, and go to state 132
+    TOK_CASE       shift, and go to state 133
+    TOK_DEFAULT    shift, and go to state 134
+    TOK_RETURN     shift, and go to state 135
+    TOK_BREAK      shift, and go to state 136
+    TOK_CONT       shift, and go to state 137
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_LCBRACKET  shift, and go to state 86
+    TOK_RCBRACKET  shift, and go to state 200
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    ASSIGN_EXPR       go to state 126
-    COND_EXPR         go to state 40
-    LOGIC_EXPR        go to state 41
-    BIT_EXPR          go to state 28
-    EQ_EXPR           go to state 29
-    REL_EXPR          go to state 30
-    SHIFT_EXPR        go to state 31
-    ADD_EXPR          go to state 32
-    MULT_EXPR         go to state 33
-    UNARY             go to state 34
-    FACTOR            go to state 42
-    STATEMENT         go to state 166
-    EXPR_STATEMENT    go to state 129
-    FUNC_STATEMENT    go to state 130
-    SELECT_STATEMENT  go to state 131
-    ITER_STATEMENT    go to state 132
-    JUMP_STATEMENT    go to state 133
-
-
-State 164
-
-   82 EXPR_STATEMENT: ASSIGN_EXPR TOK_SEMICOLON .
-
-    $default  reduce using rule 82 (EXPR_STATEMENT)
-
-
-State 165
-
-   84 FUNC_STATEMENT: TOK_LCBRACKET REC_STATEMENT TOK_RCBRACKET .
-
-    $default  reduce using rule 84 (FUNC_STATEMENT)
+    ASSIGN_EXPR       go to state 142
+    COND_EXPR         go to state 48
+    LOGIC_EXPR        go to state 49
+    BIT_EXPR          go to state 34
+    EQ_EXPR           go to state 35
+    REL_EXPR          go to state 36
+    SHIFT_EXPR        go to state 37
+    ADD_EXPR          go to state 38
+    MULT_EXPR         go to state 39
+    UNARY             go to state 50
+    FACTOR            go to state 41
+    STATEMENT         go to state 187
+    SWITCH_STATEMENT  go to state 145
+    EXPR_STATEMENT    go to state 146
+    FUNC_STATEMENT    go to state 147
+    SELECT_STATEMENT  go to state 148
+    ITER_STATEMENT    go to state 149
+    JUMP_STATEMENT    go to state 150
 
 
-State 166
+State 185
 
-   76 REC_STATEMENT: REC_STATEMENT STATEMENT .
+   92 EXPR_STATEMENT: ASSIGN_EXPR TOK_SEMICOLON .
 
-    $default  reduce using rule 76 (REC_STATEMENT)
-
-
-State 167
-
-   16 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON .
-
-    $default  reduce using rule 16 (DECLARATION)
+    $default  reduce using rule 92 (EXPR_STATEMENT)
 
 
-State 168
+State 186
 
-   20 FUNC_CALL_ARGS: FUNC_CALL_ARGS TOK_COMMA ARG_SINGLE .
+   94 FUNC_STATEMENT: TOK_LCBRACKET REC_STATEMENT TOK_RCBRACKET .
 
-    $default  reduce using rule 20 (FUNC_CALL_ARGS)
-
-
-State 169
-
-   37 LOGIC_EXPR: LOGIC_EXPR . TOK_LOGIC_AND BIT_EXPR
-   38           | LOGIC_EXPR . TOK_LOGIC_OR BIT_EXPR
-   87 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR . TOK_RBRACKET STATEMENT
-   88                 | TOK_IF TOK_LBRACKET LOGIC_EXPR . TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
-
-    TOK_LOGIC_AND  shift, and go to state 52
-    TOK_LOGIC_OR   shift, and go to state 53
-    TOK_RBRACKET   shift, and go to state 176
+    $default  reduce using rule 94 (FUNC_STATEMENT)
 
 
-State 170
+State 187
 
-   89 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET ASSIGN_EXPR . TOK_RBRACKET STATEMENT
+   83 REC_STATEMENT: REC_STATEMENT STATEMENT .
 
-    TOK_RBRACKET  shift, and go to state 177
-
-
-State 171
-
-   90 ITER_STATEMENT: TOK_FOR TOK_LBRACKET EXPR_STATEMENT . EXPR_STATEMENT ASSIGN_EXPR TOK_RBRACKET STATEMENT
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR     go to state 126
-    COND_EXPR       go to state 40
-    LOGIC_EXPR      go to state 41
-    BIT_EXPR        go to state 28
-    EQ_EXPR         go to state 29
-    REL_EXPR        go to state 30
-    SHIFT_EXPR      go to state 31
-    ADD_EXPR        go to state 32
-    MULT_EXPR       go to state 33
-    UNARY           go to state 34
-    FACTOR          go to state 42
-    EXPR_STATEMENT  go to state 178
+    $default  reduce using rule 83 (REC_STATEMENT)
 
 
-State 172
+State 188
+
+   40 COND_EXPR: LOGIC_EXPR TOK_QMARK ASSIGN_EXPR TOK_COLON . COND_EXPR
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    COND_EXPR   go to state 201
+    LOGIC_EXPR  go to state 49
+    BIT_EXPR    go to state 34
+    EQ_EXPR     go to state 35
+    REL_EXPR    go to state 36
+    SHIFT_EXPR  go to state 37
+    ADD_EXPR    go to state 38
+    MULT_EXPR   go to state 39
+    UNARY       go to state 40
+    FACTOR      go to state 41
+
+
+State 189
+
+   17 DECLARATION: VARTYPE_INT ARRAY_DECLARATOR TOK_EQASSIGN TOK_LCBRACKET FUNC_CALL_ARGS TOK_RCBRACKET TOK_SEMICOLON .
+
+    $default  reduce using rule 17 (DECLARATION)
+
+
+State 190
+
+   22 FUNC_CALL_ARGS: FUNC_CALL_ARGS TOK_COMMA ARG_SINGLE .
+
+    $default  reduce using rule 22 (FUNC_CALL_ARGS)
+
+
+State 191
+
+   42 LOGIC_EXPR: LOGIC_EXPR . TOK_LOGIC_AND BIT_EXPR
+   43           | LOGIC_EXPR . TOK_LOGIC_OR BIT_EXPR
+   97 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR . TOK_RBRACKET STATEMENT
+   98                 | TOK_IF TOK_LBRACKET LOGIC_EXPR . TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT
+
+    TOK_LOGIC_AND  shift, and go to state 64
+    TOK_LOGIC_OR   shift, and go to state 65
+    TOK_RBRACKET   shift, and go to state 202
+
+
+State 192
+
+  100 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET ASSIGN_EXPR . TOK_RBRACKET STATEMENT
+
+    TOK_RBRACKET  shift, and go to state 203
+
+
+State 193
+
+  101 ITER_STATEMENT: TOK_FOR TOK_LBRACKET EXPR_STATEMENT . EXPR_STATEMENT ASSIGN_EXPR TOK_RBRACKET STATEMENT
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR     go to state 142
+    COND_EXPR       go to state 48
+    LOGIC_EXPR      go to state 49
+    BIT_EXPR        go to state 34
+    EQ_EXPR         go to state 35
+    REL_EXPR        go to state 36
+    SHIFT_EXPR      go to state 37
+    ADD_EXPR        go to state 38
+    MULT_EXPR       go to state 39
+    UNARY           go to state 50
+    FACTOR          go to state 41
+    EXPR_STATEMENT  go to state 204
+
+
+State 194
+
+   42 LOGIC_EXPR: LOGIC_EXPR . TOK_LOGIC_AND BIT_EXPR
+   43           | LOGIC_EXPR . TOK_LOGIC_OR BIT_EXPR
+   99 SELECT_STATEMENT: TOK_SWITCH TOK_LBRACKET LOGIC_EXPR . TOK_RBRACKET STATEMENT
+
+    TOK_LOGIC_AND  shift, and go to state 64
+    TOK_LOGIC_OR   shift, and go to state 65
+    TOK_RBRACKET   shift, and go to state 205
+
+
+State 195
+
+   90 SWITCH_STATEMENT: TOK_CASE COND_EXPR TOK_COLON . STATEMENT
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_IF         shift, and go to state 129
+    TOK_WHILE      shift, and go to state 130
+    TOK_FOR        shift, and go to state 131
+    TOK_SWITCH     shift, and go to state 132
+    TOK_CASE       shift, and go to state 133
+    TOK_DEFAULT    shift, and go to state 134
+    TOK_RETURN     shift, and go to state 135
+    TOK_BREAK      shift, and go to state 136
+    TOK_CONT       shift, and go to state 137
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_LCBRACKET  shift, and go to state 86
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR       go to state 142
+    COND_EXPR         go to state 48
+    LOGIC_EXPR        go to state 49
+    BIT_EXPR          go to state 34
+    EQ_EXPR           go to state 35
+    REL_EXPR          go to state 36
+    SHIFT_EXPR        go to state 37
+    ADD_EXPR          go to state 38
+    MULT_EXPR         go to state 39
+    UNARY             go to state 50
+    FACTOR            go to state 41
+    STATEMENT         go to state 206
+    SWITCH_STATEMENT  go to state 145
+    EXPR_STATEMENT    go to state 146
+    FUNC_STATEMENT    go to state 147
+    SELECT_STATEMENT  go to state 148
+    ITER_STATEMENT    go to state 149
+    JUMP_STATEMENT    go to state 150
+
+
+State 196
+
+   91 SWITCH_STATEMENT: TOK_DEFAULT TOK_COLON STATEMENT .
+
+    $default  reduce using rule 91 (SWITCH_STATEMENT)
+
+
+State 197
 
     6 FUNCTION: VARTYPE_INT DECLARATOR . TOK_LBRACKET FUNC_ARGS TOK_RBRACKET FUNC_STATEMENT
     7         | VARTYPE_INT DECLARATOR . TOK_LBRACKET TOK_RBRACKET FUNC_STATEMENT
     8         | VARTYPE_INT DECLARATOR . TOK_LBRACKET FUNC_ARGS TOK_RBRACKET TOK_SEMICOLON
     9         | VARTYPE_INT DECLARATOR . TOK_LBRACKET TOK_RBRACKET TOK_SEMICOLON
 
-    TOK_LBRACKET  shift, and go to state 13
+    TOK_LBRACKET  shift, and go to state 16
 
 
-State 173
+State 198
 
-   94 JUMP_STATEMENT: TOK_RETURN FUNCTION TOK_SEMICOLON .
+  105 JUMP_STATEMENT: TOK_RETURN FUNCTION TOK_SEMICOLON .
 
-    $default  reduce using rule 94 (JUMP_STATEMENT)
-
-
-State 174
-
-   95 JUMP_STATEMENT: TOK_RETURN LOGIC_EXPR TOK_SEMICOLON .
-
-    $default  reduce using rule 95 (JUMP_STATEMENT)
+    $default  reduce using rule 105 (JUMP_STATEMENT)
 
 
-State 175
+State 199
 
-   86 FUNC_STATEMENT: TOK_LCBRACKET REC_DECLARATION REC_STATEMENT TOK_RCBRACKET .
+  106 JUMP_STATEMENT: TOK_RETURN LOGIC_EXPR TOK_SEMICOLON .
 
-    $default  reduce using rule 86 (FUNC_STATEMENT)
-
-
-State 176
-
-   87 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET . STATEMENT
-   88                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET . STATEMENT TOK_ELSE STATEMENT
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_IF         shift, and go to state 116
-    TOK_WHILE      shift, and go to state 117
-    TOK_FOR        shift, and go to state 118
-    TOK_RETURN     shift, and go to state 119
-    TOK_BREAK      shift, and go to state 120
-    TOK_CONT       shift, and go to state 121
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_LCBRACKET  shift, and go to state 74
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR       go to state 126
-    COND_EXPR         go to state 40
-    LOGIC_EXPR        go to state 41
-    BIT_EXPR          go to state 28
-    EQ_EXPR           go to state 29
-    REL_EXPR          go to state 30
-    SHIFT_EXPR        go to state 31
-    ADD_EXPR          go to state 32
-    MULT_EXPR         go to state 33
-    UNARY             go to state 34
-    FACTOR            go to state 42
-    STATEMENT         go to state 179
-    EXPR_STATEMENT    go to state 129
-    FUNC_STATEMENT    go to state 130
-    SELECT_STATEMENT  go to state 131
-    ITER_STATEMENT    go to state 132
-    JUMP_STATEMENT    go to state 133
+    $default  reduce using rule 106 (JUMP_STATEMENT)
 
 
-State 177
+State 200
 
-   89 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET . STATEMENT
+   96 FUNC_STATEMENT: TOK_LCBRACKET REC_DECLARATION REC_STATEMENT TOK_RCBRACKET .
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_IF         shift, and go to state 116
-    TOK_WHILE      shift, and go to state 117
-    TOK_FOR        shift, and go to state 118
-    TOK_RETURN     shift, and go to state 119
-    TOK_BREAK      shift, and go to state 120
-    TOK_CONT       shift, and go to state 121
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_LCBRACKET  shift, and go to state 74
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR       go to state 126
-    COND_EXPR         go to state 40
-    LOGIC_EXPR        go to state 41
-    BIT_EXPR          go to state 28
-    EQ_EXPR           go to state 29
-    REL_EXPR          go to state 30
-    SHIFT_EXPR        go to state 31
-    ADD_EXPR          go to state 32
-    MULT_EXPR         go to state 33
-    UNARY             go to state 34
-    FACTOR            go to state 42
-    STATEMENT         go to state 180
-    EXPR_STATEMENT    go to state 129
-    FUNC_STATEMENT    go to state 130
-    SELECT_STATEMENT  go to state 131
-    ITER_STATEMENT    go to state 132
-    JUMP_STATEMENT    go to state 133
+    $default  reduce using rule 96 (FUNC_STATEMENT)
 
 
-State 178
+State 201
 
-   90 ITER_STATEMENT: TOK_FOR TOK_LBRACKET EXPR_STATEMENT EXPR_STATEMENT . ASSIGN_EXPR TOK_RBRACKET STATEMENT
+   40 COND_EXPR: LOGIC_EXPR TOK_QMARK ASSIGN_EXPR TOK_COLON COND_EXPR .
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR  go to state 181
-    COND_EXPR    go to state 40
-    LOGIC_EXPR   go to state 41
-    BIT_EXPR     go to state 28
-    EQ_EXPR      go to state 29
-    REL_EXPR     go to state 30
-    SHIFT_EXPR   go to state 31
-    ADD_EXPR     go to state 32
-    MULT_EXPR    go to state 33
-    UNARY        go to state 34
-    FACTOR       go to state 42
+    $default  reduce using rule 40 (COND_EXPR)
 
 
-State 179
+State 202
 
-   87 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT .
-   88                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT . TOK_ELSE STATEMENT
+   97 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET . STATEMENT
+   98                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET . STATEMENT TOK_ELSE STATEMENT
 
-    TOK_ELSE  shift, and go to state 182
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_IF         shift, and go to state 129
+    TOK_WHILE      shift, and go to state 130
+    TOK_FOR        shift, and go to state 131
+    TOK_SWITCH     shift, and go to state 132
+    TOK_CASE       shift, and go to state 133
+    TOK_DEFAULT    shift, and go to state 134
+    TOK_RETURN     shift, and go to state 135
+    TOK_BREAK      shift, and go to state 136
+    TOK_CONT       shift, and go to state 137
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_LCBRACKET  shift, and go to state 86
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    TOK_ELSE  [reduce using rule 87 (SELECT_STATEMENT)]
-    $default  reduce using rule 87 (SELECT_STATEMENT)
-
-
-State 180
-
-   89 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET STATEMENT .
-
-    $default  reduce using rule 89 (ITER_STATEMENT)
-
-
-State 181
-
-   90 ITER_STATEMENT: TOK_FOR TOK_LBRACKET EXPR_STATEMENT EXPR_STATEMENT ASSIGN_EXPR . TOK_RBRACKET STATEMENT
-
-    TOK_RBRACKET  shift, and go to state 183
-
-
-State 182
-
-   88 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE . STATEMENT
-
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_IF         shift, and go to state 116
-    TOK_WHILE      shift, and go to state 117
-    TOK_FOR        shift, and go to state 118
-    TOK_RETURN     shift, and go to state 119
-    TOK_BREAK      shift, and go to state 120
-    TOK_CONT       shift, and go to state 121
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_LCBRACKET  shift, and go to state 74
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
-
-    ASSIGN_EXPR       go to state 126
-    COND_EXPR         go to state 40
-    LOGIC_EXPR        go to state 41
-    BIT_EXPR          go to state 28
-    EQ_EXPR           go to state 29
-    REL_EXPR          go to state 30
-    SHIFT_EXPR        go to state 31
-    ADD_EXPR          go to state 32
-    MULT_EXPR         go to state 33
-    UNARY             go to state 34
-    FACTOR            go to state 42
-    STATEMENT         go to state 184
-    EXPR_STATEMENT    go to state 129
-    FUNC_STATEMENT    go to state 130
-    SELECT_STATEMENT  go to state 131
-    ITER_STATEMENT    go to state 132
-    JUMP_STATEMENT    go to state 133
+    ASSIGN_EXPR       go to state 142
+    COND_EXPR         go to state 48
+    LOGIC_EXPR        go to state 49
+    BIT_EXPR          go to state 34
+    EQ_EXPR           go to state 35
+    REL_EXPR          go to state 36
+    SHIFT_EXPR        go to state 37
+    ADD_EXPR          go to state 38
+    MULT_EXPR         go to state 39
+    UNARY             go to state 50
+    FACTOR            go to state 41
+    STATEMENT         go to state 207
+    SWITCH_STATEMENT  go to state 145
+    EXPR_STATEMENT    go to state 146
+    FUNC_STATEMENT    go to state 147
+    SELECT_STATEMENT  go to state 148
+    ITER_STATEMENT    go to state 149
+    JUMP_STATEMENT    go to state 150
 
 
-State 183
+State 203
 
-   90 ITER_STATEMENT: TOK_FOR TOK_LBRACKET EXPR_STATEMENT EXPR_STATEMENT ASSIGN_EXPR TOK_RBRACKET . STATEMENT
+  100 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET . STATEMENT
 
-    TOK_LOGIC_NOT  shift, and go to state 18
-    TOK_BIT_NOT    shift, and go to state 19
-    TOK_IF         shift, and go to state 116
-    TOK_WHILE      shift, and go to state 117
-    TOK_FOR        shift, and go to state 118
-    TOK_RETURN     shift, and go to state 119
-    TOK_BREAK      shift, and go to state 120
-    TOK_CONT       shift, and go to state 121
-    TOK_MINUS      shift, and go to state 20
-    TOK_LBRACKET   shift, and go to state 21
-    TOK_LCBRACKET  shift, and go to state 74
-    TOK_N          shift, and go to state 23
-    TOK_VAR        shift, and go to state 24
-    TOK_INCR       shift, and go to state 25
-    TOK_DECR       shift, and go to state 26
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_IF         shift, and go to state 129
+    TOK_WHILE      shift, and go to state 130
+    TOK_FOR        shift, and go to state 131
+    TOK_SWITCH     shift, and go to state 132
+    TOK_CASE       shift, and go to state 133
+    TOK_DEFAULT    shift, and go to state 134
+    TOK_RETURN     shift, and go to state 135
+    TOK_BREAK      shift, and go to state 136
+    TOK_CONT       shift, and go to state 137
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_LCBRACKET  shift, and go to state 86
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
 
-    ASSIGN_EXPR       go to state 126
-    COND_EXPR         go to state 40
-    LOGIC_EXPR        go to state 41
-    BIT_EXPR          go to state 28
-    EQ_EXPR           go to state 29
-    REL_EXPR          go to state 30
-    SHIFT_EXPR        go to state 31
-    ADD_EXPR          go to state 32
-    MULT_EXPR         go to state 33
-    UNARY             go to state 34
-    FACTOR            go to state 42
-    STATEMENT         go to state 185
-    EXPR_STATEMENT    go to state 129
-    FUNC_STATEMENT    go to state 130
-    SELECT_STATEMENT  go to state 131
-    ITER_STATEMENT    go to state 132
-    JUMP_STATEMENT    go to state 133
+    ASSIGN_EXPR       go to state 142
+    COND_EXPR         go to state 48
+    LOGIC_EXPR        go to state 49
+    BIT_EXPR          go to state 34
+    EQ_EXPR           go to state 35
+    REL_EXPR          go to state 36
+    SHIFT_EXPR        go to state 37
+    ADD_EXPR          go to state 38
+    MULT_EXPR         go to state 39
+    UNARY             go to state 50
+    FACTOR            go to state 41
+    STATEMENT         go to state 208
+    SWITCH_STATEMENT  go to state 145
+    EXPR_STATEMENT    go to state 146
+    FUNC_STATEMENT    go to state 147
+    SELECT_STATEMENT  go to state 148
+    ITER_STATEMENT    go to state 149
+    JUMP_STATEMENT    go to state 150
 
 
-State 184
+State 204
 
-   88 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT .
+  101 ITER_STATEMENT: TOK_FOR TOK_LBRACKET EXPR_STATEMENT EXPR_STATEMENT . ASSIGN_EXPR TOK_RBRACKET STATEMENT
 
-    $default  reduce using rule 88 (SELECT_STATEMENT)
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR  go to state 209
+    COND_EXPR    go to state 48
+    LOGIC_EXPR   go to state 49
+    BIT_EXPR     go to state 34
+    EQ_EXPR      go to state 35
+    REL_EXPR     go to state 36
+    SHIFT_EXPR   go to state 37
+    ADD_EXPR     go to state 38
+    MULT_EXPR    go to state 39
+    UNARY        go to state 50
+    FACTOR       go to state 41
 
 
-State 185
+State 205
 
-   90 ITER_STATEMENT: TOK_FOR TOK_LBRACKET EXPR_STATEMENT EXPR_STATEMENT ASSIGN_EXPR TOK_RBRACKET STATEMENT .
+   99 SELECT_STATEMENT: TOK_SWITCH TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET . STATEMENT
 
-    $default  reduce using rule 90 (ITER_STATEMENT)
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_IF         shift, and go to state 129
+    TOK_WHILE      shift, and go to state 130
+    TOK_FOR        shift, and go to state 131
+    TOK_SWITCH     shift, and go to state 132
+    TOK_CASE       shift, and go to state 133
+    TOK_DEFAULT    shift, and go to state 134
+    TOK_RETURN     shift, and go to state 135
+    TOK_BREAK      shift, and go to state 136
+    TOK_CONT       shift, and go to state 137
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_LCBRACKET  shift, and go to state 86
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR       go to state 142
+    COND_EXPR         go to state 48
+    LOGIC_EXPR        go to state 49
+    BIT_EXPR          go to state 34
+    EQ_EXPR           go to state 35
+    REL_EXPR          go to state 36
+    SHIFT_EXPR        go to state 37
+    ADD_EXPR          go to state 38
+    MULT_EXPR         go to state 39
+    UNARY             go to state 50
+    FACTOR            go to state 41
+    STATEMENT         go to state 210
+    SWITCH_STATEMENT  go to state 145
+    EXPR_STATEMENT    go to state 146
+    FUNC_STATEMENT    go to state 147
+    SELECT_STATEMENT  go to state 148
+    ITER_STATEMENT    go to state 149
+    JUMP_STATEMENT    go to state 150
+
+
+State 206
+
+   90 SWITCH_STATEMENT: TOK_CASE COND_EXPR TOK_COLON STATEMENT .
+
+    $default  reduce using rule 90 (SWITCH_STATEMENT)
+
+
+State 207
+
+   97 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT .
+   98                 | TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT . TOK_ELSE STATEMENT
+
+    TOK_ELSE  shift, and go to state 211
+
+    TOK_ELSE  [reduce using rule 97 (SELECT_STATEMENT)]
+    $default  reduce using rule 97 (SELECT_STATEMENT)
+
+
+State 208
+
+  100 ITER_STATEMENT: TOK_WHILE TOK_LBRACKET ASSIGN_EXPR TOK_RBRACKET STATEMENT .
+
+    $default  reduce using rule 100 (ITER_STATEMENT)
+
+
+State 209
+
+  101 ITER_STATEMENT: TOK_FOR TOK_LBRACKET EXPR_STATEMENT EXPR_STATEMENT ASSIGN_EXPR . TOK_RBRACKET STATEMENT
+
+    TOK_RBRACKET  shift, and go to state 212
+
+
+State 210
+
+   99 SELECT_STATEMENT: TOK_SWITCH TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT .
+
+    $default  reduce using rule 99 (SELECT_STATEMENT)
+
+
+State 211
+
+   98 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE . STATEMENT
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_IF         shift, and go to state 129
+    TOK_WHILE      shift, and go to state 130
+    TOK_FOR        shift, and go to state 131
+    TOK_SWITCH     shift, and go to state 132
+    TOK_CASE       shift, and go to state 133
+    TOK_DEFAULT    shift, and go to state 134
+    TOK_RETURN     shift, and go to state 135
+    TOK_BREAK      shift, and go to state 136
+    TOK_CONT       shift, and go to state 137
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_LCBRACKET  shift, and go to state 86
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR       go to state 142
+    COND_EXPR         go to state 48
+    LOGIC_EXPR        go to state 49
+    BIT_EXPR          go to state 34
+    EQ_EXPR           go to state 35
+    REL_EXPR          go to state 36
+    SHIFT_EXPR        go to state 37
+    ADD_EXPR          go to state 38
+    MULT_EXPR         go to state 39
+    UNARY             go to state 50
+    FACTOR            go to state 41
+    STATEMENT         go to state 213
+    SWITCH_STATEMENT  go to state 145
+    EXPR_STATEMENT    go to state 146
+    FUNC_STATEMENT    go to state 147
+    SELECT_STATEMENT  go to state 148
+    ITER_STATEMENT    go to state 149
+    JUMP_STATEMENT    go to state 150
+
+
+State 212
+
+  101 ITER_STATEMENT: TOK_FOR TOK_LBRACKET EXPR_STATEMENT EXPR_STATEMENT ASSIGN_EXPR TOK_RBRACKET . STATEMENT
+
+    TOK_BIT_AND    shift, and go to state 22
+    TOK_LOGIC_NOT  shift, and go to state 23
+    TOK_BIT_NOT    shift, and go to state 24
+    TOK_IF         shift, and go to state 129
+    TOK_WHILE      shift, and go to state 130
+    TOK_FOR        shift, and go to state 131
+    TOK_SWITCH     shift, and go to state 132
+    TOK_CASE       shift, and go to state 133
+    TOK_DEFAULT    shift, and go to state 134
+    TOK_RETURN     shift, and go to state 135
+    TOK_BREAK      shift, and go to state 136
+    TOK_CONT       shift, and go to state 137
+    TOK_MUL        shift, and go to state 25
+    TOK_MINUS      shift, and go to state 26
+    TOK_LBRACKET   shift, and go to state 27
+    TOK_LCBRACKET  shift, and go to state 86
+    TOK_N          shift, and go to state 29
+    TOK_VAR        shift, and go to state 30
+    TOK_INCR       shift, and go to state 31
+    TOK_DECR       shift, and go to state 32
+
+    ASSIGN_EXPR       go to state 142
+    COND_EXPR         go to state 48
+    LOGIC_EXPR        go to state 49
+    BIT_EXPR          go to state 34
+    EQ_EXPR           go to state 35
+    REL_EXPR          go to state 36
+    SHIFT_EXPR        go to state 37
+    ADD_EXPR          go to state 38
+    MULT_EXPR         go to state 39
+    UNARY             go to state 50
+    FACTOR            go to state 41
+    STATEMENT         go to state 214
+    SWITCH_STATEMENT  go to state 145
+    EXPR_STATEMENT    go to state 146
+    FUNC_STATEMENT    go to state 147
+    SELECT_STATEMENT  go to state 148
+    ITER_STATEMENT    go to state 149
+    JUMP_STATEMENT    go to state 150
+
+
+State 213
+
+   98 SELECT_STATEMENT: TOK_IF TOK_LBRACKET LOGIC_EXPR TOK_RBRACKET STATEMENT TOK_ELSE STATEMENT .
+
+    $default  reduce using rule 98 (SELECT_STATEMENT)
+
+
+State 214
+
+  101 ITER_STATEMENT: TOK_FOR TOK_LBRACKET EXPR_STATEMENT EXPR_STATEMENT ASSIGN_EXPR TOK_RBRACKET STATEMENT .
+
+    $default  reduce using rule 101 (ITER_STATEMENT)

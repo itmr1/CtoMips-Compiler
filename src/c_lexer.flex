@@ -82,7 +82,7 @@ extern "C" int fileno(FILE *stream);
 [\{]              { return TOK_LCBRACKET; }
 [\}]              { return TOK_RCBRACKET; }
 [;]               { return TOK_SEMICOLON; }
-[,]               { return TOK_COMMA;  }
+[,]               { return TOK_COMMA;}
 [?]               {return TOK_QMARK;}
 [:]               {return TOK_COLON;}
       

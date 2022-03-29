@@ -8,10 +8,10 @@ sw $8,4($30)
 b CondCheck3
 nop
 StartOfLoop2:
-lw $2,4($30)
-move $9,$2
 li $2,8
-sub $2,$9,$2
+move $9,$2
+lw $2,4($30)
+sub $2,$2,$9
 sll $2,2
 addiu $9,$30,8
 addu $9,$9,$2
@@ -34,16 +34,16 @@ sw $8,4($30)
 b CondCheck6
 nop
 StartOfLoop5:
-lw $2,40($30)
-move $9,$2
-lw $2,4($30)
-move $10,$2
 li $2,0
+move $10,$2
+lw $2,4($30)
 add $2,$2,$10
 sll $2,2
 addiu $10,$30,8
 addu $10,$10,$2
 lw $2,($10)
+move $9,$2
+lw $2,40($30)
 add $2,$2,$9
 sw $2,40($30)
 lw $2,4($30)

@@ -12,10 +12,10 @@ slt $8,$8,$9
 beq $0,$8,LoopEnd2
 nop
 LoopStart1:
-lw $2,4($30)
-move $9,$2
 li $2,1
-sub $2,$9,$2
+move $9,$2
+lw $2,4($30)
+sub $2,$2,$9
 sw $2,4($30)
 lw $8,4($30)
 move $9,$8
