@@ -27,6 +27,9 @@ extern "C" int fileno(FILE *stream);
 "return"          {return TOK_RETURN;}
 "break"           {return TOK_BREAK;} 
 "continue"        {return TOK_CONT;}  
+"case"            {return TOK_CASE;}
+"default"         {return TOK_DEFAULT;}
+"switch"          {return TOK_SWITCH;}
 
 [0-9]+                   {yylval.number = std::strtod(yytext,0);
                            return TOK_N;}

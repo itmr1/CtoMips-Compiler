@@ -84,33 +84,41 @@ extern int yydebug;
     TOK_WHILE = 274,
     TOK_ELSE = 275,
     TOK_FOR = 276,
-    TOK_RETURN = 277,
-    TOK_BREAK = 278,
-    TOK_CONT = 279,
-    TOK_MUL = 280,
-    TOK_DIVIDE = 281,
-    TOK_PLUS = 282,
-    TOK_MINUS = 283,
-    TOK_MOD = 284,
-    TOK_LBRACKET = 285,
-    TOK_RBRACKET = 286,
-    TOK_SEMICOLON = 287,
-    TOK_LCBRACKET = 288,
-    TOK_RCBRACKET = 289,
-    TOK_LSQBRACKET = 290,
-    TOK_RSQBRACKET = 291,
-    TOK_COMMA = 292,
-    TOK_N = 293,
-    TOK_VAR = 294,
-    VARTYPE_INT = 295,
-    TOK_SUBASSIGN = 296,
-    TOK_MULASSIGN = 297,
-    TOK_DIVASSIGN = 298,
-    TOK_ADDASSIGN = 299,
-    TOK_EQASSIGN = 300,
-    TOK_MODASSIGN = 301,
-    TOK_INCR = 302,
-    TOK_DECR = 303
+    TOK_SWITCH = 277,
+    TOK_CASE = 278,
+    TOK_DEFAULT = 279,
+    TOK_RETURN = 280,
+    TOK_BREAK = 281,
+    TOK_CONT = 282,
+    TOK_MUL = 283,
+    TOK_DIVIDE = 284,
+    TOK_PLUS = 285,
+    TOK_MINUS = 286,
+    TOK_MOD = 287,
+    TOK_LBRACKET = 288,
+    TOK_RBRACKET = 289,
+    TOK_SEMICOLON = 290,
+    TOK_LCBRACKET = 291,
+    TOK_RCBRACKET = 292,
+    TOK_LSQBRACKET = 293,
+    TOK_RSQBRACKET = 294,
+    TOK_COMMA = 295,
+    TOK_QMARK = 296,
+    TOK_COLON = 297,
+    TOK_N = 298,
+    TOK_VAR = 299,
+    VARTYPE_INT = 300,
+    TOK_SUBASSIGN = 301,
+    TOK_MULASSIGN = 302,
+    TOK_DIVASSIGN = 303,
+    TOK_ADDASSIGN = 304,
+    TOK_EQASSIGN = 305,
+    TOK_MODASSIGN = 306,
+    TOK_ANDASSIGN = 307,
+    TOK_ORASSIGN = 308,
+    TOK_XORASSIGN = 309,
+    TOK_INCR = 310,
+    TOK_DECR = 311
   };
 #endif
 
@@ -124,7 +132,7 @@ union YYSTYPE
   double number;
   std::string *string;
 
-#line 128 "src/c_parser.tab.hpp"
+#line 136 "src/c_parser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
