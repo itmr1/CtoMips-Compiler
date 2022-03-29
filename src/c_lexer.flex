@@ -46,6 +46,9 @@ extern "C" int fileno(FILE *stream);
 "-="              {return TOK_SUBASSIGN; }
 "%="              {return TOK_MODASSIGN; }
 "="               {return TOK_EQASSIGN; }
+"&="              {return TOK_ANDASSIGN;}
+"|="              {return TOK_ORASSIGN;}
+"\^="             {return TOK_XORASSIGN;}
 
 "=="              { return TOK_EQ; }
 "!="              { return TOK_NEQ; }
@@ -77,6 +80,8 @@ extern "C" int fileno(FILE *stream);
 [\}]              { return TOK_RCBRACKET; }
 [;]               { return TOK_SEMICOLON; }
 [,]               { return TOK_COMMA;  }
+[?]               {return TOK_QMARK;}
+[:]               {return TOK_COLON;}
       
 [ \t\r\n]+        {;}
 . {fprintf(stderr, "Invalid token\n");exit(1);}
