@@ -251,5 +251,118 @@ public:
     }
 };
 
+class BitwiseAndOperator
+ : public Operator
+{
+protected:
+    virtual const char *getOpcode() const override
+    {return "&";}
+public:
+    BitwiseAndOperator(ExpressionPtr _left, ExpressionPtr _right)
+        : Operator(_left, _right)
+    {}
+     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        if(left->IsFuncCall()){
+            int idx = data.registers.allocate();
+            left->MipsCodeGen(dst,data, DstReg);
+            std::string tmp_reg = data.registers.make_regname(idx);
+            dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+            data.registers.free_reg(idx);
+            right->MipsCodeGen(dst,data, DstReg);
+            dst<<"and $"<<DstReg<<",$"<<tmp_reg<<","<<DstReg<<std::endl;
+        }
+        else{
+        int idx = data.registers.allocate();
+        right->MipsCodeGen(dst,data, DstReg);
+        std::string tmp_reg = data.registers.make_regname(idx);
+        dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+        data.registers.free_reg(idx);
+        left->MipsCodeGen(dst,data, DstReg);
+        dst<<"and $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        }
+    }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate();
+        int r = right->evaluate();
+        return l&r;
+    }
+};
+
+class BitwiseOrOperator
+ : public Operator
+{
+protected:
+    virtual const char *getOpcode() const override
+    {return "|";}
+public:
+    BitwiseOrOperator(ExpressionPtr _left, ExpressionPtr _right)
+        : Operator(_left, _right)
+    {}
+     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        if(left->IsFuncCall()){
+            int idx = data.registers.allocate();
+            left->MipsCodeGen(dst,data, DstReg);
+            std::string tmp_reg = data.registers.make_regname(idx);
+            dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+            data.registers.free_reg(idx);
+            right->MipsCodeGen(dst,data, DstReg);
+            dst<<"or $"<<DstReg<<",$"<<tmp_reg<<","<<DstReg<<std::endl;
+        }
+        else{
+        int idx = data.registers.allocate();
+        right->MipsCodeGen(dst,data, DstReg);
+        std::string tmp_reg = data.registers.make_regname(idx);
+        dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+        data.registers.free_reg(idx);
+        left->MipsCodeGen(dst,data, DstReg);
+        dst<<"or $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        }
+    }
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate();
+        int r = right->evaluate();
+        return l|r;
+    }
+};
+
+class BitwiseXorOperator
+ : public Operator
+{
+protected:
+    virtual const char *getOpcode() const override
+    {return "^";}
+public:
+    BitwiseXorOperator(ExpressionPtr _left, ExpressionPtr _right)
+        : Operator(_left, _right)
+    {}
+     virtual void MipsCodeGen(std::ostream &dst,Data &data, int DstReg) const override{
+        if(left->IsFuncCall()){
+            int idx = data.registers.allocate();
+            left->MipsCodeGen(dst,data, DstReg);
+            std::string tmp_reg = data.registers.make_regname(idx);
+            dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+            data.registers.free_reg(idx);
+            right->MipsCodeGen(dst,data, DstReg);
+            dst<<"xor $"<<DstReg<<",$"<<tmp_reg<<","<<DstReg<<std::endl;
+        }
+        else{
+        int idx = data.registers.allocate();
+        right->MipsCodeGen(dst,data, DstReg);
+        std::string tmp_reg = data.registers.make_regname(idx);
+        dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
+        data.registers.free_reg(idx);
+        left->MipsCodeGen(dst,data, DstReg);
+        dst<<"xor $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        }
+    }
+
+    virtual int evaluate(ExpressionPtr) const {
+        int l = left->evaluate();
+        int r = right->evaluate();
+        return l^r;
+    }
+};
+
 
 #endif
