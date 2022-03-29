@@ -69,18 +69,18 @@ public:
             left->MipsCodeGen(dst,data, DstReg);
             std::string tmp_reg = data.registers.make_regname(idx);
             dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-            data.registers.free_reg(idx);
             right->MipsCodeGen(dst,data, DstReg);
             dst<<"add $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+            data.registers.free_reg(idx);
         }
         else{
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst,data, DstReg);
         std::string tmp_reg = data.registers.make_regname(idx);
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        data.registers.free_reg(idx);
         left->MipsCodeGen(dst,data, DstReg);
         dst<<"add $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        data.registers.free_reg(idx);
         }
     }
         virtual int evaluate() const override {
@@ -107,18 +107,19 @@ public:
             left->MipsCodeGen(dst,data, DstReg);
             std::string tmp_reg = data.registers.make_regname(idx);
             dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-            data.registers.free_reg(idx);
             right->MipsCodeGen(dst,data, DstReg);
             dst<<"sub $"<<DstReg<<",$"<<tmp_reg<<","<<DstReg<<std::endl;
+            data.registers.free_reg(idx);
         }
         else{
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst,data, DstReg);
         std::string tmp_reg = data.registers.make_regname(idx);
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        data.registers.free_reg(idx);
+    
         left->MipsCodeGen(dst,data, DstReg);
         dst<<"sub $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        data.registers.free_reg(idx);
         }
     }
 
@@ -147,20 +148,20 @@ public:
             left->MipsCodeGen(dst,data, DstReg);
             std::string tmp_reg = data.registers.make_regname(idx);
             dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-            data.registers.free_reg(idx);
             right->MipsCodeGen(dst,data, DstReg);
             dst<<"mult $"<<DstReg<<","<<tmp_reg<<std::endl;
             dst<<"mflo $"<<DstReg<<std::endl;
+            data.registers.free_reg(idx);
         }
         else{
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst,data, DstReg);
         std::string tmp_reg = data.registers.make_regname(idx);
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        data.registers.free_reg(idx);
         left->MipsCodeGen(dst,data, DstReg);
         dst<<"mult $"<<DstReg<<","<<tmp_reg<<std::endl;
         dst<<"mflo $"<<DstReg<<std::endl;
+        data.registers.free_reg(idx);
         }
     }
 
@@ -188,20 +189,20 @@ public:
             left->MipsCodeGen(dst,data, DstReg);
             std::string tmp_reg = data.registers.make_regname(idx);
             dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-            data.registers.free_reg(idx);
             right->MipsCodeGen(dst,data, DstReg);
             dst<<"div $"<<tmp_reg<<","<<DstReg<<std::endl;
             dst<<"mflo $"<<DstReg<<std::endl;
+            data.registers.free_reg(idx);
         }
         else{
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst,data, DstReg);
         std::string tmp_reg = data.registers.make_regname(idx);
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        data.registers.free_reg(idx);
         left->MipsCodeGen(dst,data, DstReg);
         dst<<"div $"<<DstReg<<","<<tmp_reg<<std::endl;
         dst<<"mflo $"<<DstReg<<std::endl;
+        data.registers.free_reg(idx);
         }
     }
     virtual int evaluate() const override{
@@ -227,20 +228,20 @@ public:
             left->MipsCodeGen(dst,data, DstReg);
             std::string tmp_reg = data.registers.make_regname(idx);
             dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-            data.registers.free_reg(idx);
             right->MipsCodeGen(dst,data, DstReg);
             dst<<"div $"<<tmp_reg<<","<<DstReg<<std::endl;
             dst<<"mfhi $"<<DstReg<<std::endl;
+            data.registers.free_reg(idx);
         }
         else{
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst,data, DstReg);
         std::string tmp_reg = data.registers.make_regname(idx);
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        data.registers.free_reg(idx);
         left->MipsCodeGen(dst,data, DstReg);
         dst<<"div $"<<DstReg<<","<<tmp_reg<<std::endl;
         dst<<"mfhi $"<<DstReg<<std::endl;
+        data.registers.free_reg(idx);
         }
     }
 
@@ -267,18 +268,18 @@ public:
             left->MipsCodeGen(dst,data, DstReg);
             std::string tmp_reg = data.registers.make_regname(idx);
             dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-            data.registers.free_reg(idx);
             right->MipsCodeGen(dst,data, DstReg);
             dst<<"and $"<<DstReg<<",$"<<tmp_reg<<","<<DstReg<<std::endl;
+            data.registers.free_reg(idx);
         }
         else{
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst,data, DstReg);
         std::string tmp_reg = data.registers.make_regname(idx);
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        data.registers.free_reg(idx);
         left->MipsCodeGen(dst,data, DstReg);
         dst<<"and $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        data.registers.free_reg(idx);
         }
     }
 
@@ -305,18 +306,18 @@ public:
             left->MipsCodeGen(dst,data, DstReg);
             std::string tmp_reg = data.registers.make_regname(idx);
             dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-            data.registers.free_reg(idx);
             right->MipsCodeGen(dst,data, DstReg);
             dst<<"or $"<<DstReg<<",$"<<tmp_reg<<","<<DstReg<<std::endl;
+            data.registers.free_reg(idx);
         }
         else{
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst,data, DstReg);
         std::string tmp_reg = data.registers.make_regname(idx);
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        data.registers.free_reg(idx);
         left->MipsCodeGen(dst,data, DstReg);
         dst<<"or $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        data.registers.free_reg(idx);
         }
     }
     virtual int evaluate(ExpressionPtr) const {
@@ -342,18 +343,18 @@ public:
             left->MipsCodeGen(dst,data, DstReg);
             std::string tmp_reg = data.registers.make_regname(idx);
             dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-            data.registers.free_reg(idx);
             right->MipsCodeGen(dst,data, DstReg);
             dst<<"xor $"<<DstReg<<",$"<<tmp_reg<<","<<DstReg<<std::endl;
+            data.registers.free_reg(idx);
         }
         else{
         int idx = data.registers.allocate();
         right->MipsCodeGen(dst,data, DstReg);
         std::string tmp_reg = data.registers.make_regname(idx);
         dst<<"move "<<tmp_reg<<",$"<<DstReg<<std::endl;
-        data.registers.free_reg(idx);
         left->MipsCodeGen(dst,data, DstReg);
         dst<<"xor $"<<DstReg<<",$"<<DstReg<<","<<tmp_reg<<std::endl;
+        data.registers.free_reg(idx);
         }
     }
 
