@@ -27,6 +27,7 @@ public:
     virtual ExpressionPtr getindex() const { return NULL;}
     virtual int evaluate() const {return 0;}
     virtual bool IsFuncCall() const { return false;}
+    //virtual void GetExpr(std::vector<ExpressionPtr> &expr) const {return;}
 };
 
 class SingleExpr
