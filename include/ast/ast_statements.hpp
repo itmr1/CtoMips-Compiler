@@ -402,7 +402,7 @@ public:
    {
         CurrSize+=0;
    }
-   virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override()}
+   virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{}
 };
 
 
