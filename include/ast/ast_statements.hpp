@@ -131,7 +131,9 @@ public:
    }
 
    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg) const override{
+        //std::cout<<"hello\n";
         Cond->MipsCodeGen(dst, data, DstReg);
+        //std::cout<<"hello\n";
         std::string Else = data.MakeLabel("Else");
         std::string EndIfElse = data.MakeLabel("EndIfElse");
         dst<<"beq $0,$"<<DstReg<<","<<Else<<std::endl;
@@ -218,28 +220,28 @@ public:
     virtual void CountFrameSize(int &CurrSize) const override
    {
         Cond->CountFrameSize(CurrSize);
-        Cond2->CountFrameSize(CurrSize);
-        Cond3->CountFrameSize(CurrSize);
         Statement->CountFrameSize(CurrSize);
+        Statement2->CountFrameSize(CurrSize);
+        Statement3->CountFrameSize(CurrSize);
    }
 
    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg) const override{
-    tmp = data.registers.allocate();
+    int tmp = data.registers.allocate();
     Cond->MipsCodeGen(dst,data,tmp);
     std::string EndOfLoop = data.MakeLabel("EndOfLoop");
     std::string StartOfLoop = data.MakeLabel("StartOfLoop");
     data.Loopstarts.push_back(StartOfLoop);
     data.Loopends.push_back(EndOfLoop);
     std::string CondCheck = data.MakeLabel("CondCheck");
-    dst<<"b "<<CondCheck<<":"<<std::endl;
+    dst<<"b "<<CondCheck<<std::endl;
     dst<<"nop"<<std::endl;
-    dst<<StartOfLoop<<":"std::endl;
-    Statement->MipsCodeGen(dst,data,DstReg);
-    tmp2 = data.registers.allocate();
-    Cond3->MipsCodeGen(dst,data,DstReg);
+    dst<<StartOfLoop<<":"<<std::endl;
+    Statement3->MipsCodeGen(dst,data,DstReg);
+    int tmp2 = data.registers.allocate();
+    Statement2->MipsCodeGen(dst,data,DstReg);
     dst<<CondCheck<<":"<<std::endl;
-    Cond2->MipsCodeGen(dst,data,tmp);
-    dst<<"bne $"<<tmp<<",$0"<<","<<StartOfLoop;
+    Statement->MipsCodeGen(dst,data,tmp);
+    dst<<"bne $"<<tmp<<",$0"<<","<<StartOfLoop<<std::endl;
     data.registers.free_reg(tmp);
     data.registers.free_reg(tmp2);
     dst<<EndOfLoop<<":"<<std::endl;
@@ -338,7 +340,7 @@ public:
    {
         CurrSize+=0;
    }
-   virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
+    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
         dst<<"b "<<data.Loopends.back()<<std::endl;
         dst<<"nop"<<std::endl;
 
@@ -372,8 +374,8 @@ public:
    virtual void MipsCodeGen(std::ostream &dst, Data &data, int DstReg)const override{
        dst<<"b "<<data.Loopstarts.back()<<std::endl;
         dst<<"nop"<<std::endl;
-        
-   }
+   }    
+
 };
 
 class EmptyStatement

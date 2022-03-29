@@ -81,6 +81,7 @@ public:
         dst<<"sw"<<" $31,"<<frealsize<<"($29)"<<std::endl;
         dst<<"sw"<<" $30,"<<frealsize - 4<<"($29)"<<std::endl;
         dst<<"move"<<" $30,$29"<<std::endl;
+        //std::cout<<"hello\n";
         if(Args){
             int ArgSize = 0;
             Args->CountFrameSize(ArgSize);
@@ -89,7 +90,9 @@ public:
                 dst<<"sw $"<<i<<","<<4*(i-3)<<"($29)"<<std::endl;
             }
         }
+        //std::cout<<"hello\n";
         data.CurrLabel = data.MakeLabel("EoF");
+        //std::cout<<"hello\n";
         Statement->MipsCodeGen(dst, data, DstReg);
         dst<<data.CurrLabel<<":"<<std::endl;
         dst<<"move "<<"$29,$30"<<std::endl;
