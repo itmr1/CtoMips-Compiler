@@ -10,19 +10,19 @@ lw $2,4($30)
 li $8,0
 beq $8,$2,case2
 nop
-b EndSwitch1
-nop
 li $8,2
 beq $8,$2,case3
 nop
 li $8,1
 beq $8,$2,case4
 nop
-b EndSwitch1
+b default5
 nop
 case2: 
 li $2,1
 sw $2,8($30)
+b EndSwitch1
+nop
 case3: 
 li $2,2
 sw $2,8($30)
@@ -32,7 +32,9 @@ move $8,$2
 lw $2,8($30)
 add $2,$2,$8
 sw $2,8($30)
-case5: 
+b EndSwitch1
+nop
+default5: 
 li $2,1
 move $8,$2
 lw $2,4($30)

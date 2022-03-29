@@ -3,7 +3,7 @@ addiu $29,$29,-8
 sw $31,8($29)
 sw $30,4($29)
 move $30,$29
-lw $4,0($30)
+lw $4,22035($30)
 jal sizeof
 nop
 b EoF0
